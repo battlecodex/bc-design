@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to BC Design - Login</title>
+  
+  <!-- Google Fonts: Newsreader (Literary Serif) & Inter (Clean UI Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../.agents/skills/bc-design/references/tokens.css" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bc-bg);
+      color: var(--bc-text-primary);
+      font-family: var(--bc-font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      transition: background-color var(--bc-duration-normal) var(--bc-ease),
+                  color var(--bc-duration-normal) var(--bc-ease);
+      position: relative;
+    }
+
+    /* Top Navigation Bar */
+    .top-bar {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle-btn {
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border-strong);
+      color: var(--bc-text-secondary);
+      padding: 8px 14px;
+      border-radius: var(--bc-radius-full);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--bc-duration-fast) var(--bc-ease);
+      box-shadow: var(--bc-shadow-sm);
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--bc-surface-hover);
+      color: var(--bc-text-primary);
+      border-color: var(--bc-accent);
+    }
+
+    /* Auth Container */
+    .auth-wrapper {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .auth-card {
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-xl);
+      padding: 40px 36px;
+      box-shadow: var(--bc-shadow-md);
+      text-align: center;
+    }
+
+    /* Logo Mark */
+    .logo-container {
+      margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: var(--bc-radius-lg);
+      background: var(--bc-accent-subtle);
+      border: 1px solid var(--bc-accent-border);
+    }
+
+    .logo-container svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    /* Typography */
+    h1.serif-heading {
+      font-family: var(--bc-font-serif);
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--bc-text-primary);
+      margin-bottom: 8px;
+    }
+
+    p.subtext {
+      font-size: 15px;
+      color: var(--bc-text-secondary);
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    /* Form Elements */
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--bc-text-secondary);
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--bc-border-strong);
+      border-radius: var(--bc-radius-md);
+      font-size: 15px;
+      background: var(--bc-surface);
+      color: var(--bc-text-primary);
+      outline: none;
+      transition: all var(--bc-duration-fast) var(--bc-ease);
+      font-family: inherit;
+    }
+
+    .input-field::placeholder {
+      color: var(--bc-text-tertiary);
+    }
+
+    .input-field:focus {
+      border-color: var(--bc-border-focus);
+      box-shadow: var(--bc-ring);
+    }
+
+    /* Primary Submit Button */
+    .btn-submit {
+      width: 100%;
+      padding: 13px 18px;
+      background: var(--bc-accent);
+      color: var(--bc-text-on-accent);
+      border: none;
+      border-radius: var(--bc-radius-md);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 1px 3px rgba(217, 119, 87, 0.2);
+    }
+
+    .btn-submit:hover {
+      background: var(--bc-accent-hover);
+      box-shadow: 0 4px 12px rgba(217, 119, 87, 0.3);
+    }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      color: var(--bc-text-tertiary);
+      font-size: 13px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--bc-border);
+    }
+
+    .divider span {
+      padding: 0 14px;
+    }
+
+    /* OAuth Buttons */
+    .social-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-oauth {
+      width: 100%;
+      padding: 11px 16px;
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border-strong);
+      border-radius: var(--bc-radius-md);
+      color: var(--bc-text-primary);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: var(--bc-shadow-sm);
+    }
+
+    .btn-oauth:hover {
+      background: var(--bc-surface-hover);
+      border-color: var(--bc-text-secondary);
+    }
+
+    /* Footer */
+    .auth-footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--bc-text-tertiary);
+      line-height: 1.6;
+    }
+
+    .auth-footer a {
+      color: var(--bc-text-secondary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .auth-footer a:hover {
+      color: var(--bc-accent);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mode Switcher -->
+  <div class="top-bar">
+    <button class="theme-toggle-btn bc-interactive" id="themeToggle" onclick="toggleTheme()">
+      <span id="themeIcon">🌙</span>
+      <span id="themeLabel">Dark Mode</span>
+    </button>
+  </div>
+
+  <main class="auth-wrapper">
+    <div class="auth-card bc-fade-up">
+      <!-- BC Design Starburst Icon -->
+      <div class="logo-container">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="#D97757"/>
+        </svg>
+      </div>
+
+      <h1 class="serif-heading">Welcome to BC Design</h1>
+      <p class="subtext">Enter your email to sign in or create an account.</p>
+
+      <form class="auth-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input 
+            type="email" 
+            id="email" 
+            class="input-field" 
+            placeholder="name@example.com" 
+            required 
+            autocomplete="email"
+          />
+        </div>
+
+        <button type="submit" class="btn-submit bc-interactive" id="submitBtn">
+          Continue with email
+        </button>
+      </form>
+
+      <div class="divider">
+        <span>or</span>
+      </div>
+
+      <div class="social-group">
+        <button class="btn-oauth bc-interactive" type="button" onclick="oauthClick('Google')">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          Continue with Google
+        </button>
+
+        <button class="btn-oauth bc-interactive" type="button" onclick="oauthClick('Apple')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.93-2.85-.9.04-1.99.6-2.63 1.35-.57.65-1.06 1.71-.93 2.73 1 .08 2.01-.48 2.63-1.23z"/>
+          </svg>
+          Continue with Apple
+        </button>
+      </div>
+
+      <footer class="auth-footer">
+        By continuing, you agree to BC Design's <a href="#">Consumer Terms</a> and <a href="#">Privacy Policy</a>.
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', next);
+      
+      document.getElementById('themeIcon').textContent = next === 'dark' ? '☀️' : '🌙';
+      document.getElementById('themeLabel').textContent = next === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const btn = document.getElementById('submitBtn');
+      const originalText = btn.innerHTML;
+      
+      btn.innerHTML = '<span class="bc-shimmer-text">Verifying...</span>';
+      btn.style.pointerEvents = 'none';
+
+      setTimeout(() => {
+        alert(`Verification email sent to: ${email}`);
+        btn.innerHTML = originalText;
+        btn.style.pointerEvents = 'auto';
+      }, 1000);
+    }
+
+    function oauthClick(provider) {
+      alert(`Redirecting to ${provider} authentication...`);
+    }
+  </script>
+</body>
+</html>

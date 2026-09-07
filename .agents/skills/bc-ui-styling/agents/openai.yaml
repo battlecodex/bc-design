@@ -1,0 +1,4 @@
+interface:
+  display_name: "BC UI Styling"
+  short_description: "Implement or restyle an interface without changing behavior"
+  default_prompt: "Use $bc-ui-styling to implement the approved visual direction while preserving product behavior."

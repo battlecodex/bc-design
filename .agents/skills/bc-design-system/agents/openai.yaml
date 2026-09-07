@@ -1,0 +1,4 @@
+interface:
+  display_name: "BC Design System"
+  short_description: "Create tokens, component contracts, states, and governance"
+  default_prompt: "Use $bc-design-system to build a reusable design-system contract from the approved direction."

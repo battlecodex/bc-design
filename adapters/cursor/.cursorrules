@@ -1,0 +1,11 @@
+# BC Design System (.cursorrules)
+# Applies to all files
+
+Always apply the BC Design language:
+- Canvas: Warm parchment #FAF9F5 (light) or espresso soot #181816 (dark).
+- Accent: Terracotta #D97757 (hover #C15F3E, dark #E28466).
+- Buttons: Solid White #FFFFFF for primary modal CTAs in dark mode.
+- Typography: Newsreader (Editorial Serif) for headlines + Inter (Sans) for UI.
+- Motion: cubic-bezier(0.16, 1, 0.3, 1). Speed budget: 150ms-250ms.
+- Streaming: Never animate container dimensions while AI text streams.
+- Icons: 1.5px monoline Lucide icons.

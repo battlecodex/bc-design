@@ -1,0 +1,521 @@
+/**
+ * BC Design System - Design Tokens & Motion Engine
+ * BC Design token layer (Warm Editorial & Literary Humanism)
+ */
+
+:root {
+  /* ==========================================================================
+     Color Palette (Light Mode - Warm Parchment & Terracotta)
+     ========================================================================== */
+
+  /* Backgrounds */
+  --bc-bg: #FAF9F5;               /* Primary warm parchment canvas */
+  --bc-bg-subtle: #F4F3EE;        /* Secondary canvas / inset panels */
+  --bc-bg-muted: #ECEAE2;         /* Inactive tabs / soft wells */
+  --bc-surface: #FFFFFF;          /* Elevated cards / floating modal surface */
+  --bc-surface-hover: #FDFCF9;
+
+  /* Primary Accent: BC Design Terracotta */
+  --bc-accent: #D97757;           /* Signature BC Design Terracotta */
+  --bc-accent-hover: #C15F3E;     /* Darkened terracotta for button hover */
+  --bc-accent-active: #AA4F32;    /* Pressed state */
+  --bc-accent-subtle: #FDF3EE;    /* Soft terracotta tint for badges/highlights */
+  --bc-accent-border: #F4D3C5;    /* Delicate border for active/highlighted items */
+
+  /* Secondary Earth & Pastel Thumbnail Accents (Seen in Light Mode Learn Cards) */
+  --bc-pastel-sage: #A8C2B7;      /* Sage / Eucalyptus green thumbnail */
+  --bc-pastel-sage-bg: #EAF1EE;
+  --bc-pastel-peach: #E8CFC5;     /* Soft peach / blush clay thumbnail */
+  --bc-pastel-peach-bg: #F9F3F0;
+  --bc-amber: #E09F3E;
+  --bc-amber-subtle: #FBF4E8;
+  --bc-olive: #7D8A68;
+  --bc-olive-subtle: #F1F4ED;
+
+  /* Text & Ink */
+  --bc-text-primary: #1F1E1B;     /* Deep ink black with warm undertone */
+  --bc-text-secondary: #6B6760;   /* Muted warm stone for body & descriptions */
+  --bc-text-tertiary: #99948B;    /* Placeholders & subtle metadata */
+  --bc-text-on-accent: #1F1E1B;   /* Contrast-safe text on terracotta buttons */
+
+  /* Borders & Dividers */
+  --bc-border: rgba(31, 30, 27, 0.08);       /* Delicate hairline border */
+  --bc-border-strong: rgba(31, 30, 27, 0.16);/* Input field border & card hover */
+  --bc-border-focus: #D97757;                /* Focus ring border */
+
+  /* Shadows (Warm, soft diffused elevation) */
+  --bc-shadow-sm: 0 1px 2px rgba(31, 30, 27, 0.04);
+  --bc-shadow-md: 0 4px 16px -2px rgba(31, 30, 27, 0.06), 0 2px 6px -1px rgba(31, 30, 27, 0.03);
+  --bc-shadow-lg: 0 12px 32px -4px rgba(31, 30, 27, 0.08), 0 4px 12px -2px rgba(31, 30, 27, 0.04);
+  --bc-shadow-float: 0 20px 48px -8px rgba(31, 30, 27, 0.12);
+
+  /* Focus Ring */
+  --bc-ring: 0 0 0 3px rgba(217, 119, 87, 0.24);
+
+  /* Contrast & Glass Action Buttons (As seen in in-app Modals & Heroes) */
+  --bc-btn-contrast-bg: #1F1E1B;              /* Solid ink in light mode */
+  --bc-btn-contrast-text: #FFFFFF;
+  --bc-btn-contrast-hover: #35332F;
+  --bc-btn-glass-bg: rgba(31, 30, 27, 0.06);   /* Soft subtle glass */
+  --bc-btn-glass-text: #1F1E1B;
+  --bc-btn-glass-hover: rgba(31, 30, 27, 0.12);
+
+  /* Specific Badges */
+  --bc-badge-blue-bg: #1A62D6;
+  --bc-badge-blue-text: #FFFFFF;
+
+  /* ==========================================================================
+     Typography Stacks
+     ========================================================================== */
+  --bc-font-serif: "Newsreader", "Georgia", serif;
+  --bc-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --bc-font-mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* ==========================================================================
+     Radii (Soft Rounded Curves)
+     ========================================================================== */
+  --bc-radius-sm: 6px;
+  --bc-radius-md: 10px;
+  --bc-radius-lg: 14px;
+  --bc-radius-xl: 20px;
+  --bc-radius-full: 9999px;
+
+  /* ==========================================================================
+     Motion & Animation Tokens (The BC Design Motion Signature)
+     ========================================================================== */
+  --bc-ease: cubic-bezier(0.16, 1, 0.3, 1);        /* Signature smooth ease-out */
+  --bc-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);  /* Symmetric transition */
+  --bc-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1); /* Subtle playful spring */
+
+  --bc-duration-fast: 150ms;
+  --bc-duration-normal: 250ms;
+  --bc-duration-slow: 400ms;
+  --bc-duration-shimmer: 1800ms;
+}
+
+/* ==========================================================================
+   Dark Mode (Warm Espresso & Charcoal)
+   ========================================================================== */
+[data-theme="dark"],
+.dark {
+  --bc-bg: #181816;               /* Warm deep soot/espresso canvas */
+  --bc-bg-subtle: #20201D;        /* Secondary dark panel */
+  --bc-bg-muted: #2A2A26;         /* Wells & inset panels */
+  --bc-surface: #242421;          /* Card & floating surfaces */
+  --bc-surface-hover: #2B2B27;
+
+  /* Terracotta in Dark Mode (Slightly boosted vibrancy) */
+  --bc-accent: #E28466;
+  --bc-accent-hover: #EA967B;
+  --bc-accent-active: #C15F3E;
+  --bc-accent-subtle: #34221A;
+  --bc-accent-border: #4D2D20;
+
+  /* Text & Ink */
+  --bc-text-primary: #FAF9F5;     /* Warm off-white */
+  --bc-text-secondary: #A39E93;   /* Warm medium gray */
+  --bc-text-tertiary: #6E6A62;    /* Dark muted metadata */
+  --bc-text-on-accent: #181816;
+
+  /* Borders & Dividers */
+  --bc-border: rgba(250, 249, 245, 0.09);
+  --bc-border-strong: rgba(250, 249, 245, 0.18);
+  --bc-border-focus: #E28466;
+
+  /* Shadows */
+  --bc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --bc-shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.45);
+  --bc-shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.6);
+  --bc-shadow-float: 0 20px 48px -8px rgba(0, 0, 0, 0.75);
+
+  --bc-ring: 0 0 0 3px rgba(226, 132, 102, 0.28);
+
+  /* Contrast & Glass Action Buttons in Dark Mode (High-contrast white + dark glass) */
+  --bc-btn-contrast-bg: #FFFFFF;              /* Crisp white button in dark mode */
+  --bc-btn-contrast-text: #1F1E1B;            /* Deep dark text */
+  --bc-btn-contrast-hover: #EBEAE5;
+  --bc-btn-glass-bg: rgba(255, 255, 255, 0.09);/* Dark translucent glass */
+  --bc-btn-glass-text: #FAF9F5;
+  --bc-btn-glass-hover: rgba(255, 255, 255, 0.15);
+}
+
+/* ==========================================================================
+   Keyframe Animations
+   ========================================================================== */
+
+/* 1. BC Design Fade & Lift (Used on page load, cards, dialogs) */
+@keyframes bcFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 2. BC Design Thinking Shimmer (Warm terracotta glow during generation) */
+@keyframes bcThinkingPulse {
+  0% {
+    opacity: 0.45;
+    box-shadow: 0 0 0 0 rgba(217, 119, 87, 0.4);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 14px 2px rgba(217, 119, 87, 0.28);
+  }
+  100% {
+    opacity: 0.45;
+    box-shadow: 0 0 0 0 rgba(217, 119, 87, 0.4);
+  }
+}
+
+/* 3. BC Design Text Shimmer Effect */
+@keyframes bcShimmerWave {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* 4. Artifact Drawer Slide-In */
+@keyframes bcDrawerIn {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 5. Scale In (For tooltips, dropdowns, prompt pills) */
+@keyframes bcScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 6. Typing Bouncing Dots */
+@keyframes bcBouncingDot {
+  0%, 80%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   Reusable Utility Classes
+   ========================================================================== */
+
+.bc-fade-up {
+  animation: bcFadeUp var(--bc-duration-normal) var(--bc-ease) forwards;
+}
+
+.bc-drawer-in {
+  animation: bcDrawerIn var(--bc-duration-slow) var(--bc-ease) forwards;
+}
+
+.bc-scale-in {
+  animation: bcScaleIn var(--bc-duration-fast) var(--bc-ease) forwards;
+}
+
+.bc-thinking {
+  animation: bcThinkingPulse var(--bc-duration-shimmer) infinite var(--bc-ease-in-out);
+}
+
+.bc-shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--bc-text-secondary) 0%,
+    var(--bc-accent) 50%,
+    var(--bc-text-secondary) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: bcShimmerWave var(--bc-duration-shimmer) infinite var(--bc-ease-in-out);
+}
+
+/* Micro-Interactions */
+.bc-interactive {
+  transition: transform var(--bc-duration-fast) var(--bc-ease),
+              background-color var(--bc-duration-fast) var(--bc-ease),
+              border-color var(--bc-duration-fast) var(--bc-ease),
+              box-shadow var(--bc-duration-fast) var(--bc-ease);
+}
+
+.bc-interactive:active {
+  transform: scale(0.985);
+}
+
+/* 7. Action Button Styles (As seen in BC Design Hero & Modals) */
+.bc-btn-contrast {
+  background: var(--bc-btn-contrast-bg);
+  color: var(--bc-btn-contrast-text);
+  border: none;
+  padding: 10px 18px;
+  border-radius: var(--bc-radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: var(--bc-shadow-sm);
+  transition: all var(--bc-duration-fast) var(--bc-ease);
+}
+
+.bc-btn-contrast:hover {
+  background: var(--bc-btn-contrast-hover);
+}
+
+.bc-btn-glass {
+  background: var(--bc-btn-glass-bg);
+  color: var(--bc-btn-glass-text);
+  border: 1px solid var(--bc-border);
+  padding: 10px 18px;
+  border-radius: var(--bc-radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all var(--bc-duration-fast) var(--bc-ease);
+}
+
+.bc-btn-glass:hover {
+  background: var(--bc-btn-glass-hover);
+  border-color: var(--bc-border-strong);
+}
+
+/* 8. BC Design Custom Toggle Switch */
+.bc-toggle {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.bc-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.bc-toggle-slider {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--bc-bg-muted);
+  border: 1px solid var(--bc-border-strong);
+  border-radius: 24px;
+  transition: background-color var(--bc-duration-fast) var(--bc-ease);
+}
+
+.bc-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform var(--bc-duration-fast) var(--bc-ease);
+}
+
+.bc-toggle input:checked + .bc-toggle-slider {
+  background-color: var(--bc-accent);
+  border-color: var(--bc-accent);
+}
+
+.bc-toggle input:checked + .bc-toggle-slider:before {
+  transform: translateX(20px);
+}
+
+/* 9. Miniature macOS Window Chrome */
+.bc-mac-chrome {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--bc-bg-muted);
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  border-bottom: 1px solid var(--bc-border);
+}
+
+.mac-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.mac-dot-red { background-color: #FF5F56; }
+.mac-dot-yellow { background-color: #FFBD2E; }
+.mac-dot-green { background-color: #27C93F; }
+
+/* 10. Role / Category Grid Cards */
+.bc-role-card {
+  background: var(--bc-surface);
+  border: 1px solid var(--bc-border);
+  border-radius: var(--bc-radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all var(--bc-duration-fast) var(--bc-ease);
+  position: relative;
+}
+
+.bc-role-card:hover {
+  background: var(--bc-surface-hover);
+  border-color: var(--bc-border-strong);
+  transform: translateY(-1px);
+}
+
+.bc-role-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--bc-radius-md);
+  background: var(--bc-bg-subtle);
+  border: 1px solid var(--bc-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bc-badge-blue {
+  background: var(--bc-badge-blue-bg);
+  color: var(--bc-badge-blue-text);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--bc-radius-full);
+}
+
+/* 11. Light Mode Earth Pastel Thumbnails (Screenshot 1 & 2) */
+.bc-thumb-sage {
+  background-color: var(--bc-pastel-sage);
+  border-radius: var(--bc-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bc-thumb-peach {
+  background-color: var(--bc-pastel-peach);
+  border-radius: var(--bc-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Active Highlighted Course Arrow Button (Solid Black with White Arrow) */
+.bc-circle-btn-dark {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #1F1E1B;
+  color: #FFFFFF;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--bc-duration-fast) var(--bc-ease);
+}
+
+.bc-circle-btn-dark:hover {
+  background: #383530;
+  transform: scale(1.04);
+}
+
+/* 12. Artifact "Tweaks" Badge & Terracotta Popover (Screenshot 5) */
+.bc-badge-terracotta {
+  background: var(--bc-accent);
+  color: var(--bc-text-on-accent);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: var(--bc-radius-md);
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.bc-badge-terracotta:hover {
+  background: var(--bc-accent-hover);
+}
+
+.bc-popover-box {
+  background: var(--bc-surface);
+  border: 1px solid var(--bc-border);
+  border-radius: var(--bc-radius-lg);
+  padding: 16px 20px;
+  box-shadow: var(--bc-shadow-md);
+  max-width: 440px;
+}
+
+.bc-input-terracotta {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--bc-accent);
+  border-radius: var(--bc-radius-md);
+  font-size: 14.5px;
+  color: var(--bc-text-primary);
+  background: var(--bc-surface);
+  outline: none;
+  font-family: inherit;
+  box-shadow: 0 0 0 2px rgba(217, 119, 87, 0.15);
+}
+
+.bc-btn-terracotta {
+  background: var(--bc-accent);
+  color: var(--bc-text-on-accent);
+  border: none;
+  padding: 8px 18px;
+  border-radius: var(--bc-radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--bc-duration-fast) var(--bc-ease);
+}
+
+.bc-btn-terracotta:hover {
+  background: var(--bc-accent-hover);
+}
+
+/* Respect user motion preferences across every BC utility. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

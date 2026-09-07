@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-08-13",
+  "counts": {
+    "styles": {
+      "total": 88,
+      "searchable": 79,
+      "active": 50,
+      "supplemental": 29,
+      "deprecated": 9
+    },
+    "products": 192,
+    "palettes": 192,
+    "reasoningProfiles": 192,
+    "fontPairings": 74,
+    "googleFonts": 1934,
+    "curatedIcons": 105,
+    "upstreamPhosphorIcons": 1512,
+    "uxGuidelines": 119,
+    "motionPresets": 17,
+    "chartTypes": 25,
+    "stacks": 22,
+    "stackGuidelines": 1260
+  },
+  "snapshots": {
+    "google-fonts.csv": {
+      "sha256": "1c8c3b2ea1faf6a1012da463756def8b3889db33f2226f0343bb4daa80307d03"
+    },
+    "google-font-licenses.json": {
+      "sha256": "35688523f2955795caa1a47c53b83099e60c1708461476f9cc3a050cf3b0148a"
+    },
+    "icons.csv": {
+      "sha256": "50816c6012030178195a16ee481ebf58b47bd985d70e8ec58886cc83f6eddafc"
+    },
+    "phosphor-icons-upstream.json": {
+      "sha256": "2399325233b277b5c97a80e6a5e8941154f5d057beee4e7613db87c87d700236"
+    }
+  },
+  "promotionPolicy": {
+    "changedFamilySetRequiresExplicitApproval": true,
+    "relevanceGateRequired": true,
+    "unlicensedFamiliesExcluded": true
+  },
+  "pendingCandidates": [
+    {
+      "family": "Edu NSW ACT Cursive",
+      "reason": "No exact-family METADATA.pb entry in the official google/fonts repository snapshot"
+    },
+    {
+      "family": "Edu NSW ACT Hand Pre",
+      "reason": "No exact-family METADATA.pb entry in the official google/fonts repository snapshot"
+    },
+    {
+      "family": "Edu QLD Hand",
+      "reason": "No exact-family METADATA.pb entry in the official google/fonts repository snapshot"
+    },
+    {
+      "family": "Edu SA Hand",
+      "reason": "No exact-family METADATA.pb entry in the official google/fonts repository snapshot"
+    },
+    {
+      "family": "Edu VIC WA NT Hand",
+      "reason": "No exact-family METADATA.pb entry in the official google/fonts repository snapshot"
+    },
+    {
+      "family": "Edu VIC WA NT Hand Pre",
+      "reason": "No exact-family METADATA.pb entry in the official google/fonts repository snapshot"
+    },
+    {
+      "family": "Google Sans",
+      "reason": "No exact-family METADATA.pb entry in the official google/fonts repository snapshot"
+    },
+    {
+      "family": "Google Sans Flex",
+      "reason": "No exact-family METADATA.pb entry in the official google/fonts repository snapshot"
+    }
+  ],
+  "alignment": {
+    "policyVersion": 1,
+    "totals": {
+      "compatible": 1494,
+      "conditional": 74,
+      "core": 194,
+      "excluded": 13
+    },
+    "files": {
+      "styles.csv": {
+        "compatible": 3,
+        "conditional": 45,
+        "core": 32,
+        "excluded": 8
+      },
+      "colors.csv": {
+        "compatible": 163,
+        "conditional": 2,
+        "core": 27
+      },
+      "typography.csv": {
+        "compatible": 3,
+        "conditional": 8,
+        "core": 63
+      },
+      "ux-guidelines.csv": {
+        "compatible": 108,
+        "conditional": 2,
+        "core": 6,
+        "excluded": 3
+      },
+      "charts.csv": {
+        "conditional": 7,
+        "core": 16,
+        "excluded": 2
+      },
+      "motion.csv": {
+        "compatible": 12,
+        "conditional": 5
+      },
+      "stacks/angular.csv": {
+        "compatible": 50
+      },
+      "stacks/astro.csv": {
+        "compatible": 52,
+        "core": 1
+      },
+      "stacks/avalonia.csv": {
+        "compatible": 54,
+        "core": 2
+      },
+      "stacks/flutter.csv": {
+        "compatible": 50,
+        "core": 2
+      },
+      "stacks/html-tailwind.csv": {
+        "compatible": 56,
+        "core": 3
+      },
+      "stacks/javafx.csv": {
+        "compatible": 66,
+        "core": 9
+      },
+      "stacks/jetpack-compose.csv": {
+        "compatible": 50,
+        "core": 2
+      },
+      "stacks/laravel.csv": {
+        "compatible": 50
+      },
+      "stacks/nextjs.csv": {
+        "compatible": 60
+      },
+      "stacks/nuxt-ui.csv": {
+        "compatible": 65,
+        "conditional": 1,
+        "core": 4
+      },
+      "stacks/nuxtjs.csv": {
+        "compatible": 67
+      },
+      "stacks/react-native.csv": {
+        "compatible": 50,
+        "core": 1
+      },
+      "stacks/react.csv": {
+        "compatible": 59,
+        "core": 2
+      },
+      "stacks/shadcn.csv": {
+        "compatible": 57,
+        "core": 11
+      },
+      "stacks/svelte.csv": {
+        "compatible": 53,
+        "core": 2
+      },
+      "stacks/swiftui.csv": {
+        "compatible": 49,
+        "core": 1
+      },
+      "stacks/threejs.csv": {
+        "compatible": 48,
+        "conditional": 4,
+        "core": 1
+      },
+      "stacks/uno.csv": {
+        "compatible": 58,
+        "core": 1
+      },
+      "stacks/uwp.csv": {
+        "compatible": 53,
+        "core": 2
+      },
+      "stacks/vue.csv": {
+        "compatible": 48,
+        "core": 1
+      },
+      "stacks/winui.csv": {
+        "compatible": 56,
+        "core": 3
+      },
+      "stacks/wpf.csv": {
+        "compatible": 54,
+        "core": 2
+      }
+    }
+  }
+}

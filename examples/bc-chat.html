@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BC Design Workspace & Artifacts Demo</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../.agents/skills/bc-design/references/tokens.css" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bc-bg);
+      color: var(--bc-text-primary);
+      font-family: var(--bc-font-sans);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: background-color var(--bc-duration-normal) var(--bc-ease),
+                  color var(--bc-duration-normal) var(--bc-ease);
+    }
+
+    /* Header */
+    header {
+      height: 56px;
+      border-bottom: 1px solid var(--bc-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: var(--bc-surface);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--bc-font-serif);
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .brand svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .theme-btn {
+      background: var(--bc-bg-subtle);
+      border: 1px solid var(--bc-border);
+      color: var(--bc-text-secondary);
+      padding: 6px 12px;
+      border-radius: var(--bc-radius-full);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* Workspace Layout */
+    .workspace {
+      flex: 1;
+      display: flex;
+      height: calc(100vh - 56px);
+      position: relative;
+    }
+
+    /* Chat Section */
+    .chat-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+    }
+
+    .messages-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px 24px 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      max-width: 780px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .message {
+      display: flex;
+      gap: 16px;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--bc-radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .avatar-bc {
+      background: var(--bc-accent-subtle);
+      border: 1px solid var(--bc-accent-border);
+    }
+
+    .avatar-bc svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .avatar-user {
+      background: var(--bc-bg-muted);
+      color: var(--bc-text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .bubble {
+      flex: 1;
+    }
+
+    .sender-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: var(--bc-text-primary);
+    }
+
+    .message-text {
+      color: var(--bc-text-primary);
+    }
+
+    /* Thinking State Pill */
+    .thinking-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: var(--bc-accent-subtle);
+      border: 1px solid var(--bc-accent-border);
+      border-radius: var(--bc-radius-full);
+      font-size: 13px;
+      color: var(--bc-accent);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--bc-accent);
+    }
+
+    /* Artifact Snippet Card */
+    .artifact-card {
+      margin-top: 14px;
+      border: 1px solid var(--bc-border-strong);
+      border-radius: var(--bc-radius-lg);
+      background: var(--bc-surface);
+      overflow: hidden;
+      box-shadow: var(--bc-shadow-sm);
+    }
+
+    .artifact-header {
+      background: var(--bc-bg-subtle);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--bc-border);
+      font-size: 13px;
+    }
+
+    .artifact-title {
+      font-weight: 600;
+      color: var(--bc-text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-open-artifact {
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      padding: 4px 10px;
+      border-radius: var(--bc-radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--bc-accent);
+    }
+
+    /* Floating Prompt Container */
+    .prompt-wrapper {
+      position: absolute;
+      bottom: 24px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      padding: 0 24px;
+    }
+
+    .prompt-box {
+      width: 100%;
+      max-width: 780px;
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border-strong);
+      border-radius: var(--bc-radius-xl);
+      padding: 14px 18px 10px;
+      box-shadow: var(--bc-shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .prompt-textarea {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      resize: none;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--bc-text-primary);
+      max-height: 120px;
+    }
+
+    .prompt-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 4px;
+    }
+
+    .model-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bc-bg-subtle);
+      border: 1px solid var(--bc-border);
+      padding: 4px 10px;
+      border-radius: var(--bc-radius-full);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--bc-text-secondary);
+    }
+
+    .btn-send {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bc-accent);
+      color: #FFFFFF;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .btn-send:hover {
+      background: var(--bc-accent-hover);
+      transform: scale(1.04);
+    }
+
+    /* Artifacts Split Panel (Drawer) */
+    .artifact-drawer {
+      width: 480px;
+      border-left: 1px solid var(--bc-border);
+      background: var(--bc-surface);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-shadow: var(--bc-shadow-md);
+      animation: bcDrawerIn var(--bc-duration-slow) var(--bc-ease);
+    }
+
+    .drawer-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--bc-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .drawer-tabs {
+      display: flex;
+      gap: 6px;
+      background: var(--bc-bg-subtle);
+      padding: 3px;
+      border-radius: var(--bc-radius-md);
+    }
+
+    .tab-btn {
+      padding: 4px 12px;
+      border: none;
+      background: transparent;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: var(--bc-radius-sm);
+      cursor: pointer;
+      color: var(--bc-text-secondary);
+    }
+
+    .tab-btn.active {
+      background: var(--bc-surface);
+      color: var(--bc-text-primary);
+      box-shadow: var(--bc-shadow-sm);
+    }
+
+    .drawer-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      font-family: var(--bc-font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      background: var(--bc-bg);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="#D97757"/>
+      </svg>
+      BC Design Studio
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()">🌙 Toggle Theme</button>
+  </header>
+
+  <div class="workspace">
+    <!-- Chat Stream -->
+    <section class="chat-section">
+      <div class="messages-container">
+        <!-- User Message -->
+        <div class="message">
+          <div class="avatar avatar-user">U</div>
+          <div class="bubble">
+            <div class="sender-name">You</div>
+            <div class="message-text">Show me how BC Design renders a thought process and an interactive artifact.</div>
+          </div>
+        </div>
+
+        <!-- BC Design Response -->
+        <div class="message">
+          <div class="avatar avatar-bc">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="#D97757"/>
+            </svg>
+          </div>
+          <div class="bubble">
+            <div class="sender-name">BC Design</div>
+            
+            <!-- Thinking Pulse -->
+            <div class="thinking-pill bc-thinking">
+              <span class="pulse-dot"></span>
+              Thought for 4 seconds
+            </div>
+
+            <div class="message-text">
+              Certainly! Here is an example of the warm, literary tone paired with an interactive split-screen Artifact drawer on the right.
+            </div>
+
+            <!-- Artifact Preview Card -->
+            <div class="artifact-card">
+              <div class="artifact-header">
+                <span class="artifact-title">BCDesignTokens.tsx</span>
+                <button class="btn-open-artifact" onclick="toggleDrawer()">View artifact</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prompt Input Container -->
+      <div class="prompt-wrapper">
+        <div class="prompt-box">
+          <textarea class="prompt-textarea" placeholder="Reply to BC Design..." rows="2"></textarea>
+          <div class="prompt-toolbar">
+            <div class="model-badge">
+              BC Design, Current model
+            </div>
+            <button class="btn-send bc-interactive" aria-label="Send">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Artifacts Drawer (Split Screen) -->
+    <aside class="artifact-drawer" id="artifactDrawer">
+      <div class="drawer-header">
+        <div class="drawer-tabs">
+          <button class="tab-btn active">Code</button>
+          <button class="tab-btn">Preview</button>
+        </div>
+        <button class="theme-btn" style="padding: 2px 8px;" onclick="toggleDrawer()">✕ Close</button>
+      </div>
+      <div class="drawer-content">
+<pre><code>// BC Design Tokens
+export const tokens = {
+  canvas: "#FAF9F5",
+  accent: "#D97757",
+  ink: "#1F1E1B",
+  easing: "cubic-bezier(0.16, 1, 0.3, 1)"
+};</code></pre>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'light';
+      html.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
+    }
+
+    function toggleDrawer() {
+      const drawer = document.getElementById('artifactDrawer');
+      drawer.style.display = drawer.style.display === 'none' ? 'flex' : 'none';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+[
+  {"name": "greenfield", "query": "design a calm independent school landing page", "must_include": ["Newsreader", "Inter"], "must_exclude": ["Warm Editorial Glass", "BC Design Bento Grid"]},
+  {"name": "redesign", "query": "redesign this fintech dashboard", "must_include": ["BC DESIGN SYSTEM"], "must_exclude": ["neon"]},
+  {"name": "restyling", "query": "restyle a patient portal with neutral editorial hierarchy", "must_include": ["Healthcare"], "must_exclude": ["Glass"]},
+  {"name": "quality-audit", "query": "audit this interface for accessibility and responsive quality", "mode": "audit"},
+  {"name": "distinctive-review", "query": "review this AI-generated interface for generic patterns", "mode": "audit"},
+  {"name": "explicit-conditional", "query": "use claymorphism for a playful game", "domain": "style", "must_include": ["conditional"]},
+  {"name": "conflicting-request", "query": "use neon glassmorphism with low contrast", "domain": "style", "must_include": ["Found: 0"]}
+]

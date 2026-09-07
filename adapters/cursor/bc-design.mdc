@@ -1,0 +1,35 @@
+---
+description: Applies the BC Design System (warm parchment, terracotta accents, literary serif typography, and calm motion curves)
+globs: *.html, *.jsx, *.tsx, *.vue, *.svelte, *.css, *.scss, *.swift, *.dart
+alwaysApply: false
+---
+
+# BC Design System (Cursor Rule Adapter)
+
+When designing, styling, or scaffolding user interfaces in this project, adhere strictly to the **BC Design language and component guidance**:
+
+1. **Aesthetic Tone**: Warm, literary, editorial, calm, and humanistic.
+2. **Primary Palette**:
+   - Canvas: Warm parchment `#FAF9F5` (Dark mode: `#181816` espresso).
+   - Primary Accent: Terracotta `#D97757` (Active: `#C15F3E`).
+   - Dark Modal CTA: Solid White `#FFFFFF` with dark text.
+   - Text: Warm ink `#1F1E1B` & muted stone `#6B6760`.
+   - Borders: Delicate warm hairline `rgba(31, 30, 27, 0.08)`.
+3. **Typography**:
+   - Headings: Serif (`Newsreader`, `Georgia`).
+   - Body / UI: Clean sans (`Inter`, system-ui).
+4. **Motion**:
+   - Signature easing: `cubic-bezier(0.16, 1, 0.3, 1)`.
+   - Micro-press: `active:scale-[0.985]`.
+   - Never animate container width/height while AI tokens stream!
+
+Full design tokens, curated styles, palettes, landing patterns, and component blueprints are located at:
+`@.agents/skills/bc-design/SKILL.md`
+`@.agents/skills/bc-design/references/styles.md`
+`@.agents/skills/bc-design/references/palettes.md`
+`@.agents/skills/bc-design/references/typography.md`
+`@.agents/skills/bc-design/references/charts.md`
+`@.agents/skills/bc-design/references/landing-patterns.md`
+`@.agents/skills/bc-design/references/ux-guidelines.md`
+`@.agents/skills/bc-design/references/tokens.css`
+`@.agents/skills/bc-design/references/components.md`

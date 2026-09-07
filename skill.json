@@ -1,0 +1,27 @@
+{
+  "name": "bc-design",
+  "displayName": "BC Design",
+  "description": "Design intelligence for subject-grounded interfaces, design systems, styling, motion, and evidence-backed quality reviews.",
+  "version": "1.0.0",
+  "license": "MIT",
+  "skills": [
+    "bc-design",
+    "bc-brand",
+    "bc-design-system",
+    "bc-ui-styling",
+    "bc-design-audit",
+    "bc-motion"
+  ],
+  "catalogs": {
+    "styles": 88,
+    "palettes": 192,
+    "typographyPairings": 74,
+    "uxGuidelines": 119,
+    "charts": 25,
+    "motionGuidance": 17,
+    "stackCatalogs": 22,
+    "focusedStackGuides": 8
+  },
+  "entrypoint": ".agents/skills/bc-design/SKILL.md",
+  "install": "python scripts/install.py --ai {{runtime}}"
+}

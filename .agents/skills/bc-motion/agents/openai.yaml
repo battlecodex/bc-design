@@ -1,0 +1,4 @@
+interface:
+  display_name: "BC Motion"
+  short_description: "Design accessible motion, loading, overlays, and streamed states"
+  default_prompt: "Use $bc-motion to define and verify purposeful interface motion and reduced-motion behavior."
