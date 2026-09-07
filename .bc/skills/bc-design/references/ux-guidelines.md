@@ -55,11 +55,12 @@ Always respect user accessibility preferences:
   * Heading / Primary Text (`#1F1E1B`): **15.82:1** (Exceeds WCAG AAA).
   * Body Secondary Text (`#6B6760`): **5.34:1** (Exceeds WCAG AA).
   * Terracotta Accent (`#D97757`): **2.96:1** against parchment; do not use it for normal text.
-  * Terracotta Button Text (`#1F1E1B` on `#D97757`): **5.34:1** (WCAG AA).
+  * Primary Action CTA (`.bc-btn-contrast` `#1F1E1B` with `#FFFFFF` text): **15.82:1** (canonical high-contrast standard).
+  * Accent Terracotta Button Text (`#FFFFFF` on `#D97757`): **3.12:1** (Meets WCAG AA for bold CTA text >= 14px bold; hover `#C15F3E` reaches **4.22:1**). Avoid dark ink text on mid-tone accent buttons to prevent chromatic clash.
 * **Espresso Soot Dark Mode (`#181816`)**:
   * Heading / Primary Text (`#FAF9F5`): **16.88:1** (Exceeds WCAG AAA).
   * Body Secondary Text (`#A39E93`): **6.66:1** (Exceeds WCAG AA).
-  * Modal Primary Button (`#FFFFFF` on `#181816`): **16.88:1** (Crisp high-contrast).
+  * Primary Action Button (`#FFFFFF` on `#181816`): **16.88:1** (Crisp high-contrast).
 
 ### Focus Rings
 Never strip focus rings without a high-visibility accessible replacement:

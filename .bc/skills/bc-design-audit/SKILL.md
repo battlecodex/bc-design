@@ -9,8 +9,8 @@ Use this skill to inspect before changing. Choose one explicit mode so a usabili
 
 ## Modes
 
-- **Quality:** accessibility, interaction, responsive behavior, performance/CLS, typography, forms, navigation, states, and motion.
-- **Distinctive:** subject fit, generic template patterns, hierarchy monotony, decorative filler, copy, and unearned visual effects.
+- **Quality:** accessibility, interaction, responsive behavior, performance/CLS, typography, forms, navigation, states, motion, and 3D spatial safety (canvas pointer pass-through, mobile DPR capping, and WebGL lifecycle teardown).
+- **Distinctive:** subject fit, authentic physical metaphors vs generic gimmicks, hierarchy monotony, decorative filler, copy, and unearned visual effects.
 
 ## Workflow
 

@@ -259,6 +259,19 @@ class BCDesignTests(unittest.TestCase):
             [],
         )
 
+    def test_audit_flags_uncapped_spatial_pixel_ratio(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            bad = Path(tempdir) / "bad.html"
+            bad.write_text("<script>renderer.setPixelRatio(window.devicePixelRatio);</script>", encoding="utf-8")
+            violations = MODULE.audit_target(bad)
+            self.assertTrue(any(r[0] == "spatial-uncapped-pixel-ratio" for r in violations))
+
+            good = Path(tempdir) / "good.html"
+            good.write_text("<script>renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));</script>", encoding="utf-8")
+            good_violations = MODULE.audit_target(good)
+            self.assertFalse(any(r[0] == "spatial-uncapped-pixel-ratio" for r in good_violations))
+
+
     def test_school_query_uses_education_catalog_context(self):
         card, data = MODULE.generate_design_system("school education kindergarten")
         self.assertNotIn("AI & SaaS Productivity", card)
@@ -269,16 +282,24 @@ class BCDesignTests(unittest.TestCase):
         _card, data = MODULE.generate_design_system("Build a fintech wealth management dashboard")
         self.assertEqual(data.get("catalog_product"), "Financial Dashboard")
 
-    def test_canonical_contrast_guidance_does_not_claim_unsafe_white_accent_text(self):
+    def test_canonical_contrast_guidance_and_audit_rules(self):
         tokens = (SKILL_ROOT / "references" / "tokens.css").read_text(encoding="utf-8")
         ux = (SKILL_ROOT / "references" / "ux-guidelines.md").read_text(encoding="utf-8")
         rules = (SKILL_ROOT / "references" / "bc-design-rules.md").read_text(encoding="utf-8")
-        self.assertIn("--bc-text-on-accent: #1F1E1B", tokens)
+        self.assertIn("--bc-text-on-accent: #FFFFFF", tokens)
         self.assertNotIn("pair with white text `#FFFFFF` at **4.6:1**", ux)
         self.assertNotIn("STATUS: ALL CHECKS PASSED", rules)
         self.assertNotIn("✦ BC Design · Current model", rules)
         self.assertLess(MODULE.compute_contrast("#FFFFFF", "#D97757"), 4.5)
-        self.assertGreaterEqual(MODULE.compute_contrast("#1F1E1B", "#D97757"), 4.5)
+        self.assertGreaterEqual(MODULE.compute_contrast("#1F1E1B", "#FAF9F5"), 4.5)
+        # Verify the audit detects muddy dark text on accent buttons
+        bad_button = ".btn { background: var(--bc-accent); color: #1F1E1B; }"
+        violations = MODULE.find_audit_violations(bad_button, "bad.css")
+        self.assertTrue(any(rule_id == "accent-button-text-contrast" for rule_id, _, _ in violations))
+        # Verify crisp white text on accent passes
+        good_button = ".btn { background: var(--bc-accent); color: #FFFFFF; }"
+        good_violations = MODULE.find_audit_violations(good_button, "good.css")
+        self.assertFalse(any(rule_id == "accent-button-text-contrast" for rule_id, _, _ in good_violations))
 
     def test_all_bundled_examples_pass_the_source_audit(self):
         self.assertEqual(MODULE.audit_target(ROOT / "examples"), [])

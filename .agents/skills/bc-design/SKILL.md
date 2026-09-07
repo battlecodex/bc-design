@@ -14,7 +14,7 @@ BC Design has a recognizable editorial language, not a mandatory theme. Start fr
 - **Composition:** use clear editorial hierarchy, open space, hairline borders, restrained radii, and a mix of open groups, lists, and anchored panels. Avoid turning every section into a rounded card.
 - **Color:** begin with warm or true neutral canvases and high-contrast ink. Draw one or two restrained accents from the subject. Parchment, terracotta, sage, and black are options—not automatic requirements—and an accent must not become a large default surface without evidence.
 - **Typography:** default to Newsreader for editorial hierarchy and Inter for UI clarity. Change the pairing when brand evidence or the product context calls for it; reserve monospace for code and tabular values.
-- **Contrast:** use tested foreground/background pairs. Dark-mode primary actions may use solid white `#FFFFFF` with `#1F1E1B` text.
+- **Contrast:** use tested foreground/background pairs grounded in the canonical high-contrast standard: primary actions default to solid ink `.bc-btn-contrast` (`#1F1E1B` with `#FFFFFF` text in light mode, `#FFFFFF` with `#1F1E1B` text in dark mode); accent/terracotta buttons use crisp white `#FFFFFF` text, never muddy dark ink.
 - **Motion:** use `cubic-bezier(0.16, 1, 0.3, 1)` with a 150–250ms budget for ordinary interactions. Honor reduced motion.
 - **Streaming:** never animate container width, height, margin, or padding while AI text streams.
 - **Icons:** use 1.5px monoline icons, preferably Lucide, with visible focus states.
@@ -23,6 +23,7 @@ BC Design has a recognizable editorial language, not a mandatory theme. Start fr
 
 These are non-optional defaults for every BC Design implementation. Treat a deviation as a finding unless the user explicitly requests it and the design contract records the reason:
 
+- Primary action buttons follow the canonical high-contrast standard (`.bc-btn-contrast` or crisp `#FFFFFF` text on accent); never pair dark ink text on mid-tone accent/terracotta buttons.
 - Write metadata as labels or separate lines; do not use middle-dot separators (`A · B`).
 - Use meaningful action labels; do not append Unicode arrows to links or buttons.
 - Use purposeful 1.5px monoline SVG icons instead of Unicode glyphs for interface symbols.
@@ -65,6 +66,7 @@ Keep `bc-design` as the entrypoint for mixed or ambiguous requests. Sibling skil
 - Read [references/visual-language.md](./references/visual-language.md) when selecting typography, palette, shape, illustration, or layout direction.
 - Read [references/catalog-alignment.md](./references/catalog-alignment.md) when a catalog search or generated direction needs compatibility classification; automatic output is limited to `core` and `compatible` entries.
 - Read [references/ux-guidelines.md](./references/ux-guidelines.md) for accessibility, forms, motion, loading, and layout checks.
+- Read [references/spatial-3d.md](./references/spatial-3d.md) when building 3D product visualizations, scroll-driven exploded views, or interactive spatial artifacts.
 - Read the relevant guide in `stacks/` when implementing React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, or Tailwind.
 - Use [references/tokens.css](./references/tokens.css) as the canonical semantic token layer.
 
@@ -106,6 +108,13 @@ python .agents/skills/bc-design/scripts/bc_design.py "luxury editorial" --domain
 python .agents/skills/bc-design/scripts/bc_design.py "drawer reveal" --domain motion
 python .agents/skills/bc-design/scripts/bc_design.py "navigation" --domain icons
 python .agents/skills/bc-design/scripts/bc_design.py "editorial serif" --domain google-fonts
+python .agents/skills/bc-design/scripts/bc_design.py "school academy 3d" --domain spatial
+
+# Generate 3D spatial artifacts and scrollytelling stages
+python .agents/skills/bc-design/scripts/bc_design.py --spatial list
+python .agents/skills/bc-design/scripts/bc_design.py --spatial school-spatial --spatial-theme light -o examples/school-preview.html
+python .agents/skills/bc-design/scripts/bc_design.py --spatial ribbon-field --spatial-palette terracotta -o examples/ribbon.html
+python .agents/skills/bc-design/scripts/bc_design.py --spatial spatial-scrollytelling --spatial-theme dark -o examples/scrolly.html
 
 # Read a framework guide
 python .agents/skills/bc-design/scripts/bc_design.py --stack react

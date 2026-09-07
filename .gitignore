@@ -5,7 +5,8 @@ __pycache__/
 .coverage
 htmlcov/
 full-test.log
-dist/*.zip
+dist/
+*.zip
 docs/
 design-system/
 .DS_Store

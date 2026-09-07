@@ -4,7 +4,6 @@ import subprocess
 import sys
 import tempfile
 import unittest
-import zipfile
 from pathlib import Path
 
 import yaml
@@ -25,33 +24,20 @@ SKILLS = (
 
 
 class ProductionReadinessTests(unittest.TestCase):
-    def test_packager_derives_catalog_metrics_from_normalized_report(self):
-        from scripts import package as packager
+    def test_validator_derives_catalog_metrics_including_spatial(self):
+        from scripts import validate as validator
 
-        with tempfile.TemporaryDirectory() as tempdir:
-            manifest_path = Path(tempdir) / "skill.json"
-            manifest_path.write_text(json.dumps({"catalogs": {"styles": 0}}), encoding="utf-8")
-            updated = packager.sync_manifest_catalogs(manifest_path)
-        self.assertEqual(updated["catalogs"]["styles"], 88)
-        self.assertEqual(updated["catalogs"]["stackCatalogs"], 22)
+        metrics = validator.computed_catalog_metrics()
+        self.assertEqual(metrics["styles"], 88)
+        self.assertEqual(metrics["stackCatalogs"], 22)
+        self.assertEqual(metrics["spatialEffects"], 31)
+        self.assertEqual(metrics["spatialGenerators"], 5)
 
-    def test_release_archive_excludes_local_and_cache_artifacts(self):
-        with tempfile.TemporaryDirectory() as tempdir:
-            archive = Path(tempdir) / "bc-design.zip"
-            subprocess.run(
-                [sys.executable, str(ROOT / "scripts" / "package.py"), "--output", str(archive)],
-                cwd=ROOT,
-                check=True,
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-            )
-            with zipfile.ZipFile(archive) as bundle:
-                names = bundle.namelist()
-            self.assertIn("bc-design/skill.json", names)
-            self.assertIn("bc-design/.agents/skills/bc-design/SKILL.md", names)
-            self.assertFalse(any("__pycache__" in name or name.endswith(".pyc") for name in names))
-            self.assertFalse(any(name.startswith("bc-design/design-system/") for name in names))
+    def test_no_binary_archives_or_untracked_zip_files_in_repo(self):
+        from scripts import validate as validator
+
+        errors = validator.validate_prohibited_artifacts()
+        self.assertEqual(errors, [])
 
     def test_every_skill_has_valid_codex_ui_metadata(self):
         for name in SKILLS:
@@ -71,6 +57,17 @@ class ProductionReadinessTests(unittest.TestCase):
         self.assertRegex(manifest["version"], r"^\d+\.\d+\.\d+$")
         self.assertEqual(list(SKILLS), manifest["skills"])
         self.assertEqual("MIT", manifest["license"])
+
+    def test_manifest_spatial_contract_matches_runtime(self):
+        from scripts import validate as validator
+        from spatial import SPATIAL_GENERATOR_PRESETS, SPATIAL_PRESET_ALIASES
+
+        manifest = json.loads((ROOT / "skill.json").read_text(encoding="utf-8"))
+        spatial = manifest["spatial"]
+        self.assertEqual(list(SPATIAL_GENERATOR_PRESETS), spatial["generators"])
+        self.assertEqual(SPATIAL_PRESET_ALIASES, spatial["aliases"])
+        self.assertEqual(len(SPATIAL_GENERATOR_PRESETS), manifest["catalogs"]["spatialGenerators"])
+        self.assertEqual(validator.computed_catalog_metrics()["spatialEffects"], spatial["effectsCount"])
 
     def test_readme_catalog_counts_match_bundled_data(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
@@ -122,6 +119,39 @@ class ProductionReadinessTests(unittest.TestCase):
                 if path.is_file() and path.suffix != ".pyc"
             }
             self.assertEqual(left, right, name)
+
+    def test_validator_detects_extra_mirror_files(self):
+        from scripts import validate as validator
+
+        with tempfile.TemporaryDirectory() as tempdir:
+            root = Path(tempdir)
+            canonical = root / ".agents" / "skills"
+            mirror = root / ".bc" / "skills"
+            (canonical / "bc-design").mkdir(parents=True)
+            (mirror / "bc-design").mkdir(parents=True)
+            (canonical / "bc-design" / "SKILL.md").write_text("same", encoding="utf-8")
+            (mirror / "bc-design" / "SKILL.md").write_text("same", encoding="utf-8")
+            (mirror / "bc-design" / "stale.md").write_text("stale", encoding="utf-8")
+            original_root = validator.ROOT
+            try:
+                validator.ROOT = root
+                self.assertTrue(any("stale.md" in error for error in validator.validate_mirror_parity()))
+            finally:
+                validator.ROOT = original_root
+
+    def test_validator_detects_nested_zip_artifacts(self):
+        from scripts import validate as validator
+
+        with tempfile.TemporaryDirectory() as tempdir:
+            root = Path(tempdir)
+            (root / "examples" / "nested").mkdir(parents=True)
+            (root / "examples" / "nested" / "backup.zip").write_bytes(b"not a release")
+            original_root = validator.ROOT
+            try:
+                validator.ROOT = root
+                self.assertTrue(validator.validate_prohibited_artifacts())
+            finally:
+                validator.ROOT = original_root
 
 
 if __name__ == "__main__":

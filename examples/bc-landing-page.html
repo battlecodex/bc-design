@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="BattleCode Studio — A literary humanist intelligence workspace crafted with archival parchment, terracotta accents, and streaming token isolation." />
   <title>BattleCode Studio — Literary Humanist Intelligence</title>
-  
+
   <!-- Google Fonts: Newsreader (Editorial Serif) & Inter (UI Sans) & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  
+
   <!-- Primary Token Reference -->
   <link rel="stylesheet" href="../.agents/skills/bc-design/references/tokens.css" />
 
   <style>
-    /* ========================================================================== 
+    /* ==========================================================================
        Self-Contained BC Design Tokens
        ========================================================================== */
     :root {
@@ -69,7 +69,7 @@
       --bc-text-primary: #F0EFEA;
       --bc-text-secondary: #AAA69D;
       --bc-text-tertiary: #6E6A62;
-      --bc-text-on-accent: #181816;
+      --bc-text-on-accent: #FFFFFF;
       --bc-border: rgba(240, 239, 234, 0.09);
       --bc-border-strong: rgba(240, 239, 234, 0.18);
       --bc-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
@@ -1350,6 +1350,7 @@
         <a href="#studio" class="nav-link">Studio</a>
         <a href="#principles" class="nav-link">Design Pillars</a>
         <a href="#playground" class="nav-link">Capabilities</a>
+        <a href="#suite-hub" class="nav-link">Suite Demos</a>
         <a href="#pricing" class="nav-link">Pricing</a>
         <a href="#faq" class="nav-link">Philosophy</a>
       </nav>
@@ -1363,8 +1364,8 @@
           </svg>
         </button>
 
-        <a href="#" class="btn-secondary">Log in</a>
-        <a href="#studio" class="btn-primary">Get Started</a>
+        <a href="login-page.html" class="btn-secondary">Sign in</a>
+        <a href="bc-chat.html" class="btn-primary">Launch Studio</a>
       </div>
     </div>
   </header>
@@ -1393,20 +1394,27 @@
         </p>
 
         <div class="hero-cta-group">
-          <button id="heroPrimaryBtn" class="btn-terracotta">
-            <span>Start Free Trial</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14"></path>
-              <path d="m12 5 7 7-7 7"></path>
+          <a href="bc-chat.html" class="btn-terracotta" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+            <span>Launch Studio Workspace</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
             </svg>
-          </button>
-          
-          <button id="demoReplayTrigger" class="btn-secondary" style="height:44px; padding:0 18px;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </a>
+
+          <a href="bc-dashboard.html" class="btn-secondary" style="height:44px; padding:0 18px; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
             </svg>
-            <span>Live Stream Demo</span>
-          </button>
+            <span>Executive Dashboard</span>
+          </a>
+
+          <a href="#suite-hub" class="btn-secondary" style="height:44px; padding:0 18px; text-decoration:none; display:inline-flex; align-items:center;">
+            <span>Explore Suite Demos</span>
+          </a>
         </div>
 
         <div class="hero-social-proof">
@@ -1773,6 +1781,95 @@
   </section>
 
   <!-- ==========================================================================
+       Suite Showcase Hub: Complete Working Implementations
+       ========================================================================== -->
+  <section class="section" id="suite-hub" style="border-top: 1px solid var(--bc-border); background: var(--bc-bg-subtle);">
+    <div class="container">
+      <div class="section-header" style="text-align: center;">
+        <span class="section-tag">Production Showcase</span>
+        <h2 class="section-title">Explore the complete BattleCode suite in action.</h2>
+        <p class="section-subtitle" style="margin: 0 auto; max-width: 620px;">
+          Every interface below is a fully functional, audited, subject-grounded application engineered with BC Design tokens and zero layout shifts.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 40px;">
+
+        <!-- App 1: Login Page -->
+        <a href="login-page.html" class="price-card" style="text-decoration: none; color: inherit; justify-content: space-between; padding: 24px;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <span style="font-family: var(--bc-font-mono); font-size: 11px; color: var(--bc-accent); background: var(--bc-accent-subtle); padding: 2px 7px; border-radius: var(--bc-radius-sm); border: 1px solid var(--bc-accent-border);">Authentication</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--bc-text-tertiary);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <h3 style="font-family: var(--bc-font-serif); font-size: 20px; font-weight: 500; margin-bottom: 8px; color: var(--bc-text-primary);">Security & Auth Portal</h3>
+            <p style="font-size: 13.5px; color: var(--bc-text-secondary); line-height: 1.5; margin-bottom: 16px;">
+              Split-screen editorial login, password strength meter, 2FA code entry with resend timer, and Enterprise SSO.
+            </p>
+          </div>
+          <div style="border-top: 1px solid var(--bc-border); padding-top: 12px; font-size: 13px; font-weight: 600; color: var(--bc-accent);">
+            Launch Authentication Portal
+          </div>
+        </a>
+
+        <!-- App 2: AI Chat & Artifacts Studio -->
+        <a href="bc-chat.html" class="price-card" style="text-decoration: none; color: inherit; justify-content: space-between; padding: 24px;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <span style="font-family: var(--bc-font-mono); font-size: 11px; color: var(--bc-accent); background: var(--bc-accent-subtle); padding: 2px 7px; border-radius: var(--bc-radius-sm); border: 1px solid var(--bc-accent-border);">AI Studio</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--bc-text-tertiary);"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            </div>
+            <h3 style="font-family: var(--bc-font-serif); font-size: 20px; font-weight: 500; margin-bottom: 8px; color: var(--bc-text-primary);">AI Chat & Artifacts Studio</h3>
+            <p style="font-size: 13.5px; color: var(--bc-text-secondary); line-height: 1.5; margin-bottom: 16px;">
+              Three-pane workspace with conversation history, expandable thinking steps, streaming simulation, and interactive sidecar drawer.
+            </p>
+          </div>
+          <div style="border-top: 1px solid var(--bc-border); padding-top: 12px; font-size: 13px; font-weight: 600; color: var(--bc-accent);">
+            Launch AI Chat Studio
+          </div>
+        </a>
+
+        <!-- App 3: Executive Dashboard -->
+        <a href="bc-dashboard.html" class="price-card" style="text-decoration: none; color: inherit; justify-content: space-between; padding: 24px;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <span style="font-family: var(--bc-font-mono); font-size: 11px; color: var(--bc-accent); background: var(--bc-accent-subtle); padding: 2px 7px; border-radius: var(--bc-radius-sm); border: 1px solid var(--bc-accent-border);">Operations</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--bc-text-tertiary);"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            </div>
+            <h3 style="font-family: var(--bc-font-serif); font-size: 20px; font-weight: 500; margin-bottom: 8px; color: var(--bc-text-primary);">Executive Dashboard</h3>
+            <p style="font-size: 13.5px; color: var(--bc-text-secondary); line-height: 1.5; margin-bottom: 16px;">
+              KPI monitoring, project manager with create modal, knowledge memory bank, and authentic crayon thought bubble dialog.
+            </p>
+          </div>
+          <div style="border-top: 1px solid var(--bc-border); padding-top: 12px; font-size: 13px; font-weight: 600; color: var(--bc-accent);">
+            Launch Executive Dashboard
+          </div>
+        </a>
+
+        <!-- App 4: Enterprise ERP -->
+        <a href="bc-erp.html" class="price-card" style="text-decoration: none; color: inherit; justify-content: space-between; padding: 24px;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <span style="font-family: var(--bc-font-mono); font-size: 11px; color: var(--bc-accent); background: var(--bc-accent-subtle); padding: 2px 7px; border-radius: var(--bc-radius-sm); border: 1px solid var(--bc-accent-border);">Procurement</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--bc-text-tertiary);"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+            <h3 style="font-family: var(--bc-font-serif); font-size: 20px; font-weight: 500; margin-bottom: 8px; color: var(--bc-text-primary);">Meridian ERP Suite</h3>
+            <p style="font-size: 13.5px; color: var(--bc-text-secondary); line-height: 1.5; margin-bottom: 16px;">
+              Multi-module procurement ledger with dynamic status filtering, batch approvals, slide-over order drawer, and PO creation.
+            </p>
+          </div>
+          <div style="border-top: 1px solid var(--bc-border); padding-top: 12px; font-size: 13px; font-weight: 600; color: var(--bc-accent);">
+            Launch Meridian ERP Suite
+          </div>
+        </a>
+
+
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
        Pricing Section (Clean, Transparent)
        ========================================================================== -->
   <section class="section" id="pricing">
@@ -1818,7 +1915,7 @@
               <span>Parchment & dark soot themes</span>
             </li>
           </ul>
-          <button class="btn-secondary" style="width:100%; justify-content:center;">Get Started Free</button>
+          <a href="login-page.html" class="btn-secondary" style="width:100%; justify-content:center; text-decoration:none;">Create Scholar Account</a>
         </div>
 
         <!-- Tier 2: Pro / Featured -->
@@ -1848,7 +1945,7 @@
               <span>Priority access to bleeding-edge reasoning</span>
             </li>
           </ul>
-          <button class="btn-terracotta" style="width:100%; justify-content:center;">Start 14-Day Free Trial</button>
+          <a href="login-page.html" class="btn-terracotta" style="width:100%; justify-content:center; text-decoration:none;">Start 14-Day Free Trial</a>
         </div>
 
         <!-- Tier 3: Enterprise -->
@@ -2004,16 +2101,16 @@
         Join over 42,000 researchers, writers, and engineers crafting with the BC Design language today.
       </p>
       <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
-        <button class="btn-terracotta" style="height:48px; padding:0 28px; font-size:16px;">
+        <a href="bc-chat.html" class="btn-terracotta" style="height:48px; padding:0 28px; font-size:15px; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
           <span>Launch BattleCode Studio</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M5 12h14"></path>
-            <path d="m12 5 7 7-7 7"></path>
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
           </svg>
-        </button>
-        <button class="btn-secondary" style="height:48px; padding:0 24px; font-size:15px;">
-          <span>Read Documentation</span>
-        </button>
+        </a>
+        <a href="login-page.html" class="btn-secondary" style="height:48px; padding:0 24px; font-size:15px; text-decoration:none; display:inline-flex; align-items:center;">
+          <span>Sign In to Workspace</span>
+        </a>
       </div>
     </div>
   </div>
@@ -2037,22 +2134,22 @@
         </div>
 
         <div class="footer-col">
+          <h5>Suite Examples</h5>
+          <ul>
+            <li><a href="login-page.html">Authentication Portal</a></li>
+            <li><a href="bc-chat.html">AI Studio Workspace</a></li>
+            <li><a href="bc-dashboard.html">Executive Dashboard</a></li>
+            <li><a href="bc-erp.html">Meridian ERP Suite</a></li>
+                      </ul>
+        </div>
+
+        <div class="footer-col">
           <h5>Workspace</h5>
           <ul>
             <li><a href="#studio">Studio Canvas</a></li>
             <li><a href="#playground">Artifacts Sandbox</a></li>
             <li><a href="#principles">Design Tokens</a></li>
             <li><a href="#pricing">Plan Pricing</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h5>Integrations</h5>
-          <ul>
-            <li><a href="#">Cursor MDC Rule</a></li>
-            <li><a href="#">Windsurf Cascade</a></li>
-            <li><a href="#">Google Antigravity</a></li>
-            <li><a href="#">GitHub Copilot</a></li>
           </ul>
         </div>
 
@@ -2137,10 +2234,10 @@
         isStreaming = true;
         streamStatusText.textContent = "Streaming 42 tps";
         streamTarget.innerHTML = '';
-        
+
         let index = 0;
         const words = text.split(' ');
-        
+
         streamInterval = setInterval(() => {
           if (index < words.length) {
             const span = document.createElement('span');

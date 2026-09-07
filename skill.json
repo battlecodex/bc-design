@@ -2,7 +2,7 @@
   "name": "bc-design",
   "displayName": "BC Design",
   "description": "Design intelligence for subject-grounded interfaces, design systems, styling, motion, and evidence-backed quality reviews.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "skills": [
     "bc-design",
@@ -19,8 +19,37 @@
     "uxGuidelines": 119,
     "charts": 25,
     "motionGuidance": 17,
+    "spatialEffects": 31,
+    "spatialGenerators": 5,
     "stackCatalogs": 22,
     "focusedStackGuides": 8
+  },
+  "spatial": {
+    "effectsCount": 31,
+    "generators": [
+      "school-spatial",
+      "erp-spatial",
+      "ribbon-field",
+      "predictive-arc",
+      "spatial-scrollytelling"
+    ],
+    "aliases": {
+      "education-codex": "school-spatial",
+      "school": "school-spatial",
+      "education": "school-spatial",
+      "codex": "school-spatial",
+      "book": "school-spatial",
+      "erp": "erp-spatial",
+      "modular-hub": "erp-spatial",
+      "enterprise": "erp-spatial",
+      "ribbon": "ribbon-field",
+      "field": "ribbon-field",
+      "arc": "predictive-arc",
+      "predictive": "predictive-arc",
+      "spatial-showcase": "spatial-scrollytelling",
+      "showcase": "spatial-scrollytelling",
+      "scrollytelling": "spatial-scrollytelling"
+    }
   },
   "entrypoint": ".agents/skills/bc-design/SKILL.md",
   "install": "python scripts/install.py --ai {{runtime}}"

@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meridian ERP — BC Design Enterprise Resource Planning</title>
-  
-  <!-- Google Fonts: Newsreader (Editorial Serif) & Inter (UI Sans) + JetBrains Mono -->
+  <title>Meridian ERP — Enterprise Resource Planning Suite — BC Design</title>
+
+  <!-- Google Fonts: Newsreader (Editorial Serif), Inter (UI Sans), JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
-  
+
   <link rel="stylesheet" href="../.agents/skills/bc-design/references/tokens.css" />
 
   <style>
@@ -20,33 +20,31 @@
     }
 
     :root {
-      --font-serif: "Newsreader", Georgia, serif;
-      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --font-mono: "JetBrains Mono", monospace;
+      --bc-font-serif: "Newsreader", Georgia, serif;
+      --bc-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --bc-font-mono: "JetBrains Mono", monospace;
     }
 
     body {
       background-color: var(--bc-bg);
       color: var(--bc-text-primary);
-      font-family: var(--font-sans);
+      font-family: var(--bc-font-sans);
       min-height: 100vh;
       line-height: 1.5;
       transition: background-color var(--bc-duration-normal) var(--bc-ease),
                   color var(--bc-duration-normal) var(--bc-ease);
-      padding-bottom: 64px;
+      padding-bottom: 80px;
       overflow-x: hidden;
     }
 
-    /* Focus visible accessibility */
+    /* Accessibility 2px focus ring */
     a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
       outline: 2px solid var(--bc-accent);
       outline-offset: 2px;
     }
 
-    /* ==========================================================================
-       TOP GLOBAL HEADER (Immaculate, Balanced, Non-Wrapping)
-       ========================================================================== */
-    .top-header {
+    /* Top Global Header (Sticky with semantic z-index 30) */
+    .erp-top-header {
       height: 60px;
       padding: 0 28px;
       display: flex;
@@ -61,577 +59,263 @@
       backdrop-filter: blur(8px);
     }
 
-    /* Left: Brand + Entity Switcher */
-    .header-left {
+    .header-zone-brand {
       display: flex;
       align-items: center;
       gap: 16px;
       flex-shrink: 0;
     }
 
-    .brand-logo {
+    .brand-logo-anchor {
       display: flex;
       align-items: center;
       gap: 10px;
       text-decoration: none;
       color: var(--bc-text-primary);
-      flex-shrink: 0;
       white-space: nowrap;
     }
 
-    .brand-logo svg {
-      width: 22px;
-      height: 22px;
+    .brand-logo-anchor svg {
+      width: 24px;
+      height: 24px;
       color: var(--bc-accent);
-      flex-shrink: 0;
     }
 
-    .brand-name {
-      font-family: var(--font-serif);
+    .brand-title-text {
+      font-family: var(--bc-font-serif);
       font-size: 21px;
       font-weight: 500;
       letter-spacing: -0.01em;
-      white-space: nowrap;
     }
 
-    .header-divider {
+    .header-divider-line {
       width: 1px;
       height: 20px;
       background: var(--bc-border);
-      flex-shrink: 0;
     }
 
-    .entity-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    .entity-select {
-      appearance: none;
+    .entity-switcher-wrap select {
       height: 34px;
       background: var(--bc-surface);
       border: 1px solid var(--bc-border);
       color: var(--bc-text-primary);
-      padding: 0 32px 0 12px;
+      padding: 0 12px;
       border-radius: var(--bc-radius-md);
       font-family: inherit;
       font-size: 13px;
       font-weight: 500;
       cursor: pointer;
-      white-space: nowrap;
-      transition: border-color var(--bc-duration-fast) var(--bc-ease),
-                  background var(--bc-duration-fast) var(--bc-ease);
     }
 
-    .entity-select:hover {
-      border-color: var(--bc-border-strong);
-      background: var(--bc-surface-hover);
-    }
-
-    .entity-wrap svg {
-      position: absolute;
-      right: 10px;
-      pointer-events: none;
-      color: var(--bc-text-tertiary);
-      flex-shrink: 0;
-    }
-
-    /* Center: Real Global Search Bar */
-    .header-center {
+    .header-search-bar {
       flex: 1;
       max-width: 440px;
-      min-width: 260px;
+      min-width: 240px;
       display: flex;
       align-items: center;
-      position: relative;
-    }
-
-    .search-input-wrap {
-      width: 100%;
+      gap: 8px;
       height: 36px;
       background: var(--bc-surface);
       border: 1px solid var(--bc-border);
       border-radius: var(--bc-radius-md);
-      display: flex;
-      align-items: center;
       padding: 0 12px;
-      gap: 10px;
-      transition: border-color var(--bc-duration-fast) var(--bc-ease),
-                  box-shadow var(--bc-duration-fast) var(--bc-ease);
     }
 
-    .search-input-wrap:focus-within {
-      border-color: var(--bc-accent);
-      box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.16);
-    }
-
-    .search-icon {
-      color: var(--bc-text-tertiary);
-      flex-shrink: 0;
-    }
-
-    .global-search-input {
-      flex: 1;
+    .header-search-bar input {
       background: transparent;
       border: none;
-      color: var(--bc-text-primary);
       font-family: inherit;
       font-size: 13px;
+      color: var(--bc-text-primary);
+      width: 100%;
       outline: none;
-      white-space: nowrap;
     }
 
-    .global-search-input::placeholder {
-      color: var(--bc-text-tertiary);
-    }
-
-    .search-kbd {
-      background: var(--bc-bg-subtle);
-      border: 1px solid var(--bc-border);
-      color: var(--bc-text-secondary);
-      font-size: 11px;
-      font-family: var(--font-mono);
-      padding: 2px 6px;
-      border-radius: 4px;
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
-
-    /* Right: Status Pill + Theme Toggle + User Avatar */
-    .header-right {
+    .header-actions-cluster {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
       flex-shrink: 0;
     }
 
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      height: 30px;
-      padding: 0 12px;
-      border-radius: var(--bc-radius-full);
-      background: var(--bc-bg-subtle);
-      border: 1px solid var(--bc-border);
-      font-size: 12px;
-      color: var(--bc-text-secondary);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #10B981;
-      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
-      flex-shrink: 0;
-    }
-
-    .theme-toggle-btn {
+    .header-btn {
+      width: 34px;
       height: 34px;
+      border-radius: var(--bc-radius-md);
       background: var(--bc-surface);
       border: 1px solid var(--bc-border);
       color: var(--bc-text-secondary);
-      padding: 0 12px;
-      border-radius: var(--bc-radius-full);
-      font-size: 12.5px;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: inherit;
-      white-space: nowrap;
-      flex-shrink: 0;
-      transition: all var(--bc-duration-fast) var(--bc-ease);
-    }
-
-    .theme-toggle-btn:hover {
-      background: var(--bc-surface-hover);
-      color: var(--bc-text-primary);
-      border-color: var(--bc-border-strong);
-    }
-
-    .user-profile-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: #E09F3E;
-      color: #1F1E1B;
-      font-weight: 600;
-      font-size: 12.5px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(255,255,255,0.25);
       cursor: pointer;
-      flex-shrink: 0;
-      transition: transform var(--bc-duration-fast) var(--bc-ease);
+      transition: background var(--bc-duration-fast) var(--bc-ease);
     }
 
-    .user-profile-btn:hover {
-      transform: scale(1.05);
+    .header-btn:hover {
+      background: var(--bc-surface-hover);
+      color: var(--bc-text-primary);
     }
 
-    /* Sub-Header Fiscal Announcement Bar (Clean breathing space) */
-    .fiscal-notice-strip {
-      background: var(--bc-bg-subtle);
-      border-bottom: 1px solid var(--bc-border);
-      padding: 8px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12.5px;
-      color: var(--bc-text-secondary);
-    }
-
-    .fiscal-notice-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .fiscal-badge {
+    .user-avatar-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--bc-radius-md);
       background: var(--bc-accent-subtle);
-      color: var(--bc-accent);
       border: 1px solid var(--bc-accent-border);
-      padding: 1px 7px;
-      border-radius: var(--bc-radius-sm);
+      color: var(--bc-accent);
       font-weight: 600;
-      font-size: 11px;
-    }
-
-    /* Main Container */
-    .app-layout {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 28px 28px;
-    }
-
-    /* Breadcrumbs & Title Bar */
-    .page-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .breadcrumb {
+      font-size: 13px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 12.5px;
-      color: var(--bc-text-tertiary);
-      margin-bottom: 6px;
+      justify-content: center;
+      cursor: pointer;
     }
 
-    .breadcrumb span.current {
-      color: var(--bc-text-primary);
-      font-weight: 500;
+    /* Subnav Module Switcher */
+    .erp-module-subnav {
+      background: var(--bc-surface);
+      border-bottom: 1px solid var(--bc-border);
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow-x: auto;
     }
 
-    .page-title {
-      font-family: var(--font-serif);
-      font-size: 32px;
-      font-weight: 500;
-      letter-spacing: -0.02em;
-      color: var(--bc-text-primary);
-      line-height: 1.2;
+    .module-tabs-list {
+      display: flex;
+      gap: 6px;
     }
 
-    .page-subtitle {
-      font-size: 14px;
+    .module-tab-btn {
+      padding: 14px 14px;
+      border-bottom: 2px solid transparent;
       color: var(--bc-text-secondary);
-      margin-top: 4px;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      background: transparent;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      white-space: nowrap;
+      transition: color var(--bc-duration-fast) var(--bc-ease),
+                  border-color var(--bc-duration-fast) var(--bc-ease);
     }
 
-    .header-cta-group {
+    .module-tab-btn:hover {
+      color: var(--bc-text-primary);
+    }
+
+    .module-tab-btn.active {
+      color: var(--bc-text-primary);
+      border-bottom-color: var(--bc-accent);
+    }
+
+    .module-toolbar-actions {
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .btn-secondary {
-      height: 38px;
+    .btn-action-outline {
+      padding: 7px 14px;
       background: var(--bc-surface);
       border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-md);
       color: var(--bc-text-primary);
-      padding: 0 16px;
-      border-radius: var(--bc-radius-md);
-      font-size: 13.5px;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all var(--bc-duration-fast) var(--bc-ease);
-      font-family: inherit;
-      white-space: nowrap;
-    }
-
-    .btn-secondary:hover {
-      background: var(--bc-surface-hover);
-      border-color: var(--bc-border-strong);
-    }
-
-    /* Primary CTA obeying Dark Mode Contrast Rule */
-    .btn-primary {
-      height: 38px;
-      background: var(--bc-accent);
-      color: #FFFFFF;
-      border: none;
-      padding: 0 18px;
-      border-radius: var(--bc-radius-md);
-      font-size: 13.5px;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: background var(--bc-duration-fast) var(--bc-ease);
-      font-family: inherit;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-      white-space: nowrap;
-    }
-
-    .btn-primary:hover {
-      background: var(--bc-accent-hover);
-    }
-
-    [data-theme="dark"] .btn-primary {
-      background: #FFFFFF;
-      color: #1F1E1B;
-      font-weight: 600;
-    }
-
-    [data-theme="dark"] .btn-primary:hover {
-      background: #E8E6E0;
-    }
-
-    /* ==========================================================================
-       BC restraint principle - THE SIGNATURE MOMENT
-       BC Design Intelligence Ledger Audit & Discrepancy Resolver
-       ========================================================================== */
-    .signature-audit-box {
-      background: var(--bc-surface);
-      border: 1px solid var(--bc-border);
-      border-radius: var(--bc-radius-lg);
-      padding: 20px 24px;
-      margin-bottom: 28px;
-      position: relative;
-      box-shadow: var(--bc-shadow-sm);
-      transition: border-color var(--bc-duration-normal) var(--bc-ease);
-    }
-
-    .signature-audit-box:focus-within {
-      border-color: var(--bc-accent);
-      box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.15);
-    }
-
-    .audit-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-
-    .ai-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--bc-accent);
-      background: var(--bc-accent-subtle);
-      border: 1px solid var(--bc-accent-border);
-      padding: 2px 10px;
-      border-radius: var(--bc-radius-full);
-      white-space: nowrap;
-    }
-
-    .ai-badge svg {
-      width: 14px;
-      height: 14px;
-    }
-
-    .audit-prompt-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .audit-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      font-family: inherit;
-      font-size: 15px;
-      color: var(--bc-text-primary);
-      outline: none;
-    }
-
-    .audit-input::placeholder {
-      color: var(--bc-text-tertiary);
-    }
-
-    .audit-submit-btn {
-      height: 36px;
-      background: var(--bc-accent);
-      color: #FFFFFF;
-      border: none;
-      padding: 0 16px;
-      border-radius: var(--bc-radius-md);
       font-size: 13px;
       font-weight: 500;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      font-family: inherit;
-      white-space: nowrap;
-      flex-shrink: 0;
       transition: background var(--bc-duration-fast) var(--bc-ease);
     }
 
-    .audit-submit-btn:hover {
+    .btn-action-outline:hover {
+      background: var(--bc-surface-hover);
+    }
+
+    .btn-action-primary {
+      padding: 7px 14px;
+      background: var(--bc-accent);
+      color: var(--bc-text-on-accent);
+      border: none;
+      border-radius: var(--bc-radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .btn-action-primary:hover {
       background: var(--bc-accent-hover);
     }
 
-    /* Prompt suggestion chips */
-    .quick-prompts {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 14px;
-      flex-wrap: wrap;
+    /* Main Container */
+    .erp-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 24px 0;
     }
 
-    .prompt-chip {
-      background: var(--bc-bg-subtle);
-      border: 1px solid var(--bc-border);
-      color: var(--bc-text-secondary);
-      font-size: 12px;
-      padding: 5px 12px;
-      border-radius: var(--bc-radius-full);
-      cursor: pointer;
-      transition: all var(--bc-duration-fast) var(--bc-ease);
-      font-family: inherit;
-      white-space: nowrap;
-    }
-
-    .prompt-chip:hover {
-      background: var(--bc-surface-hover);
-      color: var(--bc-text-primary);
-      border-color: var(--bc-border-strong);
-    }
-
-    /* STREAMING TOKEN ISOLATION CONTAINER (R-30 Safe) */
-    .streaming-panel {
+    /* Module Views */
+    .erp-module-view {
       display: none;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px dashed var(--bc-border);
-      height: 110px; /* FIXED HEIGHT - NO RESIZE JITTER */
-      overflow-y: auto;
-      font-size: 13.5px;
-      line-height: 1.6;
-      color: var(--bc-text-primary);
-      background: var(--bc-bg-subtle);
-      border-radius: var(--bc-radius-md);
-      padding: 12px 16px;
     }
 
-    .streaming-cursor {
-      display: inline-block;
-      width: 7px;
-      height: 14px;
-      background: var(--bc-accent);
-      vertical-align: middle;
-      margin-left: 4px;
-      animation: blink var(--bc-duration-shimmer) infinite var(--bc-ease-in-out);
+    .erp-module-view.active {
+      display: block;
     }
 
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-
-    /* ==========================================================================
-       Grounded Operational Metrics (Not generic SaaS-cards)
-       ========================================================================== */
-    .metrics-grid {
+    /* KPI Summary Row */
+    .erp-kpi-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 16px;
       margin-bottom: 28px;
     }
 
-    .metric-card {
+    .erp-kpi-card {
       background: var(--bc-surface);
       border: 1px solid var(--bc-border);
-      border-radius: var(--bc-radius-md);
+      border-radius: var(--bc-radius-lg);
       padding: 18px 20px;
-      transition: border-color var(--bc-duration-fast) var(--bc-ease);
+      box-shadow: var(--bc-shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    .metric-card:hover {
-      border-color: var(--bc-border-strong);
-    }
-
-    .metric-top {
+    .erp-kpi-title {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--bc-text-secondary);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
     }
 
-    .metric-label {
-      font-size: 12.5px;
-      color: var(--bc-text-secondary);
-      font-weight: 500;
-    }
-
-    .metric-icon {
-      color: var(--bc-text-tertiary);
-    }
-
-    .metric-value {
-      font-family: var(--font-serif);
-      font-size: 26px;
+    .erp-kpi-val {
+      font-family: var(--bc-font-serif);
+      font-size: 28px;
       font-weight: 500;
       color: var(--bc-text-primary);
       letter-spacing: -0.01em;
     }
 
-    .metric-meta {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .erp-kpi-meta {
       font-size: 12px;
       color: var(--bc-text-secondary);
-      margin-top: 4px;
     }
 
-    .badge-positive {
-      color: #10B981;
-      font-weight: 500;
-    }
-
-    .badge-caution {
-      color: #E09F3E;
-      font-weight: 500;
-    }
-
-    /* ==========================================================================
-       Tabular Workspace & Filter Suite
-       ========================================================================== */
-    .table-container {
+    /* Table Surface Container */
+    .erp-table-surface {
       background: var(--bc-surface);
       border: 1px solid var(--bc-border);
       border-radius: var(--bc-radius-lg);
@@ -639,63 +323,62 @@
       box-shadow: var(--bc-shadow-sm);
     }
 
-    .table-toolbar {
-      padding: 16px 20px;
+    .table-control-toolbar {
+      padding: 14px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--bc-border);
       flex-wrap: wrap;
       gap: 12px;
+      background: var(--bc-surface);
     }
 
-    .filter-pills {
+    .filter-pills-cluster {
       display: flex;
       align-items: center;
       gap: 6px;
       flex-wrap: wrap;
     }
 
-    .filter-pill {
+    .filter-tab-pill {
       background: transparent;
       border: 1px solid transparent;
       color: var(--bc-text-secondary);
       font-size: 13px;
       padding: 5px 12px;
-      border-radius: var(--bc-radius-full);
+      border-radius: var(--bc-radius-md);
       cursor: pointer;
       font-family: inherit;
       font-weight: 500;
       transition: all var(--bc-duration-fast) var(--bc-ease);
-      white-space: nowrap;
     }
 
-    .filter-pill:hover {
+    .filter-tab-pill:hover {
       background: var(--bc-bg-subtle);
       color: var(--bc-text-primary);
     }
 
-    .filter-pill.active {
-      background: var(--bc-bg-muted);
+    .filter-tab-pill.active {
+      background: var(--bc-bg-subtle);
       color: var(--bc-text-primary);
       border-color: var(--bc-border);
     }
 
-    .table-search-box {
+    .table-inline-search {
       display: flex;
       align-items: center;
       gap: 8px;
       background: var(--bc-bg-subtle);
       border: 1px solid var(--bc-border);
-      padding: 0 12px;
-      height: 34px;
+      padding: 0 10px;
+      height: 32px;
       border-radius: var(--bc-radius-md);
       font-size: 13px;
-      color: var(--bc-text-primary);
-      width: 260px;
+      width: 240px;
     }
 
-    .table-search-box input {
+    .table-inline-search input {
       background: transparent;
       border: none;
       color: inherit;
@@ -705,8 +388,8 @@
       width: 100%;
     }
 
-    /* Batch selection bar */
-    .batch-selection-bar {
+    /* Batch Selection Action Bar */
+    .batch-selection-banner {
       display: none;
       background: var(--bc-bg-subtle);
       border-bottom: 1px solid var(--bc-border);
@@ -716,30 +399,30 @@
       font-size: 13px;
     }
 
-    .batch-selection-bar.active {
+    .batch-selection-banner.active {
       display: flex;
     }
 
-    .batch-actions {
+    .batch-actions-cluster {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
     /* ERP Data Table */
-    .data-table-wrap {
+    .data-table-scroll-wrap {
       width: 100%;
       overflow-x: auto;
     }
 
-    table.erp-table {
+    table.erp-ledger-table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
       font-size: 13.5px;
     }
 
-    table.erp-table th {
+    table.erp-ledger-table th {
       padding: 12px 18px;
       font-size: 11.5px;
       font-weight: 600;
@@ -751,7 +434,7 @@
       white-space: nowrap;
     }
 
-    table.erp-table td {
+    table.erp-ledger-table td {
       padding: 14px 18px;
       border-bottom: 1px solid var(--bc-border);
       color: var(--bc-text-primary);
@@ -759,228 +442,252 @@
       transition: background var(--bc-duration-fast) var(--bc-ease);
     }
 
-    table.erp-table tr:last-child td {
+    table.erp-ledger-table tr:last-child td {
       border-bottom: none;
     }
 
-    table.erp-table tr:hover td {
+    table.erp-ledger-table tr:hover td {
       background: var(--bc-surface-hover);
       cursor: pointer;
     }
 
-    .id-cell {
-      font-family: var(--font-mono);
+    .checkbox-col-cell {
+      width: 40px;
+      text-align: center;
+    }
+
+    .row-checkbox {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--bc-accent);
+      cursor: pointer;
+    }
+
+    .id-code-badge {
+      font-family: var(--bc-font-mono);
       font-size: 12.5px;
       color: var(--bc-accent);
       font-weight: 500;
     }
 
-    .vendor-primary {
+    .vendor-primary-name {
       font-weight: 500;
       color: var(--bc-text-primary);
     }
 
-    .vendor-sub {
+    .vendor-subtext-meta {
       font-size: 12px;
       color: var(--bc-text-secondary);
     }
 
-    .status-badge {
+    /* Status Badges */
+    .erp-status-badge {
       display: inline-flex;
       align-items: center;
       gap: 5px;
       font-size: 12px;
       font-weight: 500;
-      padding: 3px 9px;
-      border-radius: var(--bc-radius-full);
+      padding: 3px 8px;
+      border-radius: var(--bc-radius-sm);
       white-space: nowrap;
+      font-family: var(--bc-font-mono);
     }
 
-    .status-badge.in-production {
-      background: #FEF3C7;
-      color: #92400E;
-      border: 1px solid #FDE68A;
+    .status-in-production {
+      background: rgba(245, 158, 11, 0.12);
+      color: #F59E0B;
+      border: 1px solid rgba(245, 158, 11, 0.25);
     }
 
-    [data-theme="dark"] .status-badge.in-production {
-      background: rgba(245, 158, 11, 0.15);
-      color: #FCD34D;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-
-    .status-badge.awaiting-cfo {
+    .status-awaiting-cfo {
       background: var(--bc-accent-subtle);
       color: var(--bc-accent);
       border: 1px solid var(--bc-accent-border);
     }
 
-    .status-badge.customs {
-      background: #E0E7FF;
-      color: #3730A3;
-      border: 1px solid #C7D2FE;
+    .status-customs {
+      background: rgba(99, 102, 241, 0.12);
+      color: #818CF8;
+      border: 1px solid rgba(99, 102, 241, 0.25);
     }
 
-    [data-theme="dark"] .status-badge.customs {
-      background: rgba(99, 102, 241, 0.15);
-      color: #A5B4FC;
-      border: 1px solid rgba(99, 102, 241, 0.3);
+    .status-cleared {
+      background: rgba(16, 185, 129, 0.12);
+      color: #10B981;
+      border: 1px solid rgba(16, 185, 129, 0.25);
     }
 
-    .status-badge.cleared {
-      background: #D1FAE5;
-      color: #065F46;
-      border: 1px solid #A7F3D0;
-    }
-
-    [data-theme="dark"] .status-badge.cleared {
-      background: rgba(16, 185, 129, 0.15);
-      color: #6EE7B7;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    .amount-cell {
-      font-family: var(--font-mono);
+    .amount-tabular-cell {
+      font-family: var(--bc-font-mono);
       font-size: 13.5px;
       font-weight: 500;
       text-align: right;
       white-space: nowrap;
     }
 
-    /* ==========================================================================
-       Slide-Over Detail Drawer (Modal Inspection)
-       ========================================================================== */
-    .drawer-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(2px);
-      z-index: 50;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity var(--bc-duration-normal) var(--bc-ease);
-    }
-
-    .drawer-backdrop.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .drawer-panel {
+    /* Slide-Over Detail Drawer */
+    .erp-detail-drawer {
       position: fixed;
       top: 0;
       right: -600px;
       width: 580px;
-      max-width: 90vw;
       height: 100vh;
       background: var(--bc-surface);
-      border-left: 1px solid var(--bc-border);
-      box-shadow: var(--bc-shadow-float);
-      z-index: 51;
+      border-left: 1px solid var(--bc-border-strong);
+      box-shadow: var(--bc-shadow-lg);
+      z-index: 100;
       display: flex;
       flex-direction: column;
-      transition: right var(--bc-duration-slow) var(--bc-ease);
+      transition: right var(--bc-duration-normal) var(--bc-ease);
     }
 
-    .drawer-backdrop.open .drawer-panel {
+    .erp-detail-drawer.open {
       right: 0;
     }
 
-    .drawer-header {
-      padding: 24px 28px;
+    .drawer-top-banner {
+      padding: 18px 24px;
       border-bottom: 1px solid var(--bc-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background: var(--bc-bg);
     }
 
-    .drawer-title {
-      font-family: var(--font-serif);
-      font-size: 22px;
+    .drawer-title-h2 {
+      font-family: var(--bc-font-serif);
+      font-size: 20px;
       font-weight: 500;
       color: var(--bc-text-primary);
     }
 
-    .drawer-close-btn {
-      background: transparent;
-      border: none;
-      color: var(--bc-text-tertiary);
-      cursor: pointer;
-      padding: 6px;
-      border-radius: var(--bc-radius-sm);
-    }
-
-    .drawer-close-btn:hover {
-      color: var(--bc-text-primary);
-    }
-
-    .drawer-body {
-      padding: 28px;
-      overflow-y: auto;
+    .drawer-scroll-body {
       flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
 
-    .drawer-section {
-      margin-bottom: 24px;
-    }
-
-    .drawer-section-title {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--bc-text-secondary);
-      margin-bottom: 12px;
-    }
-
-    .drawer-key-val {
+    .drawer-summary-grid {
       display: grid;
-      grid-template-columns: 140px 1fr;
-      gap: 10px;
-      font-size: 13.5px;
-      margin-bottom: 8px;
-    }
-
-    .drawer-key {
-      color: var(--bc-text-secondary);
-    }
-
-    .drawer-val {
-      color: var(--bc-text-primary);
-      font-weight: 500;
-    }
-
-    /* Handcrafted SVG Crayon Artwork inside Drawer */
-    .drawer-crayon-card {
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
       background: var(--bc-bg-subtle);
       border: 1px solid var(--bc-border);
       border-radius: var(--bc-radius-md);
       padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-top: 16px;
+      font-size: 13px;
     }
 
-    .drawer-footer {
-      padding: 20px 28px;
+    .drawer-meta-item-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--bc-text-tertiary);
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .drawer-meta-item-val {
+      font-weight: 500;
+      color: var(--bc-text-primary);
+    }
+
+    /* Approval Timeline */
+    .timeline-steps-track {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border-left: 2px solid var(--bc-border);
+      margin-left: 8px;
+      padding-left: 16px;
+    }
+
+    .timeline-step-point {
+      position: relative;
+    }
+
+    .timeline-step-point::before {
+      content: "";
+      position: absolute;
+      left: -22px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--bc-accent);
+    }
+
+    .timeline-step-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--bc-text-primary);
+    }
+
+    .timeline-step-time {
+      font-size: 12px;
+      color: var(--bc-text-tertiary);
+    }
+
+    .drawer-bottom-actions {
+      padding: 16px 24px;
       border-top: 1px solid var(--bc-border);
+      background: var(--bc-bg);
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 12px;
-      background: var(--bc-bg);
+      gap: 10px;
     }
 
-    /* Responsive adjustments */
-    @media (max-width: 900px) {
-      .top-header { padding: 0 16px; }
-      .app-layout { padding: 20px 16px; }
-      .header-center { display: none; }
-      .status-pill { display: none; }
-      .metrics-grid { grid-template-columns: 1fr; }
+    /* Modal Dialog for New Order */
+    .modal-backdrop-wrap {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 110;
+      padding: 24px;
+    }
+
+    .modal-backdrop-wrap.active {
+      display: flex;
+    }
+
+    .new-po-dialog {
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-xl);
+      max-width: 580px;
+      width: 100%;
+      padding: 32px;
+      box-shadow: var(--bc-shadow-lg);
+      position: relative;
+    }
+
+    /* Toast */
+    .erp-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bc-surface);
+      color: var(--bc-text-primary);
+      border: 1px solid var(--bc-border-strong);
+      padding: 12px 18px;
+      border-radius: var(--bc-radius-md);
+      box-shadow: var(--bc-shadow-md);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      font-size: 13.5px;
+      z-index: 120;
+    }
+
+    .erp-toast.show {
+      display: flex;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -995,640 +702,763 @@
 </head>
 <body>
 
-  <!-- ==========================================================================
-       TOP GLOBAL HEADER (Clean, Sleek, Unified 36px Height, Zero Wrap)
-       ========================================================================== -->
-  <header class="top-header">
-    
-    <!-- Left: Brand Logo & Operating Entity Dropdown -->
-    <div class="header-left">
-      <a href="#" class="brand-logo" aria-label="Meridian ERP Home">
-        <!-- Monoline 1.5px Stroke BC Design/BC Design inspired mark -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-          <polyline points="2 17 12 22 22 17"></polyline>
-          <polyline points="2 12 12 17 22 12"></polyline>
+  <!-- Top Sticky Header -->
+  <header class="erp-top-header">
+    <div class="header-zone-brand">
+      <a href="bc-landing-page.html" class="brand-logo-anchor">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="currentColor"/>
         </svg>
-        <span class="brand-name">Meridian</span>
+        <span class="brand-title-text">Meridian ERP</span>
       </a>
 
-      <div class="header-divider"></div>
-      
-      <!-- Multi-Entity Selector -->
-      <div class="entity-wrap">
-        <select class="entity-select" id="entitySelect" aria-label="Select Operating Entity">
-          <option value="global">Consolidated Holdings (CHF, USD, EUR)</option>
-          <option value="zurich">Zurich Advanced Biotech AG (CHF)</option>
-          <option value="tokyo">Tokyo Logistics & Semiconductor Hub (JPY)</option>
-          <option value="sf">San Francisco R&D & Operations (USD)</option>
+      <div class="header-divider-line"></div>
+
+      <div class="entity-switcher-wrap">
+        <select id="entitySelect" onchange="switchEntity(this.value)">
+          <option value="Global">Meridian Global Operations</option>
+          <option value="Zurich">Zurich Precision Instruments</option>
+          <option value="Tokyo">Tokyo Advanced Optics</option>
         </select>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
       </div>
     </div>
 
-    <!-- Center: Dedicated Command Search Bar -->
-    <div class="header-center">
-      <div class="search-input-wrap">
-        <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input 
-          type="text" 
-          class="global-search-input" 
-          id="globalSearchInput" 
-          placeholder="Search transactions, batches, or SKUs..." 
-          aria-label="Global ERP Search"
-        />
-        <kbd class="search-kbd">⌘K</kbd>
-      </div>
+    <div class="header-search-bar">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--bc-text-tertiary);">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" id="ledgerSearchInput" placeholder="Search orders, vendors, SKUs..." oninput="handleTableSearch(this.value)" />
     </div>
 
-    <!-- Right: Status Dot + Theme Toggle + CFO Avatar -->
-    <div class="header-right">
-      <div class="status-pill" title="Automated reconciliation sync running">
-        <span class="status-dot"></span>
-        <span>Ledger Balanced</span>
-      </div>
-
-      <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle Light and Dark Mode">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    <div class="header-actions-cluster">
+      <button class="header-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
         </svg>
-        <span id="themeLabel">Light</span>
       </button>
 
-      <button class="user-profile-btn" title="CFO Session: Sarah Chen">SC</button>
+      <a href="bc-dashboard.html" class="header-btn" title="Open Dashboard" aria-label="Dashboard">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+      </a>
+
+      <div class="user-avatar-badge" title="Authenticated as Chief Procurement Officer">
+        CP
+      </div>
     </div>
   </header>
 
-  <!-- Sub-Header Fiscal Announcement Bar -->
-  <div class="fiscal-notice-strip">
-    <div class="fiscal-notice-left">
-      <span class="fiscal-badge">Q3 FISCAL CLOSING</span>
-      <span>Ledger balanced across Zurich, Tokyo, and San Francisco • <strong>4 days remaining</strong> • 99.98% automated reconciliation rate</span>
-    </div>
-    <div>
-      <span>Accounting Standard: <strong>IFRS & US-GAAP Dual Ledger</strong></span>
-    </div>
-  </div>
-
-  <!-- Main Layout -->
-  <main class="app-layout">
-    
-    <!-- Title & Action Bar -->
-    <div class="page-header">
-      <div>
-        <div class="breadcrumb">
-          <span>Global Treasury & Supply Chain</span>
-          <span>/</span>
-          <span class="current">Production Batches & Purchase Orders</span>
-        </div>
-        <h1 class="page-title">Enterprise Resource Planning</h1>
-        <p class="page-subtitle">Consolidated ledger workflows, automated invoice reconciliation, and batch tracking.</p>
-      </div>
-
-      <div class="header-cta-group">
-        <button class="btn-secondary" id="exportBtn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-          <span>Export Audit Log</span>
-        </button>
-
-        <button class="btn-primary" id="createPoBtn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          <span>Create Purchase Order</span>
-        </button>
-      </div>
+  <!-- Subnavigation Modules -->
+  <nav class="erp-module-subnav">
+    <div class="module-tabs-list">
+      <button class="module-tab-btn active" onclick="switchErpModule(this, 'procurement')">Procurement & Purchase Orders</button>
+      <button class="module-tab-btn" onclick="switchErpModule(this, 'inventory')">Inventory & Warehouses</button>
+      <button class="module-tab-btn" onclick="switchErpModule(this, 'invoices')">Invoices & Accounts Payable</button>
+      <button class="module-tab-btn" onclick="switchErpModule(this, 'vendors')">Supplier Directory</button>
     </div>
 
-    <!-- ==========================================================================
-         BC restraint principle - THE SIGNATURE MOMENT
-         BC Design Intelligence Ledger Audit & Discrepancy Resolver
-         ========================================================================== -->
-    <section class="signature-audit-box" aria-labelledby="ai-audit-title">
-      <div class="audit-header">
-        <div class="ai-badge" id="ai-audit-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
-          </svg>
-          <span>BC Design, Current model; Enterprise Reconciliation</span>
+    <div class="module-toolbar-actions">
+      <button class="btn-action-outline" onclick="exportTableToCsv()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Export CSV
+      </button>
+
+      <button class="btn-action-primary" onclick="openNewPoModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Issue Purchase Order
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="erp-container">
+
+    <!-- MODULE 1: Procurement & Purchase Orders -->
+    <div class="erp-module-view active" id="moduleProcurement">
+      <!-- KPI Metrics -->
+      <div class="erp-kpi-row">
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-title">
+            <span>Quarterly Procurement Committed</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="erp-kpi-val">$2,418,920</div>
+          <span class="erp-kpi-meta" style="color: #10B981;">+8.4% within budget cap</span>
         </div>
-        <span style="font-size: 12px; color: var(--bc-text-tertiary);">Deterministic Fiscal Audit Mode</span>
-      </div>
 
-      <div class="audit-prompt-row">
-        <input 
-          type="text" 
-          class="audit-input" 
-          id="auditInput" 
-          placeholder="Ask BC Design to audit variances, reconcile multi-currency settlements, or run three-way PO matching..."
-          aria-label="BC Design ERP Audit Prompt"
-        />
-        <button class="audit-submit-btn" id="runAuditBtn">
-          <span>Execute Audit</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </button>
-      </div>
-
-      <!-- Quick Suggested Directives -->
-      <div class="quick-prompts">
-        <span style="font-size: 11.5px; color: var(--bc-text-tertiary);">Try asking:</span>
-        <button class="prompt-chip" data-prompt="Reconcile 4,820 transactions across Stripe, UBS, and J.P. Morgan">
-          "Reconcile 4,820 transactions across Stripe, UBS, and J.P. Morgan"
-        </button>
-        <button class="prompt-chip" data-prompt="Analyze supplier lead-time variance across Tokyo semiconductor vendors">
-          "Analyze supplier lead-time variance in Tokyo hub"
-        </button>
-        <button class="prompt-chip" data-prompt="Verify three-way matching for Swiss biotech PO-8842">
-          "Verify three-way matching for PO-8842"
-        </button>
-      </div>
-
-      <!-- Streaming Text Output Container (Fixed height to prevent layout thrashing R-30) -->
-      <div class="streaming-panel" id="streamingPanel" role="status" aria-live="polite">
-        <span id="streamingText"></span><span class="streaming-cursor" id="streamingCursor"></span>
-      </div>
-    </section>
-
-    <!-- Grounded Operational Metrics Grid -->
-    <section class="metrics-grid" aria-label="Operational Metrics">
-      <div class="metric-card">
-        <div class="metric-top">
-          <span class="metric-label">Consolidated Working Capital</span>
-          <svg class="metric-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-          </svg>
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-title">
+            <span>Awaiting CFO Authorization</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+          </div>
+          <div class="erp-kpi-val">$482,100</div>
+          <span class="erp-kpi-meta">2 orders pending sign-off</span>
         </div>
-        <div class="metric-value">$84,320,500 <span style="font-size: 14px; font-family: var(--font-sans); color: var(--bc-text-secondary);">USD</span></div>
-        <div class="metric-meta">
-          <span class="badge-positive">+3.8%</span>
-          <span>vs Q2 baseline (Liquidity Ratio 2.41)</span>
+
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-title">
+            <span>Customs & Port Transit</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div class="erp-kpi-val">2 Shipments</div>
+          <span class="erp-kpi-meta" style="color: #818CF8;">Rotterdam and Yokohama ports</span>
+        </div>
+
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-title">
+            <span>Average Lead Fulfillment</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="erp-kpi-val">18.4 Days</div>
+          <span class="erp-kpi-meta" style="color: #10B981;">-3 days vs 2025 benchmark</span>
         </div>
       </div>
 
-      <div class="metric-card">
-        <div class="metric-top">
-          <span class="metric-label">Active Manufacturing Runs</span>
-          <svg class="metric-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
+      <!-- Ledger Table Surface -->
+      <div class="erp-table-surface">
+        <div class="table-control-toolbar">
+          <div class="filter-pills-cluster">
+            <button class="filter-tab-pill active" onclick="filterByStatus(this, 'all')">All Orders (6)</button>
+            <button class="filter-tab-pill" onclick="filterByStatus(this, 'in-production')">In Production (2)</button>
+            <button class="filter-tab-pill" onclick="filterByStatus(this, 'awaiting-cfo')">Awaiting CFO (2)</button>
+            <button class="filter-tab-pill" onclick="filterByStatus(this, 'customs')">Customs (1)</button>
+            <button class="filter-tab-pill" onclick="filterByStatus(this, 'cleared')">Cleared (1)</button>
+          </div>
+
+          <div class="table-inline-search">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--bc-text-tertiary);">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="inlineSearch" placeholder="Filter ledger rows..." oninput="handleTableSearch(this.value)" />
+          </div>
         </div>
-        <div class="metric-value">42 Batches</div>
-        <div class="metric-meta">
-          <span class="badge-positive">99.4%</span>
-          <span>target yield in Zurich Bio-Plant</span>
+
+        <!-- Batch selection bar -->
+        <div class="batch-selection-banner" id="batchBar">
+          <span id="batchSelectedCount">0 purchase orders selected</span>
+          <div class="batch-actions-cluster">
+            <button class="btn-action-outline" style="padding: 4px 10px; font-size: 12px;" onclick="batchApprove()">Approve selected</button>
+            <button class="btn-action-outline" style="padding: 4px 10px; font-size: 12px;" onclick="exportTableToCsv()">Export selected</button>
+          </div>
+        </div>
+
+        <div class="data-table-scroll-wrap">
+          <table class="erp-ledger-table" id="ordersTable">
+            <thead>
+              <tr>
+                <th class="checkbox-col-cell">
+                  <input type="checkbox" class="row-checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this.checked)" />
+                </th>
+                <th>Order Number</th>
+                <th>Supplier / Vendor</th>
+                <th>Status</th>
+                <th>Commodity & Line Item</th>
+                <th>Expected Delivery</th>
+                <th style="text-align: right;">Committed Value</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <!-- Row 1 -->
+              <tr data-status="awaiting-cfo" data-id="PO-9042" data-vendor="Kyoto Precision Machining" data-desc="High-precision titanium chassis assemblies" data-amount="$148,200" data-delivery="Oct 14, 2026" onclick="openOrderDrawer(this)">
+                <td class="checkbox-col-cell" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="row-checkbox" onchange="updateBatchSelection()" />
+                </td>
+                <td><span class="id-code-badge">PO-9042</span></td>
+                <td>
+                  <div class="vendor-primary-name">Kyoto Precision Machining</div>
+                  <div class="vendor-subtext-meta">Tax ID: JP-8840192</div>
+                </td>
+                <td><span class="erp-status-badge status-awaiting-cfo">Awaiting CFO</span></td>
+                <td>Titanium chassis assemblies (120 units)</td>
+                <td>Oct 14, 2026</td>
+                <td class="amount-tabular-cell">$148,200.00</td>
+              </tr>
+
+              <!-- Row 2 -->
+              <tr data-status="in-production" data-id="PO-9043" data-vendor="Basel Instrumentarium AG" data-desc="Optical sensory calibration modules" data-amount="$94,500" data-delivery="Nov 02, 2026" onclick="openOrderDrawer(this)">
+                <td class="checkbox-col-cell" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="row-checkbox" onchange="updateBatchSelection()" />
+                </td>
+                <td><span class="id-code-badge">PO-9043</span></td>
+                <td>
+                  <div class="vendor-primary-name">Basel Instrumentarium AG</div>
+                  <div class="vendor-subtext-meta">Tax ID: CHE-104.921.844</div>
+                </td>
+                <td><span class="erp-status-badge status-in-production">In Production</span></td>
+                <td>Optical sensor arrays (40 units)</td>
+                <td>Nov 02, 2026</td>
+                <td class="amount-tabular-cell">$94,500.00</td>
+              </tr>
+
+              <!-- Row 3 -->
+              <tr data-status="customs" data-id="PO-9044" data-vendor="Stuttgart Photonics GMBH" data-desc="Monochromatic laser diodes" data-amount="$212,000" data-delivery="Oct 28, 2026" onclick="openOrderDrawer(this)">
+                <td class="checkbox-col-cell" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="row-checkbox" onchange="updateBatchSelection()" />
+                </td>
+                <td><span class="id-code-badge">PO-9044</span></td>
+                <td>
+                  <div class="vendor-primary-name">Stuttgart Photonics GMBH</div>
+                  <div class="vendor-subtext-meta">Tax ID: DE-314892011</div>
+                </td>
+                <td><span class="erp-status-badge status-customs">Customs Inspection</span></td>
+                <td>Monochromatic laser diodes (500 units)</td>
+                <td>Oct 28, 2026</td>
+                <td class="amount-tabular-cell">$212,000.00</td>
+              </tr>
+
+              <!-- Row 4 -->
+              <tr data-status="cleared" data-id="PO-9045" data-vendor="Oxford Materials Lab" data-desc="Synthetic sapphire lens substrates" data-amount="$64,800" data-delivery="Oct 04, 2026" onclick="openOrderDrawer(this)">
+                <td class="checkbox-col-cell" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="row-checkbox" onchange="updateBatchSelection()" />
+                </td>
+                <td><span class="id-code-badge">PO-9045</span></td>
+                <td>
+                  <div class="vendor-primary-name">Oxford Materials Lab</div>
+                  <div class="vendor-subtext-meta">Tax ID: GB-99482012</div>
+                </td>
+                <td><span class="erp-status-badge status-cleared">Cleared & Received</span></td>
+                <td>Synthetic sapphire substrates (200 units)</td>
+                <td>Oct 04, 2026</td>
+                <td class="amount-tabular-cell">$64,800.00</td>
+              </tr>
+
+              <!-- Row 5 -->
+              <tr data-status="in-production" data-id="PO-9046" data-vendor="Yokohama Micro-Electronics" data-desc="Cryogenic cooling controllers" data-amount="$186,400" data-delivery="Nov 18, 2026" onclick="openOrderDrawer(this)">
+                <td class="checkbox-col-cell" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="row-checkbox" onchange="updateBatchSelection()" />
+                </td>
+                <td><span class="id-code-badge">PO-9046</span></td>
+                <td>
+                  <div class="vendor-primary-name">Yokohama Micro-Electronics</div>
+                  <div class="vendor-subtext-meta">Tax ID: JP-4491029</div>
+                </td>
+                <td><span class="erp-status-badge status-in-production">In Production</span></td>
+                <td>Cryogenic cooling controllers (80 units)</td>
+                <td>Nov 18, 2026</td>
+                <td class="amount-tabular-cell">$186,400.00</td>
+              </tr>
+
+              <!-- Row 6 -->
+              <tr data-status="awaiting-cfo" data-id="PO-9047" data-vendor="Zurich Precision Instruments" data-desc="Tungsten thermal isolators" data-amount="$333,900" data-delivery="Dec 01, 2026" onclick="openOrderDrawer(this)">
+                <td class="checkbox-col-cell" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="row-checkbox" onchange="updateBatchSelection()" />
+                </td>
+                <td><span class="id-code-badge">PO-9047</span></td>
+                <td>
+                  <div class="vendor-primary-name">Zurich Precision Instruments</div>
+                  <div class="vendor-subtext-meta">Tax ID: CHE-991.240.101</div>
+                </td>
+                <td><span class="erp-status-badge status-awaiting-cfo">Awaiting CFO</span></td>
+                <td>Tungsten thermal isolators (300 units)</td>
+                <td>Dec 01, 2026</td>
+                <td class="amount-tabular-cell">$333,900.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 2: Inventory & Warehouses -->
+    <div class="erp-module-view" id="moduleInventory">
+      <div class="erp-kpi-row">
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-title"><span>Indexed Stock SKUs</span></div>
+          <div class="erp-kpi-val">1,420</div>
+          <span class="erp-kpi-meta">Across 3 global facilities</span>
+        </div>
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-title"><span>Warehouse Valuation</span></div>
+          <div class="erp-kpi-val">$4,820,400</div>
+          <span class="erp-kpi-meta" style="color: #10B981;">Audited valuation</span>
+        </div>
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-title"><span>Low Stock Warnings</span></div>
+          <div class="erp-kpi-val">4 SKUs</div>
+          <span class="erp-kpi-meta" style="color: #F59E0B;">Reorder threshold reached</span>
         </div>
       </div>
 
-      <div class="metric-card">
-        <div class="metric-top">
-          <span class="metric-label">Pending Approval Ledger</span>
-          <svg class="metric-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-          </svg>
-        </div>
-        <div class="metric-value">14 Orders</div>
-        <div class="metric-meta">
-          <span class="badge-caution">$1,428,200</span>
-          <span>awaiting CFO sign-off</span>
-        </div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-top">
-          <span class="metric-label">Fulfillment Velocity</span>
-          <svg class="metric-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-        </div>
-        <div class="metric-value">98.2% On-Time</div>
-        <div class="metric-meta">
-          <span>Global lead time avg: <strong>4.2 days</strong></span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Table Workspace -->
-    <section class="table-container" aria-label="Purchase Orders and Batches">
-      
-      <!-- Toolbar & Filter Pills -->
-      <div class="table-toolbar">
-        <div class="filter-pills" role="tablist">
-          <button class="filter-pill active" data-filter="all">All Batches (6)</button>
-          <button class="filter-pill" data-filter="awaiting-cfo">Awaiting CFO Approval (2)</button>
-          <button class="filter-pill" data-filter="in-production">In Production (2)</button>
-          <button class="filter-pill" data-filter="customs">Customs Clearance (1)</button>
-          <button class="filter-pill" data-filter="cleared">Settled & Cleared (1)</button>
-        </div>
-
-        <div class="table-search-box">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" id="tableSearch" placeholder="Filter by vendor, SKU or PO..." aria-label="Filter table">
-        </div>
-      </div>
-
-      <!-- Batch Selection Counter Bar -->
-      <div class="batch-selection-bar" id="batchBar">
-        <div>
-          <strong id="selectedCount">0</strong> items selected across entities
-        </div>
-        <div class="batch-actions">
-          <button class="btn-secondary" style="height: 30px; padding: 0 10px; font-size: 12.5px;" id="batchFlagBtn">Flag for Review</button>
-          <button class="btn-primary" style="height: 30px; padding: 0 12px; font-size: 12.5px;" id="batchApproveBtn">Approve Selected Orders</button>
-        </div>
-      </div>
-
-      <!-- Main Data Table -->
-      <div class="data-table-wrap">
-        <table class="erp-table" id="erpTable">
+      <div class="erp-table-surface">
+        <table class="erp-ledger-table">
           <thead>
             <tr>
-              <th style="width: 40px;"><input type="checkbox" id="selectAllCheckbox" aria-label="Select all rows"></th>
-              <th>PO / Batch ID</th>
-              <th>Entity & Hub</th>
-              <th>Vendor & Supplier</th>
-              <th>Category</th>
-              <th>Settlement Status</th>
-              <th style="text-align: right;">Gross Value</th>
-              <th style="text-align: center;">Match Verification</th>
+              <th>SKU Identifier</th>
+              <th>Description</th>
+              <th>Facility Location</th>
+              <th>Available Units</th>
+              <th>Stock Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Row 1 -->
-            <tr data-id="PO-8849" data-status="awaiting-cfo" data-vendor="Kyocera Precision Corp" data-value="$248,500.00">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-checkbox"></td>
-              <td><span class="id-cell">PO-8849</span></td>
-              <td>Tokyo Logistics Hub</td>
-              <td>
-                <div class="vendor-primary">Kyocera Precision Corp</div>
-                <div class="vendor-sub">Ceramic Sensor Modules (SKU-KY-92)</div>
-              </td>
-              <td>Semiconductor Raw Materials</td>
-              <td><span class="status-badge awaiting-cfo">● Awaiting CFO Sign-off</span></td>
-              <td class="amount-cell">$248,500.00 USD</td>
-              <td style="text-align: center;"><span style="color: #10B981; font-size: 12px; font-weight: 500;">3-Way Matched ✓</span></td>
+            <tr>
+              <td><span class="id-code-badge">SKU-OPT-091</span></td>
+              <td>Sapphire Beam Splitter 50/50</td>
+              <td>Zurich Vault B2</td>
+              <td>14 units</td>
+              <td><span class="erp-status-badge status-awaiting-cfo">Low Stock</span></td>
+              <td><button class="btn-action-outline" style="padding: 4px 8px; font-size: 11.5px;" onclick="showToast('Reorder PO drafted for SKU-OPT-091')">Draft PO</button></td>
             </tr>
-
-            <!-- Row 2 -->
-            <tr data-id="PO-8842" data-status="awaiting-cfo" data-vendor="Novartis Pharma Basel" data-value="CHF 640,000.00">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-checkbox"></td>
-              <td><span class="id-cell">PO-8842</span></td>
-              <td>Zurich Bio-Tech AG</td>
-              <td>
-                <div class="vendor-primary">Novartis Pharma Basel</div>
-                <div class="vendor-sub">Active Peptides Batch A4 (SKU-BIO-04)</div>
-              </td>
-              <td>Biopharmaceutical Synthesis</td>
-              <td><span class="status-badge awaiting-cfo">● Awaiting CFO Sign-off</span></td>
-              <td class="amount-cell">CHF 640,000.00</td>
-              <td style="text-align: center;"><span style="color: #E09F3E; font-size: 12px; font-weight: 500;">VAT Variance (0.02%)</span></td>
+            <tr>
+              <td><span class="id-code-badge">SKU-CHAS-440</span></td>
+              <td>Milled Invar Housing Block</td>
+              <td>Yokohama Dock Bay 1</td>
+              <td>120 units</td>
+              <td><span class="erp-status-badge status-cleared">Optimal</span></td>
+              <td><button class="btn-action-outline" style="padding: 4px 8px; font-size: 11.5px;" onclick="showToast('Inventory audit confirmed')">Audit</button></td>
             </tr>
-
-            <!-- Row 3 -->
-            <tr data-id="PO-8839" data-status="in-production" data-vendor="Siemens Energy Munich" data-value="€ 385,200.00">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-checkbox"></td>
-              <td><span class="id-cell">PO-8839</span></td>
-              <td>Consolidated Holdings</td>
-              <td>
-                <div class="vendor-primary">Siemens Energy Munich</div>
-                <div class="vendor-sub">Titanium Turbine Blades (SKU-TB-88)</div>
-              </td>
-              <td>Capital Equipment</td>
-              <td><span class="status-badge in-production">● In Production (Phase 2)</span></td>
-              <td class="amount-cell">€ 385,200.00 EUR</td>
-              <td style="text-align: center;"><span style="color: #10B981; font-size: 12px; font-weight: 500;">3-Way Matched ✓</span></td>
-            </tr>
-
-            <!-- Row 4 -->
-            <tr data-id="PO-8835" data-status="customs" data-vendor="Kuehne+Nagel Global Logistics" data-value="$94,100.00">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-checkbox"></td>
-              <td><span class="id-cell">PO-8835</span></td>
-              <td>San Francisco R&D</td>
-              <td>
-                <div class="vendor-primary">Kuehne+Nagel Logistics</div>
-                <div class="vendor-sub">Cryogenic Cold-Chain Air Freight</div>
-              </td>
-              <td>Freight & Customs Transit</td>
-              <td><span class="status-badge customs">● Customs Review (Zurich)</span></td>
-              <td class="amount-cell">$94,100.00 USD</td>
-              <td style="text-align: center;"><span style="color: var(--bc-text-tertiary); font-size: 12px;">Transit Manifest ✓</span></td>
-            </tr>
-
-            <!-- Row 5 -->
-            <tr data-id="PO-8828" data-status="in-production" data-vendor="Tokyo Electron Ltd" data-value="¥ 42,800,000">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-checkbox"></td>
-              <td><span class="id-cell">PO-8828</span></td>
-              <td>Tokyo Logistics Hub</td>
-              <td>
-                <div class="vendor-primary">Tokyo Electron Ltd</div>
-                <div class="vendor-sub">Wafer Inspection Probes (SKU-TEL-11)</div>
-              </td>
-              <td>Cleanroom Tooling</td>
-              <td><span class="status-badge in-production">● In Production (Phase 1)</span></td>
-              <td class="amount-cell">¥ 42,800,000 JPY</td>
-              <td style="text-align: center;"><span style="color: #10B981; font-size: 12px; font-weight: 500;">3-Way Matched ✓</span></td>
-            </tr>
-
-            <!-- Row 6 -->
-            <tr data-id="PO-8819" data-status="cleared" data-vendor="Air Liquide Industrial Gases" data-value="€ 72,400.00">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-checkbox"></td>
-              <td><span class="id-cell">PO-8819</span></td>
-              <td>Zurich Bio-Tech AG</td>
-              <td>
-                <div class="vendor-primary">Air Liquide SA</div>
-                <div class="vendor-sub">High-Purity Argon & Nitrogen Cylinders</div>
-              </td>
-              <td>Consumables & Reagents</td>
-              <td><span class="status-badge cleared">● Settled & Reconciled</span></td>
-              <td class="amount-cell">€ 72,400.00 EUR</td>
-              <td style="text-align: center;"><span style="color: #10B981; font-size: 12px; font-weight: 500;">Cleared & Audited ✓</span></td>
+            <tr>
+              <td><span class="id-code-badge">SKU-LAS-102</span></td>
+              <td>Solid State Fiber Cavity</td>
+              <td>Nevada Depot 4</td>
+              <td>45 units</td>
+              <td><span class="erp-status-badge status-cleared">Optimal</span></td>
+              <td><button class="btn-action-outline" style="padding: 4px 8px; font-size: 11.5px;" onclick="showToast('Inventory audit confirmed')">Audit</button></td>
             </tr>
           </tbody>
         </table>
       </div>
-    </section>
+    </div>
+
+    <!-- MODULE 3: Invoices & Accounts Payable -->
+    <div class="erp-module-view" id="moduleInvoices">
+      <div class="erp-kpi-row">
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-title"><span>Due within 30 Days</span></div>
+          <div class="erp-kpi-val">$242,800</div>
+          <span class="erp-kpi-meta">Scheduled for payment release</span>
+        </div>
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-title"><span>Due within 60 Days</span></div>
+          <div class="erp-kpi-val">$184,200</div>
+          <span class="erp-kpi-meta">Pending goods confirmation</span>
+        </div>
+      </div>
+
+      <div class="erp-table-surface">
+        <table class="erp-ledger-table">
+          <thead>
+            <tr>
+              <th>Invoice Ref</th>
+              <th>Vendor Creditor</th>
+              <th>Maturity Date</th>
+              <th>Total Balance</th>
+              <th>Status</th>
+              <th>Authorization</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="id-code-badge">INV-8821</span></td>
+              <td>Kyoto Precision Machining</td>
+              <td>Oct 30, 2026</td>
+              <td class="amount-tabular-cell">$148,200.00</td>
+              <td><span class="erp-status-badge status-awaiting-cfo">Pending Release</span></td>
+              <td><button class="btn-action-primary" style="padding: 4px 10px; font-size: 11.5px;" onclick="showToast('Invoice INV-8821 approved for transfer')">Approve Wire</button></td>
+            </tr>
+            <tr>
+              <td><span class="id-code-badge">INV-8822</span></td>
+              <td>Basel Instrumentarium AG</td>
+              <td>Nov 15, 2026</td>
+              <td class="amount-tabular-cell">$94,500.00</td>
+              <td><span class="erp-status-badge status-cleared">Scheduled</span></td>
+              <td><button class="btn-action-outline" style="padding: 4px 10px; font-size: 11.5px;" onclick="showToast('Voucher receipt exported')">View Voucher</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- MODULE 4: Supplier Directory -->
+    <div class="erp-module-view" id="moduleVendors">
+      <div class="erp-table-surface">
+        <table class="erp-ledger-table">
+          <thead>
+            <tr>
+              <th>Vendor Name</th>
+              <th>Jurisdiction</th>
+              <th>Performance Score</th>
+              <th>Active Contracts</th>
+              <th>Default Terms</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="vendor-primary-name">Kyoto Precision Machining</div>
+                <div class="vendor-subtext-meta">Tax ID: JP-8840192</div>
+              </td>
+              <td>Japan</td>
+              <td><span style="color: #10B981; font-weight: 600;">99.4% On-time</span></td>
+              <td>3 master agreements</td>
+              <td>Net 30 Days</td>
+              <td><button class="btn-action-outline" style="padding: 4px 8px; font-size: 11.5px;" onclick="showToast('Opened supplier contract JP-8840192')">Contracts</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="vendor-primary-name">Basel Instrumentarium AG</div>
+                <div class="vendor-subtext-meta">Tax ID: CHE-104.921.844</div>
+              </td>
+              <td>Switzerland</td>
+              <td><span style="color: #10B981; font-weight: 600;">98.8% On-time</span></td>
+              <td>2 master agreements</td>
+              <td>Net 45 Days</td>
+              <td><button class="btn-action-outline" style="padding: 4px 8px; font-size: 11.5px;" onclick="showToast('Opened supplier contract CHE-104.921.844')">Contracts</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </main>
 
-  <!-- ==========================================================================
-       Slide-Over Inspection Drawer
-       ========================================================================== -->
-  <div class="drawer-backdrop" id="drawerBackdrop" aria-hidden="true">
-    <div class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
-      <div class="drawer-header">
+  <!-- Slide-Over Inspection Drawer -->
+  <aside class="erp-detail-drawer" id="orderDrawer">
+    <div class="drawer-top-banner">
+      <div>
+        <span class="id-code-badge" id="drawerPoId">PO-9042</span>
+        <h2 class="drawer-title-h2" id="drawerVendorName">Kyoto Precision Machining</h2>
+      </div>
+      <button class="header-btn" onclick="closeOrderDrawer()" title="Close drawer">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="drawer-scroll-body">
+      <div class="drawer-summary-grid">
         <div>
-          <span style="font-size: 12px; color: var(--bc-accent); font-weight: 600;" id="drawerPoId">PO-8849</span>
-          <h2 class="drawer-title" id="drawerTitle">Purchase Order Details</h2>
+          <div class="drawer-meta-item-label">Committed Value</div>
+          <div class="drawer-meta-item-val" id="drawerAmountVal">$148,200.00 USD</div>
         </div>
-        <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close details drawer">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
+        <div>
+          <div class="drawer-meta-item-label">Delivery Date</div>
+          <div class="drawer-meta-item-val" id="drawerDeliveryVal">Oct 14, 2026</div>
+        </div>
+        <div>
+          <div class="drawer-meta-item-label">Status</div>
+          <div class="drawer-meta-item-val" id="drawerStatusVal">Awaiting CFO Sign-off</div>
+        </div>
+        <div>
+          <div class="drawer-meta-item-label">Cost Center</div>
+          <div class="drawer-meta-item-val">Zurich High-Energy Physics</div>
+        </div>
       </div>
 
-      <div class="drawer-body">
-        <div class="drawer-section">
-          <div class="drawer-section-title">General Ledger & Counterparty</div>
-          <div class="drawer-key-val">
-            <div class="drawer-key">Vendor:</div>
-            <div class="drawer-val" id="drawerVendor">Kyocera Precision Corp</div>
+      <div>
+        <h3 style="font-family: var(--bc-font-serif); font-size: 18px; font-weight: 500; margin-bottom: 12px;">
+          Line Item Breakdown
+        </h3>
+        <p style="font-size: 13.5px; color: var(--bc-text-secondary); line-height: 1.5; margin-bottom: 14px;" id="drawerDescVal">
+          High-precision titanium chassis assemblies machined according to CAD ISO 2768-mK tolerances.
+        </p>
+        <div style="background: var(--bc-bg-subtle); padding: 14px; border-radius: var(--bc-radius-md); border: 1px solid var(--bc-border); font-size: 13px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <span>Subtotal (Net goods)</span>
+            <span style="font-family: var(--bc-font-mono);">$136,800.00</span>
           </div>
-          <div class="drawer-key-val">
-            <div class="drawer-key">Operating Hub:</div>
-            <div class="drawer-val" id="drawerHub">Tokyo Logistics & Semiconductor Hub</div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <span>Import Customs Tariff (4.2%)</span>
+            <span style="font-family: var(--bc-font-mono);">$5,745.60</span>
           </div>
-          <div class="drawer-key-val">
-            <div class="drawer-key">Gross Amount:</div>
-            <div class="drawer-val" id="drawerAmount">$248,500.00 USD</div>
-          </div>
-          <div class="drawer-key-val">
-            <div class="drawer-key">GL Account:</div>
-            <div class="drawer-val" style="font-family: var(--font-mono);">#5100-Raw-Materials</div>
-          </div>
-        </div>
-
-        <div class="drawer-section">
-          <div class="drawer-section-title">Audit Trail & Matching Status</div>
-          <div class="drawer-key-val">
-            <div class="drawer-key">PO Generation:</div>
-            <div class="drawer-val">Sep 04, 2026 09:12 AM (Automated MRP)</div>
-          </div>
-          <div class="drawer-key-val">
-            <div class="drawer-key">Goods Receipt:</div>
-            <div class="drawer-val">Sep 05, 2026 02:40 PM (Tokyo Dock 4)</div>
-          </div>
-          <div class="drawer-key-val">
-            <div class="drawer-key">Vendor Invoice:</div>
-            <div class="drawer-val">INV-KYO-2026-992 (Matched 100%)</div>
-          </div>
-          <div class="drawer-key-val">
-            <div class="drawer-key">Tax / Customs:</div>
-            <div class="drawer-val">JCT 10% cleared by Sagawa Express</div>
-          </div>
-        </div>
-
-        <!-- Hand-Drawn SVG Crayon Artwork inside Drawer -->
-        <div class="drawer-crayon-card">
-          <svg width="48" height="48" viewBox="0 0 80 80" fill="none" style="flex-shrink: 0;">
-            <!-- Authentic Crayon Tactile Seal -->
-            <path d="M40 8 C22 8, 8 22, 8 40 C8 58, 22 72, 40 72 C58 72, 72 58, 72 40 C72 22, 58 8, 40 8 Z" 
-                  stroke="var(--bc-accent)" stroke-width="2.5" stroke-dasharray="4 2" stroke-linecap="round" fill="none"/>
-            <path d="M26 40 L35 49 L54 28" stroke="var(--bc-accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <!-- Tactile crayon smudge dots -->
-            <circle cx="28" cy="24" r="2" fill="var(--bc-accent)" opacity="0.6"/>
-            <circle cx="56" cy="54" r="1.5" fill="var(--bc-accent)" opacity="0.5"/>
-          </svg>
-          <div>
-            <div style="font-weight: 500; font-size: 13.5px; color: var(--bc-text-primary);">Pre-Verified by BC Design Reconciliation</div>
-            <div style="font-size: 12px; color: var(--bc-text-secondary); margin-top: 2px;">
-              No variance detected across quantity, unit price, or customs duties. Safe for immediate CFO execution.
-            </div>
+          <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--bc-border); padding-top: 6px; font-weight: 600;">
+            <span>Total Ledger Obligation</span>
+            <span style="font-family: var(--bc-font-mono); color: var(--bc-accent);">$148,200.00</span>
           </div>
         </div>
       </div>
 
-      <div class="drawer-footer">
-        <button class="btn-secondary" id="flagOrderBtn">Flag Variance</button>
-        <!-- In dark mode, this button is Solid White with #1F1E1B text per BC Design rule -->
-        <button class="btn-primary" id="approveOrderBtn">Execute Settlement & Close PO</button>
+      <div>
+        <h3 style="font-family: var(--bc-font-serif); font-size: 18px; font-weight: 500; margin-bottom: 14px;">
+          Approval & Audit Timeline
+        </h3>
+        <div class="timeline-steps-track">
+          <div class="timeline-step-point">
+            <div class="timeline-step-title">Purchase Requisition Issued</div>
+            <div class="timeline-step-time">Oct 01, 2026 by Dr. A. Vance</div>
+          </div>
+          <div class="timeline-step-point">
+            <div class="timeline-step-title">Department Sign-off Approved</div>
+            <div class="timeline-step-time">Oct 02, 2026 by Lead Engineer</div>
+          </div>
+          <div class="timeline-step-point">
+            <div class="timeline-step-title">Awaiting CFO Final Release</div>
+            <div class="timeline-step-time">Current pending gate</div>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <div class="drawer-bottom-actions">
+      <button class="btn-action-outline" onclick="showToast('Discrepancy flag reported to vendor')">Flag Order</button>
+      <button class="btn-action-primary" onclick="approveCurrentOrder()">Approve Purchase Order</button>
+    </div>
+  </aside>
+
+  <!-- Issue New PO Modal -->
+  <div class="modal-backdrop-wrap" id="newPoModal" onclick="closePoModalOnBackdrop(event)">
+    <div class="new-po-dialog">
+      <h3 style="font-family: var(--bc-font-serif); font-size: 24px; font-weight: 500; margin-bottom: 6px;">
+        Issue New Purchase Order
+      </h3>
+      <p style="font-size: 13.5px; color: var(--bc-text-secondary); line-height: 1.5; margin-bottom: 20px;">
+        Generate an audited enterprise procurement commitment in compliance with Meridian financial rules.
+      </p>
+
+      <form onsubmit="handleNewPoSubmit(event)" style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <label style="font-size: 13px; font-weight: 500; color: var(--bc-text-secondary);">Supplier / Vendor</label>
+          <select id="newPoVendor" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid var(--bc-border-strong); border-radius: var(--bc-radius-md); background: var(--bc-bg); color: var(--bc-text-primary); font-family: inherit; font-size: 13.5px;">
+            <option value="Kyoto Precision Machining">Kyoto Precision Machining (Japan)</option>
+            <option value="Basel Instrumentarium AG">Basel Instrumentarium AG (Switzerland)</option>
+            <option value="Stuttgart Photonics GMBH">Stuttgart Photonics GMBH (Germany)</option>
+            <option value="Oxford Materials Lab">Oxford Materials Lab (United Kingdom)</option>
+          </select>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <label style="font-size: 13px; font-weight: 500; color: var(--bc-text-secondary);">Line Item Description</label>
+          <input type="text" id="newPoDesc" placeholder="e.g. Ultra-pure crystalline silicon boules" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid var(--bc-border-strong); border-radius: var(--bc-radius-md); background: var(--bc-bg); color: var(--bc-text-primary); font-family: inherit; font-size: 13.5px;" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <label style="font-size: 13px; font-weight: 500; color: var(--bc-text-secondary);">Quantity</label>
+            <input type="number" id="newPoQty" value="50" min="1" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid var(--bc-border-strong); border-radius: var(--bc-radius-md); background: var(--bc-bg); color: var(--bc-text-primary); font-family: inherit; font-size: 13.5px;" />
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <label style="font-size: 13px; font-weight: 500; color: var(--bc-text-secondary);">Total Value ($ USD)</label>
+            <input type="text" id="newPoAmount" value="75,000" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid var(--bc-border-strong); border-radius: var(--bc-radius-md); background: var(--bc-bg); color: var(--bc-text-primary); font-family: inherit; font-size: 13.5px;" />
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <label style="font-size: 13px; font-weight: 500; color: var(--bc-text-secondary);">Expected Delivery Date</label>
+          <input type="date" id="newPoDate" value="2026-11-20" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid var(--bc-border-strong); border-radius: var(--bc-radius-md); background: var(--bc-bg); color: var(--bc-text-primary); font-family: inherit; font-size: 13.5px;" />
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+          <button type="button" class="btn-action-outline" onclick="closeNewPoModal()">Cancel</button>
+          <button class="btn-action-primary">Issue Order to Ledger</button>
+        </div>
+      </form>
     </div>
   </div>
 
+  <!-- Toast -->
+  <div class="erp-toast" id="erpToast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--bc-accent);">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="16" x2="12" y2="12"/>
+      <line x1="12" y1="8" x2="12.01" y2="8"/>
+    </svg>
+    <span id="toastMsgText">Order approved successfully</span>
+  </div>
+
   <script>
-    // Theme Toggle State
-    const htmlEl = document.documentElement;
-    const themeBtn = document.getElementById('themeToggle');
-    const themeLabel = document.getElementById('themeLabel');
+    let activeDrawerRow = null;
 
-    themeBtn.addEventListener('click', () => {
-      const current = htmlEl.getAttribute('data-theme') || 'dark';
+    // Theme Switcher
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'dark';
       const next = current === 'dark' ? 'light' : 'dark';
-      htmlEl.setAttribute('data-theme', next);
-      themeLabel.textContent = next === 'dark' ? 'Light' : 'Dark';
-    });
-
-    // Filter Pills Logic
-    const filterPills = document.querySelectorAll('.filter-pill');
-    const tableRows = document.querySelectorAll('#erpTable tbody tr');
-
-    filterPills.forEach(pill => {
-      pill.addEventListener('click', () => {
-        filterPills.forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        const filter = pill.getAttribute('data-filter');
-
-        tableRows.forEach(row => {
-          if (filter === 'all' || row.getAttribute('data-status') === filter) {
-            row.style.display = '';
-          } else {
-            row.style.display = 'none';
-          }
-        });
-      });
-    });
-
-    // Table Search Filter
-    const searchInput = document.getElementById('tableSearch');
-    searchInput.addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase().trim();
-      tableRows.forEach(row => {
-        const text = row.innerText.toLowerCase();
-        row.style.display = text.includes(q) ? '' : 'none';
-      });
-    });
-
-    // Batch Selection Logic
-    const selectAll = document.getElementById('selectAllCheckbox');
-    const rowCheckboxes = document.querySelectorAll('.row-checkbox');
-    const batchBar = document.getElementById('batchBar');
-    const selectedCount = document.getElementById('selectedCount');
-
-    function updateBatchBar() {
-      const checked = document.querySelectorAll('.row-checkbox:checked').length;
-      selectedCount.textContent = checked;
-      if (checked > 0) {
-        batchBar.classList.add('active');
-      } else {
-        batchBar.classList.remove('active');
-      }
+      html.setAttribute('data-theme', next);
+      showToast(`Switched to ${next} theme`);
     }
 
-    selectAll.addEventListener('change', (e) => {
-      rowCheckboxes.forEach(cb => {
-        if (cb.closest('tr').style.display !== 'none') {
-          cb.checked = e.target.checked;
-        }
-      });
-      updateBatchBar();
-    });
+    // Module Switcher
+    function switchErpModule(btn, modId) {
+      document.querySelectorAll('.module-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
 
-    rowCheckboxes.forEach(cb => {
-      cb.addEventListener('change', updateBatchBar);
-    });
+      document.querySelectorAll('.erp-module-view').forEach(v => v.classList.remove('active'));
+      if (modId === 'procurement') document.getElementById('moduleProcurement').classList.add('active');
+      else if (modId === 'inventory') document.getElementById('moduleInventory').classList.add('active');
+      else if (modId === 'invoices') document.getElementById('moduleInvoices').classList.add('active');
+      else if (modId === 'vendors') document.getElementById('moduleVendors').classList.add('active');
+    }
 
-    // Batch Actions
-    document.getElementById('batchApproveBtn').addEventListener('click', () => {
-      const count = document.querySelectorAll('.row-checkbox:checked').length;
-      alert(`Active Voice Action: Successfully approved ${count} purchase order(s) for immediate settlement.`);
-      rowCheckboxes.forEach(cb => cb.checked = false);
-      selectAll.checked = false;
-      updateBatchBar();
-    });
+    // Filter by Status
+    function filterByStatus(btn, status) {
+      document.querySelectorAll('.filter-tab-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
 
-    // Drawer Slide-Over Logic
-    const backdrop = document.getElementById('drawerBackdrop');
-    const closeBtn = document.getElementById('drawerCloseBtn');
-    const drawerPoId = document.getElementById('drawerPoId');
-    const drawerVendor = document.getElementById('drawerVendor');
-    const drawerAmount = document.getElementById('drawerAmount');
-
-    tableRows.forEach(row => {
-      row.addEventListener('click', () => {
-        const id = row.getAttribute('data-id');
-        const vendor = row.getAttribute('data-vendor');
-        const val = row.getAttribute('data-value');
-
-        drawerPoId.textContent = id;
-        drawerVendor.textContent = vendor;
-        drawerAmount.textContent = val;
-        backdrop.classList.add('open');
-      });
-    });
-
-    closeBtn.addEventListener('click', () => backdrop.classList.remove('open'));
-    backdrop.addEventListener('click', (e) => {
-      if (e.target === backdrop) backdrop.classList.remove('open');
-    });
-
-    document.getElementById('approveOrderBtn').addEventListener('click', () => {
-      const po = drawerPoId.textContent;
-      alert(`Executed settlement for ${po}. Funds transferred via corporate treasury ledger.`);
-      backdrop.classList.remove('open');
-    });
-
-    // ==========================================================================
-    // BC restraint principle: streaming simulation (R-30 Streaming Isolation)
-    // ==========================================================================
-    const auditInput = document.getElementById('auditInput');
-    const runAuditBtn = document.getElementById('runAuditBtn');
-    const streamingPanel = document.getElementById('streamingPanel');
-    const streamingText = document.getElementById('streamingText');
-    const streamingCursor = document.getElementById('streamingCursor');
-    const promptChips = document.querySelectorAll('.prompt-chip');
-
-    let streamInterval = null;
-
-    function runStreamingAudit(query) {
-      if (streamInterval) clearInterval(streamInterval);
-      streamingPanel.style.display = 'block';
-      streamingText.textContent = '';
-      streamingCursor.style.display = 'inline-block';
-
-      const responseScript = `[BC Design Reasoning Active: 320ms]
-1. Verified 3-way match across PO-8849 ($248,500) and PO-8842 (CHF 640,000).
-2. Found 0.02% Swiss VAT calculation variance on Novartis Basel invoice due to rounding convention: reconciled automatically within allowed tolerance (CHF 12.80).
-3. Tokyo Logistics Hub lead times are performing 1.2 days faster than baseline.
-4. AUDIT RECOMMENDATION: Cleared 2 batch orders for immediate CFO signature. No fraud indicators detected.`;
-
-      let charIdx = 0;
-      streamInterval = setInterval(() => {
-        if (charIdx < responseScript.length) {
-          streamingText.textContent += responseScript[charIdx];
-          charIdx++;
-          streamingPanel.scrollTop = streamingPanel.scrollHeight;
+      const rows = document.querySelectorAll('#ordersTableBody tr');
+      rows.forEach(r => {
+        if (status === 'all' || r.getAttribute('data-status') === status) {
+          r.style.display = '';
         } else {
-          clearInterval(streamInterval);
-          streamingCursor.style.display = 'none';
+          r.style.display = 'none';
         }
-      }, 14); // ~70 chars/sec streaming emulation
+      });
     }
 
-    runAuditBtn.addEventListener('click', () => {
-      const val = auditInput.value.trim() || "Reconcile 4,820 transactions across Stripe, UBS, and J.P. Morgan";
-      runStreamingAudit(val);
-    });
-
-    auditInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        runStreamingAudit(auditInput.value.trim() || "Reconcile all ledger batches");
-      }
-    });
-
-    promptChips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        const prompt = chip.getAttribute('data-prompt');
-        auditInput.value = prompt;
-        runStreamingAudit(prompt);
+    // Inline Search Table Rows
+    function handleTableSearch(query) {
+      const q = query.toLowerCase();
+      const rows = document.querySelectorAll('#ordersTableBody tr');
+      rows.forEach(r => {
+        const text = r.textContent.toLowerCase();
+        r.style.display = text.includes(q) ? '' : 'none';
       });
-    });
+    }
+
+    // Batch Selection
+    function toggleSelectAll(isChecked) {
+      const boxes = document.querySelectorAll('#ordersTableBody .row-checkbox');
+      boxes.forEach(b => b.checked = isChecked);
+      updateBatchSelection();
+    }
+
+    function updateBatchSelection() {
+      const boxes = document.querySelectorAll('#ordersTableBody .row-checkbox:checked');
+      const banner = document.getElementById('batchBar');
+      const countLabel = document.getElementById('batchSelectedCount');
+
+      if (boxes.length > 0) {
+        banner.classList.add('active');
+        countLabel.textContent = `${boxes.length} purchase order${boxes.length > 1 ? 's' : ''} selected`;
+      } else {
+        banner.classList.remove('active');
+      }
+    }
+
+    function batchApprove() {
+      showToast('Batch approval recorded for selected purchase orders');
+      document.getElementById('batchBar').classList.remove('active');
+      document.querySelectorAll('#ordersTableBody .row-checkbox').forEach(b => b.checked = false);
+    }
+
+    // Order Slide-over Drawer
+    function openOrderDrawer(row) {
+      activeDrawerRow = row;
+      const poId = row.getAttribute('data-id');
+      const vendor = row.getAttribute('data-vendor');
+      const desc = row.getAttribute('data-desc');
+      const amount = row.getAttribute('data-amount');
+      const delivery = row.getAttribute('data-delivery');
+      const statusText = row.querySelector('.erp-status-badge').textContent;
+
+      document.getElementById('drawerPoId').textContent = poId;
+      document.getElementById('drawerVendorName').textContent = vendor;
+      document.getElementById('drawerDescVal').textContent = desc;
+      document.getElementById('drawerAmountVal').textContent = amount;
+      document.getElementById('drawerDeliveryVal').textContent = delivery;
+      document.getElementById('drawerStatusVal').textContent = statusText;
+
+      document.getElementById('orderDrawer').classList.add('open');
+    }
+
+    function closeOrderDrawer() {
+      document.getElementById('orderDrawer').classList.remove('open');
+    }
+
+    function approveCurrentOrder() {
+      if (activeDrawerRow) {
+        const badge = activeDrawerRow.querySelector('.erp-status-badge');
+        badge.className = 'erp-status-badge status-cleared';
+        badge.textContent = 'Cleared & Approved';
+        activeDrawerRow.setAttribute('data-status', 'cleared');
+      }
+      closeOrderDrawer();
+      showToast('Purchase order approved and recorded in ERP ledger');
+    }
+
+    // New PO Modal
+    function openNewPoModal() {
+      document.getElementById('newPoModal').classList.add('active');
+    }
+
+    function closeNewPoModal() {
+      document.getElementById('newPoModal').classList.remove('active');
+    }
+
+    function closePoModalOnBackdrop(e) {
+      if (e.target.id === 'newPoModal') closeNewPoModal();
+    }
+
+    function handleNewPoSubmit(e) {
+      e.preventDefault();
+      const vendor = document.getElementById('newPoVendor').value;
+      const desc = document.getElementById('newPoDesc').value;
+      const qty = document.getElementById('newPoQty').value;
+      const amount = document.getElementById('newPoAmount').value;
+      const date = document.getElementById('newPoDate').value;
+
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      const newId = `PO-${randomNum}`;
+
+      closeNewPoModal();
+      showToast(`Purchase order ${newId} issued successfully`);
+
+      const tbody = document.getElementById('ordersTableBody');
+      const rowHtml = `
+        <tr data-status="awaiting-cfo" data-id="${newId}" data-vendor="${escapeHtml(vendor)}" data-desc="${escapeHtml(desc)} (${qty} units)" data-amount="$${escapeHtml(amount)}.00" data-delivery="${escapeHtml(date)}" onclick="openOrderDrawer(this)">
+          <td class="checkbox-col-cell" onclick="event.stopPropagation()">
+            <input type="checkbox" class="row-checkbox" onchange="updateBatchSelection()" />
+          </td>
+          <td><span class="id-code-badge">${newId}</span></td>
+          <td>
+            <div class="vendor-primary-name">${escapeHtml(vendor)}</div>
+            <div class="vendor-subtext-meta">Tax ID: Pending Verification</div>
+          </td>
+          <td><span class="erp-status-badge status-awaiting-cfo">Awaiting CFO</span></td>
+          <td>${escapeHtml(desc)} (${qty} units)</td>
+          <td>${escapeHtml(date)}</td>
+          <td class="amount-tabular-cell">$${escapeHtml(amount)}.00</td>
+        </tr>
+      `;
+      tbody.insertAdjacentHTML('afterbegin', rowHtml);
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Export CSV Simulation
+    function exportTableToCsv() {
+      showToast('Exported active procurement dataset as CSV');
+    }
+
+    function switchEntity(val) {
+      showToast(`Switched active ledger to ${val}`);
+    }
+
+    // Toast
+    function showToast(msg) {
+      const toast = document.getElementById('erpToast');
+      document.getElementById('toastMsgText').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3200);
+    }
   </script>
 </body>
 </html>

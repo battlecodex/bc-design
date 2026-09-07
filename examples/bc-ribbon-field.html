@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BC Spatial — Ribbon Field (Terracotta & Cinnabar (Canonical))</title>
+  <style>
+    :root {
+      --bc-bg: #0D0C0A;
+      --bc-text: #FAF9F5;
+      --bc-accent: #D97757;
+      --bc-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bc-bg); color: var(--bc-text); font-family: "Onest", system-ui, sans-serif; }
+    #ribbon-canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+    .overlay-hud {
+      position: fixed; inset: 0; z-index: 10; pointer-events: none;
+      display: flex; flex-direction: column; justify-content: space-between; padding: 32px;
+    }
+    .hud-header { display: flex; justify-content: space-between; align-items: center; }
+    .hud-brand { font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bc-text); }
+    .hud-telemetry { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.14em; color: #8A8479; }
+    .hud-center { max-width: 540px; pointer-events: auto; }
+    .hud-title { font-family: "Newsreader", serif; font-size: clamp(32px, 4.5vw, 64px); font-weight: 400; line-height: 1.1; margin-bottom: 16px; }
+    .hud-title em { font-style: italic; color: var(--bc-accent); }
+    .hud-deck { font-size: 15px; color: #C5BFB3; line-height: 1.6; margin-bottom: 24px; }
+    .hud-cta {
+      display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; border-radius: 100px;
+      background: var(--bc-accent); color: #ffffff !important; font-size: 12px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;
+      box-shadow: 0 4px 20px rgba(217, 119, 87, 0.35); transition: transform 200ms var(--bc-ease);
+    }
+    .hud-cta:hover { transform: translateY(-2px); }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="ribbon-canvas"></canvas>
+
+  <div class="overlay-hud">
+    <div class="hud-header">
+      <div class="hud-brand">BC Spatial // Terracotta & Cinnabar (Canonical)</div>
+      <div class="hud-telemetry">GLSL / DOT-MATRIX / 60 FPS</div>
+    </div>
+    <div class="hud-center">
+      <h1 class="hud-title">Sinuous <em>attractor</em> fields in mathematical space.</h1>
+      <p class="hud-deck">
+        Sinuous ribbon wave spatial architecture retoned to the BC Design literary humanist palette.
+        A delicate balance of GPU extrusion, exponential bloom, and discrete scan rasterization.
+      </p>
+      <a href="bc-spatial-showcase.html" class="hud-cta">Enter Full Spatial Showcase</a>
+    </div>
+    <div class="hud-header">
+      <div class="hud-telemetry">PALETTE: TERRACOTTA & CINNABAR (CANONICAL)</div>
+      <div class="hud-telemetry">COORDINATES: TENSOR-01</div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const canvas = document.getElementById("ribbon-canvas");
+      const gl = canvas.getContext("webgl");
+      if (!gl) return;
+
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+
+      const vs = `
+        attribute vec2 position;
+        void main() { gl_Position = vec4(position, 0.0, 1.0); }
+      `;
+
+      const fs = `
+        precision highp float;
+        uniform vec2 resolution;
+        uniform float time;
+        uniform vec2 pointer;
+
+        float hash(vec2 p) {
+          p = fract(p * vec2(123.34, 456.21));
+          p += dot(p, p + 45.32);
+          return fract(p.x * p.y);
+        }
+
+        float ribbon(vec2 uv, float offset, float width, float phase) {
+          float y = 0.55 + 0.20 * sin((uv.x * 2.15) + phase) + 0.045 * sin((uv.x * 7.0) - phase * 0.7);
+          float d = abs(uv.y - y - offset);
+          return exp(-(d * d) / width);
+        }
+
+        void main() {
+          vec2 uv = gl_FragCoord.xy / resolution.xy;
+          float t = time * 0.22;
+          float drift = (pointer.x - 0.5) * 0.06;
+
+          float rightFade = smoothstep(0.28, 0.72, uv.x);
+          float centerDark = 1.0 - smoothstep(0.0, 0.88, distance(uv, vec2(0.18, 0.48)));
+
+          float r1 = ribbon(vec2(uv.x + drift, uv.y), 0.03, 0.0065, t + 0.9);
+          float r2 = ribbon(vec2(uv.x - drift * 0.7, uv.y), -0.23, 0.0085, t + 3.25);
+          float r3 = ribbon(vec2(uv.x + drift * 0.4, uv.y), 0.25, 0.014, t + 1.85);
+
+          float glow = r1 * 1.14 + r2 * 1.05 + r3 * 0.48;
+
+          vec3 col1 = vec3(0.85, 0.47, 0.34);
+          vec3 col2 = vec3(0.88, 0.35, 0.24);
+          vec3 col3 = vec3(0.76, 0.64, 0.42);
+          vec3 col4 = vec3(0.96, 0.64, 0.38);
+
+          vec3 col = vec3(0.0);
+          col += col1 * r1 * 0.92;
+          col += col2 * r1 * 0.62;
+          col += col3 * r3 * 0.42;
+          col += col4 * r2 * 0.66;
+          col += col1 * (r2 + r3) * 0.30;
+
+          float bloom = exp(-pow(distance(uv, vec2(0.76, 0.40 + 0.035 * sin(t))), 2.0) / 0.050);
+          bloom += exp(-pow(distance(uv, vec2(0.71, 0.75 + 0.025 * cos(t))), 2.0) / 0.030);
+          col += vec3(1.0, 0.72, 0.45) * bloom * 0.34;
+
+          vec2 grid = fract(gl_FragCoord.xy / 7.0) - 0.5;
+          float dotShape = smoothstep(0.29, 0.11, length(grid));
+          float noise = hash(floor(gl_FragCoord.xy / 7.0));
+          float scan = 0.72 + 0.28 * sin((uv.x + uv.y) * 38.0 + time * 1.3);
+          float dots = dotShape * (0.48 + 0.52 * noise) * scan;
+
+          float micro = hash(gl_FragCoord.xy + time) * 0.035;
+          float alpha = clamp((glow * 1.55 + bloom * 0.50) * dots * rightFade, 0.0, 1.0);
+          alpha *= 1.0 - centerDark * 0.56;
+
+          vec3 base = vec3(0.05, 0.047, 0.04);
+          vec3 finalColor = mix(base, col, clamp(alpha * 1.55, 0.0, 1.0));
+          finalColor += micro * rightFade;
+
+          gl_FragColor = vec4(finalColor, 1.0);
+        }
+      `;
+
+      function compile(type, src) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      }
+
+      const prog = gl.createProgram();
+      gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
+      gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
+      gl.linkProgram(prog);
+      gl.useProgram(prog);
+
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+
+      const pos = gl.getAttribLocation(prog, "position");
+      gl.enableVertexAttribArray(pos);
+      gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+      const resLoc = gl.getUniformLocation(prog, "resolution");
+      const timeLoc = gl.getUniformLocation(prog, "time");
+      const ptrLoc = gl.getUniformLocation(prog, "pointer");
+
+      let ptrX = 0.5;
+      window.addEventListener("mousemove", (e) => {
+        ptrX += ((e.clientX / width) - ptrX) * 0.05;
+      });
+
+      let start = performance.now();
+      function render() {
+        const elapsed = (performance.now() - start) * 0.001;
+        gl.viewport(0, 0, width, height);
+        gl.uniform2f(resLoc, width, height);
+        gl.uniform1f(timeLoc, elapsed);
+        gl.uniform2f(ptrLoc, ptrX, 0.5);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        requestAnimationFrame(render);
+      }
+      render();
+
+      window.addEventListener("resize", () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+# Required only for repository tests that validate agents/openai.yaml metadata.
+PyYAML>=6,<7

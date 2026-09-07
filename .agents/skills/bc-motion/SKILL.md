@@ -13,7 +13,7 @@ Use this skill when motion is part of the interface contract. Motion should expl
 2. Choose a tier: micro 150ms, component 250ms, structural 350–400ms, or approved thinking 1800ms.
 3. Use a semantic BC easing token; avoid browser-default easing keywords.
 4. Prefer opacity and transform; never animate width, height, margin, or padding of a container receiving streamed tokens.
-5. Add a `prefers-reduced-motion: reduce` fallback in the same source unit.
+5. Add a `prefers-reduced-motion: reduce` fallback in the same source unit (for 3D spatial scenes, pause continuous rotation and present a calm static view).
 6. Check interruption, focus, loading, off-screen, and failure states.
 7. Run `bc_design.py --audit TARGET` and report any unrendered motion state.
 
@@ -21,6 +21,7 @@ Use this skill when motion is part of the interface contract. Motion should expl
 
 - Decorative motion must not compete with the product's signature moment.
 - Infinite motion is reserved for active status or loading feedback and must have a readable static fallback.
+- 3D spatial camera interaction must use smooth inertia damping (friction factor <= 0.08) and never snap abruptly.
 - Do not use motion to hide layout instability or missing content.
 - Keep easing and duration on tokens so a theme can change motion coherently.
 

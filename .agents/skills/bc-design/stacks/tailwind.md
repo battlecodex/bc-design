@@ -74,11 +74,56 @@ Always disable spatial translation when user has `prefers-reduced-motion` enable
 
 ```html
 <!-- Responsive Artifact Container -->
-<div class="fixed inset-y-0 right-0 z-40 
-            w-full md:w-[480px] lg:w-[600px] 
-            bg-[var(--bc-surface)] border-l border-[var(--bc-border)] 
-            shadow-2xl md:shadow-lg 
+<div class="fixed inset-y-0 right-0 z-40
+            w-full md:w-[480px] lg:w-[600px]
+            bg-[var(--bc-surface)] border-l border-[var(--bc-border)]
+            shadow-2xl md:shadow-lg
             transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
   <!-- Drawer Header -->
 </div>
+```
+
+---
+
+## 4. 3D Spatial Canvas Layering & Zero-Overlap Utility Patterns
+
+When embedding 3D WebGL background canvases, strictly observe the layer hierarchy to ensure **zero text overlap** and **zero click-blocking**:
+
+```html
+<!-- 3D Spatial Stage Container -->
+<section class="relative w-full min-h-[540px] md:min-h-[640px] overflow-hidden bg-[var(--bc-bg)]">
+
+  <!-- 1. Background Spatial Canvas:
+       - 'pointer-events-none' ensures clicks pass through to links and buttons
+       - 'absolute inset-0 z-0' pins canvas behind all tex
+       - 'motion-reduce:opacity-40' keeps calm contrast if motion is disabled -->
+  <canvas
+    id="spatial-canvas"
+    class="absolute inset-0 w-full h-full pointer-events-none z-0 motion-reduce:opacity-40"
+    aria-hidden="true"
+  ></canvas>
+
+  <!-- 2. Typography & Interaction Layer:
+       - 'relative z-10' guarantees text sits strictly above canvas
+       - 'max-w-[560px] md:max-w-[45vw]' restricts text to the left column
+       - Allows the 3D domain object to occupy the right hemisphere freely -->
+  <div class="relative z-10 container mx-auto px-6 py-20 flex flex-col justify-center min-h-[540px] md:min-h-[640px]">
+    <div class="max-w-xl space-y-6">
+      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider bg-[var(--bc-surface)] border border-[var(--bc-border)] text-[var(--bc-muted)]">
+        Academic Architecture
+      </span>
+      <h1 class="font-serif text-4xl md:text-6xl font-normal tracking-tight text-[var(--bc-text)] leading-[1.12]">
+        Rigorous inquiry meets physical form.
+      </h1>
+      <p class="text-lg text-[var(--bc-muted)] font-normal leading-relaxed">
+        Spatial reasoning and classical curricula engineered into an interactive humanist codex.
+      </p>
+      <div class="flex items-center gap-4 pt-2">
+        <a href="#explore" class="px-6 py-3 rounded-lg font-medium text-white bg-[var(--bc-accent)] hover:bg-[var(--bc-accent-hover)] transition-colors">
+          Explore Curricula
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
 ```

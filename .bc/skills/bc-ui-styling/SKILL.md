@@ -24,6 +24,7 @@ Use this skill for implementation work after the direction and invariants are cl
 - Use purposeful 1.5px monoline SVG icons with accessible names.
 - Use motion tokens and avoid layout-property animation for streamed output.
 - Keep fallbacks explicit when a font, image, or browser feature is unavailable.
+- For 3D spatial canvas backgrounds, enforce `pointer-events: none` and place interactive typography in a dedicated column (`z-index: 10` above canvas `z-index: 0/1`) to guarantee zero text overlap.
 
 ## References
 

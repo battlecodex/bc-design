@@ -490,6 +490,13 @@ def find_audit_violations(content, source_file):
         if pattern.search(content):
             violations.append((rule_id, message, source_file))
 
+    if re.search(r"setPixelRatio\s*\(\s*(?:window\.)?devicePixelRatio\s*\)", content) and not re.search(r"Math\.min\s*\([^)]*(?:window\.)?devicePixelRatio", content):
+        violations.append((
+            "spatial-uncapped-pixel-ratio",
+            "Cap WebGL pixel ratio with Math.min(window.devicePixelRatio, 2) to avoid GPU thermal throttling and frame drops.",
+            source_file,
+        ))
+
     pill_count = len(re.findall(r"(?:border-radius\s*:\s*999(?:px)?|rounded-full)", content, re.IGNORECASE))
     if pill_count >= 3:
         violations.append((
@@ -507,6 +514,40 @@ def find_audit_violations(content, source_file):
         violations.append((
             "accent-surface-domination",
             "Keep subject-derived accents to intentional moments; do not make the page canvas the accent by default.",
+            source_file,
+        ))
+    if re.search(r"--(?:bc-)?text-on-accent\s*:\s*#(?:1[fF]1[eE]1[bB]|181816|000000|000|111)\b", content, re.IGNORECASE):
+        violations.append((
+            "accent-button-text-contrast",
+            "Avoid dark ink text on mid-tone accent/terracotta tokens. Use crisp white (#FFFFFF) text or switch primary actions to the canonical high-contrast button (.bc-btn-contrast).",
+            source_file,
+        ))
+    elif re.search(
+        r"(?:button|\.btn[a-z0-9_-]*|\[type=['\"]?submit['\"]?\])[^{}]*\{[^{}]*background(?:-color)?\s*:\s*(?:#(?:d97757|e28466)|var\(\s*--(?:bc-)?accent\b)[^{}]*color\s*:\s*(?:#(?:1[fF]1[eE]1[bB]|181816|000000|000|111)\b|black\b|var\(\s*--(?:bc-)?text-primary\b)",
+        content,
+        re.IGNORECASE | re.DOTALL,
+    ) or re.search(
+        r"(?:button|\.btn[a-z0-9_-]*|\[type=['\"]?submit['\"]?\])[^{}]*\{[^{}]*color\s*:\s*(?:#(?:1[fF]1[eE]1[bB]|181816|000000|000|111)\b|black\b|var\(\s*--(?:bc-)?text-primary\b)[^{}]*background(?:-color)?\s*:\s*(?:#(?:d97757|e28466)|var\(\s*--(?:bc-)?accent\b)",
+        content,
+        re.IGNORECASE | re.DOTALL,
+    ):
+        violations.append((
+            "accent-button-text-contrast",
+            "Avoid dark ink text on mid-tone accent/terracotta buttons. Use crisp white (#FFFFFF) text or switch primary actions to the canonical high-contrast button (.bc-btn-contrast).",
+            source_file,
+        ))
+    elif re.search(
+        r"<[^>]*(?:button|a\b)[^>]*style\s*=\s*['\"][^'\"]*background(?:-color)?\s*:\s*(?:#(?:d97757|e28466)|var\(\s*--(?:bc-)?accent\b)[^'\"]*color\s*:\s*(?:#(?:1[fF]1[eE]1[bB]|181816|000000|000|111)\b|black\b|var\(\s*--(?:bc-)?text-primary\b)",
+        content,
+        re.IGNORECASE,
+    ) or re.search(
+        r"<[^>]*(?:button|a\b)[^>]*style\s*=\s*['\"][^'\"]*color\s*:\s*(?:#(?:1[fF]1[eE]1[bB]|181816|000000|000|111)\b|black\b|var\(\s*--(?:bc-)?text-primary\b)[^'\"]*background(?:-color)?\s*:\s*(?:#(?:d97757|e28466)|var\(\s*--(?:bc-)?accent\b)",
+        content,
+        re.IGNORECASE,
+    ):
+        violations.append((
+            "accent-button-text-contrast",
+            "Avoid dark ink text on mid-tone accent/terracotta buttons. Use crisp white (#FFFFFF) text or switch primary actions to the canonical high-contrast button (.bc-btn-contrast).",
             source_file,
         ))
 
@@ -591,7 +632,7 @@ def main():
     parser.add_argument("--design-audit", "--audit", dest="design_audit", metavar="TARGET", help="Audit a source file or directory for enforceable BC Design quality findings")
     parser.add_argument("--json", action="store_true", help="Emit structured JSON findings (only with --audit)")
     parser.add_argument("--contrast", nargs=2, metavar=("HEX1", "HEX2"), help="Compute WCAG 2.x contrast ratio between two hex colors")
-    parser.add_argument("--domain", "-d", choices=list(CSV_CONFIG.keys()), help="Search a bundled domain (style, color, typography, chart, landing, product, ux, motion, icons, google-fonts)")
+    parser.add_argument("--domain", "-d", choices=list(CSV_CONFIG.keys()), help="Search a bundled domain (style, color, typography, chart, landing, product, ux, motion, icons, google-fonts, spatial)")
     parser.add_argument("--max-results", "-n", type=int, default=3, help="Max results for domain search")
     parser.add_argument("--persist", action="store_true", help="Save design system to design-system/<project-slug>/MASTER.md")
     parser.add_argument("--page", type=str, default=None, help="Create page-specific override in design-system/<project-slug>/pages/")
@@ -601,11 +642,54 @@ def main():
     parser.add_argument("--motion", type=int, choices=range(1, 11), help="Motion intensity dial (1=subtle, 10=choreographed)")
     parser.add_argument("--density", type=int, choices=range(1, 11), help="Visual density dial (1=spacious, 10=dashboard)")
     parser.add_argument("--stack", metavar="STACK", help="Output a focused guide or searchable stack catalog")
+    parser.add_argument("--spatial", nargs="?", const="list", metavar="PRESET", help="Generate a 3D / spatial WebGL component (ribbon-field, predictive-arc, school-spatial, etc.) or list available presets")
+    parser.add_argument("--spatial-palette", default="terracotta", choices=["terracotta", "amber-brass", "sage-monochrome"], help="Color palette for spatial component")
+    parser.add_argument("--spatial-theme", default="dark", choices=["dark", "light"], help="Theme mode for spatial component (dark or light)")
+    parser.add_argument("--spatial-format", default="html", choices=["html", "react"], help="Output format for spatial component (html or react)")
 
     args = parser.parse_args()
 
     if args.json and args.design_audit is None:
         parser.error("--json requires --audit TARGET")
+
+    # Spatial 3D shader generator
+    if args.spatial:
+        try:
+            from spatial import PALETTES, SPATIAL_GENERATOR_PRESETS, SPATIAL_PRESET_ALIASES, SPATIAL_PRESETS, generate_spatial_component
+        except ImportError:
+            from .spatial import PALETTES, SPATIAL_GENERATOR_PRESETS, SPATIAL_PRESET_ALIASES, SPATIAL_PRESETS, generate_spatial_component
+
+        if args.spatial == "list":
+            print("\n" + "="*80)
+            print("  BC DESIGN SPATIAL & 3D SHADER PRESETS")
+            print("="*80 + "\n")
+            for key in SPATIAL_GENERATOR_PRESETS:
+                p = SPATIAL_PRESETS[key]
+                print(f"• {key} ({p['name']}) [{p['runtime']}]")
+                print(f"  Description: {p['description']}")
+                print(f"  Best for: {p['best_for']}\n")
+            print("Available palettes: " + ", ".join(PALETTES.keys()) + "\n")
+            return 0
+
+        preset = args.spatial
+        if preset not in SPATIAL_GENERATOR_PRESETS and preset not in SPATIAL_PRESET_ALIASES:
+            available = ", ".join(SPATIAL_GENERATOR_PRESETS)
+            print(f"Error: Preset '{preset}' is catalog-only or unknown. Generatable presets: {available}")
+            return 1
+
+        code = generate_spatial_component(preset, args.spatial_palette, args.spatial_theme, args.spatial_format)
+        ext = "html" if args.spatial_format == "html" else "tsx"
+        if args.output_dir and args.output_dir != ".":
+            out_path = Path(args.output_dir)
+            if out_path.is_dir():
+                out_path = out_path / f"bc-{preset}.{ext}"
+        else:
+            out_path = Path(f"bc-{preset}.{ext}")
+
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(code, encoding="utf-8")
+        print(f"[BC Spatial] Successfully generated '{preset}' [{args.spatial_palette} / {args.spatial_theme}] -> {out_path}")
+        return 0
 
     # 1. BC Design guideline display
     if args.brand_guidelines:

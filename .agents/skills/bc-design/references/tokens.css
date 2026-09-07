@@ -36,7 +36,7 @@
   --bc-text-primary: #1F1E1B;     /* Deep ink black with warm undertone */
   --bc-text-secondary: #6B6760;   /* Muted warm stone for body & descriptions */
   --bc-text-tertiary: #99948B;    /* Placeholders & subtle metadata */
-  --bc-text-on-accent: #1F1E1B;   /* Contrast-safe text on terracotta buttons */
+  --bc-text-on-accent: #FFFFFF;   /* Crisp white text/icons on terracotta buttons and badges */
 
   /* Borders & Dividers */
   --bc-border: rgba(31, 30, 27, 0.08);       /* Delicate hairline border */
@@ -115,7 +115,7 @@
   --bc-text-primary: #FAF9F5;     /* Warm off-white */
   --bc-text-secondary: #A39E93;   /* Warm medium gray */
   --bc-text-tertiary: #6E6A62;    /* Dark muted metadata */
-  --bc-text-on-accent: #181816;
+  --bc-text-on-accent: #FFFFFF;   /* Crisp white text/icons on dark-mode terracotta */
 
   /* Borders & Dividers */
   --bc-border: rgba(250, 249, 245, 0.09);

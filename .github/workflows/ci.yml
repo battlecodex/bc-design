@@ -1,0 +1,37 @@
+name: CI Quality Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-and-test:
+    name: Validate & Test (Python ${{ matrix.python-version }} on ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install test dependencies
+        run: python -m pip install --disable-pip-version-check -r requirements-dev.txt
+
+      - name: 1. Validate Repository Integrity & Mirror Parity
+        run: python scripts/validate.py
+
+      - name: 2. Run Full Unit Test Suite (Zero-Skip Gate)
+        run: python -m unittest discover -s tests
+
+      - name: 3. Run BC Design Quality & Accessibility Audit
+        run: python .agents/skills/bc-design/scripts/bc_design.py --audit examples/

@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BC Design Workspace & Artifacts Demo</title>
-  
+  <title>BattleCode Studio Workspace — BC Design</title>
+
+  <!-- Google Fonts: Newsreader (Editorial Serif), Inter (UI Sans), JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="../.agents/skills/bc-design/references/tokens.css" />
 
   <style>
@@ -16,6 +17,12 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    :root {
+      --bc-font-serif: "Newsreader", Georgia, serif;
+      --bc-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --bc-font-mono: "JetBrains Mono", monospace;
     }
 
     body {
@@ -26,84 +33,366 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      line-height: 1.5;
       transition: background-color var(--bc-duration-normal) var(--bc-ease),
                   color var(--bc-duration-normal) var(--bc-ease);
     }
 
-    /* Header */
-    header {
+    /* Accessibility 2px focus ring */
+    a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--bc-accent);
+      outline-offset: 2px;
+    }
+
+    /* Top Global Header (Sticky with semantic z-index 30) */
+    .chat-global-header {
       height: 56px;
       border-bottom: 1px solid var(--bc-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 24px;
+      padding: 0 20px;
       background: var(--bc-surface);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      gap: 16px;
     }
 
-    .brand {
+    .header-zone-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-toggle-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--bc-radius-md);
+      background: transparent;
+      border: 1px solid var(--bc-border);
+      color: var(--bc-text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .sidebar-toggle-btn:hover {
+      background: var(--bc-bg-subtle);
+      color: var(--bc-text-primary);
+    }
+
+    .studio-brand-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--bc-text-primary);
+    }
+
+    .studio-brand-badge svg {
+      width: 22px;
+      height: 22px;
+      color: var(--bc-accent);
+    }
+
+    .studio-brand-name {
+      font-family: var(--bc-font-serif);
+      font-size: 19px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .active-session-title {
+      font-size: 13.5px;
+      color: var(--bc-text-secondary);
+      border-left: 1px solid var(--bc-border);
+      padding-left: 12px;
+      max-width: 320px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .header-zone-center {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-family: var(--bc-font-serif);
-      font-size: 20px;
-      font-weight: 500;
     }
 
-    .brand svg {
-      width: 24px;
-      height: 24px;
-    }
-
-    .theme-btn {
+    .model-selector-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
       background: var(--bc-bg-subtle);
       border: 1px solid var(--bc-border);
-      color: var(--bc-text-secondary);
-      padding: 6px 12px;
-      border-radius: var(--bc-radius-full);
+      border-radius: var(--bc-radius-md);
       font-size: 13px;
+      font-weight: 500;
+      color: var(--bc-text-primary);
       cursor: pointer;
     }
 
-    /* Workspace Layout */
-    .workspace {
+    .token-usage-pill {
+      font-family: var(--bc-font-mono);
+      font-size: 11.5px;
+      color: var(--bc-text-tertiary);
+      padding: 4px 8px;
+      background: var(--bc-bg-subtle);
+      border-radius: var(--bc-radius-sm);
+      border: 1px solid var(--bc-border);
+    }
+
+    .header-zone-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-action-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--bc-radius-md);
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      color: var(--bc-text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .icon-action-btn:hover {
+      background: var(--bc-surface-hover);
+      color: var(--bc-text-primary);
+    }
+
+    .artifact-drawer-trigger-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--bc-accent-subtle);
+      border: 1px solid var(--bc-accent-border);
+      color: var(--bc-accent);
+      border-radius: var(--bc-radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .artifact-drawer-trigger-btn:hover {
+      background: var(--bc-accent);
+      color: var(--bc-text-on-accent);
+    }
+
+    /* Studio 3-Pane Body */
+    .studio-workspace-layout {
       flex: 1;
       display: flex;
       height: calc(100vh - 56px);
       position: relative;
+      overflow: hidden;
     }
 
-    /* Chat Section */
-    .chat-section {
+    /* Left Sidebar */
+    .chat-history-sidebar {
+      width: 280px;
+      background: var(--bc-bg-subtle);
+      border-right: 1px solid var(--bc-border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      flex-shrink: 0;
+      transition: transform var(--bc-duration-normal) var(--bc-ease);
+    }
+
+    .chat-history-sidebar.collapsed {
+      display: none;
+    }
+
+    .sidebar-actions-zone {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border-bottom: 1px solid var(--bc-border);
+    }
+
+    .btn-new-conversation {
+      width: 100%;
+      height: 38px;
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border-strong);
+      border-radius: var(--bc-radius-md);
+      color: var(--bc-text-primary);
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: var(--bc-shadow-sm);
+      transition: background var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .btn-new-conversation:hover {
+      background: var(--bc-surface-hover);
+      border-color: var(--bc-accent);
+    }
+
+    .sidebar-search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+      height: 34px;
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-md);
+    }
+
+    .sidebar-search-box input {
+      background: transparent;
+      border: none;
+      font-family: inherit;
+      font-size: 12.5px;
+      color: var(--bc-text-primary);
+      width: 100%;
+      outline: none;
+    }
+
+    .conversations-scroll-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .history-group-header {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--bc-text-tertiary);
+      padding: 0 8px 4px;
+    }
+
+    .history-item-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: var(--bc-radius-md);
+      color: var(--bc-text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background var(--bc-duration-fast) var(--bc-ease),
+                  color var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .history-item-link:hover {
+      background: var(--bc-surface);
+      color: var(--bc-text-primary);
+    }
+
+    .history-item-link.active {
+      background: var(--bc-surface);
+      color: var(--bc-text-primary);
+      font-weight: 500;
+      border: 1px solid var(--bc-border);
+    }
+
+    .history-item-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 210px;
+    }
+
+    .sidebar-user-tray {
+      padding: 14px 16px;
+      border-top: 1px solid var(--bc-border);
+      background: var(--bc-surface);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .user-profile-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-avatar-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--bc-radius-md);
+      background: var(--bc-accent-subtle);
+      border: 1px solid var(--bc-accent-border);
+      color: var(--bc-accent);
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-name-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--bc-text-primary);
+      line-height: 1.2;
+    }
+
+    .user-plan-label {
+      font-size: 11px;
+      color: var(--bc-text-tertiary);
+    }
+
+    /* Main Chat Stream Section */
+    .chat-main-section {
       flex: 1;
       display: flex;
       flex-direction: column;
       height: 100%;
       position: relative;
+      background: var(--bc-bg);
+      overflow: hidden;
     }
 
-    .messages-container {
+    .chat-messages-scroll-area {
       flex: 1;
       overflow-y: auto;
-      padding: 32px 24px 120px;
+      padding: 32px 32px 140px;
       display: flex;
       flex-direction: column;
       gap: 28px;
-      max-width: 780px;
+      max-width: 820px;
       margin: 0 auto;
       width: 100%;
     }
 
-    .message {
+    .chat-message-row {
       display: flex;
       gap: 16px;
       line-height: 1.6;
       font-size: 15px;
     }
 
-    .avatar {
-      width: 32px;
-      height: 32px;
+    .message-avatar-wrap {
+      width: 34px;
+      height: 34px;
       border-radius: var(--bc-radius-md);
       display: flex;
       align-items: center;
@@ -111,63 +400,129 @@
       flex-shrink: 0;
     }
 
-    .avatar-bc {
+    .avatar-assistant-bc {
       background: var(--bc-accent-subtle);
       border: 1px solid var(--bc-accent-border);
+      color: var(--bc-accent);
     }
 
-    .avatar-bc svg {
+    .avatar-assistant-bc svg {
       width: 20px;
       height: 20px;
     }
 
-    .avatar-user {
-      background: var(--bc-bg-muted);
+    .avatar-user-client {
+      background: var(--bc-bg-subtle);
+      border: 1px solid var(--bc-border);
       color: var(--bc-text-secondary);
       font-size: 13px;
       font-weight: 600;
     }
 
-    .bubble {
+    .message-content-box {
       flex: 1;
     }
 
-    .sender-name {
+    .message-sender-heading {
+      font-size: 13.5px;
       font-weight: 600;
-      font-size: 14px;
-      margin-bottom: 4px;
       color: var(--bc-text-primary);
-    }
-
-    .message-text {
-      color: var(--bc-text-primary);
-    }
-
-    /* Thinking State Pill */
-    .thinking-pill {
-      display: inline-flex;
+      margin-bottom: 6px;
+      display: flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 14px;
-      background: var(--bc-accent-subtle);
-      border: 1px solid var(--bc-accent-border);
-      border-radius: var(--bc-radius-full);
-      font-size: 13px;
-      color: var(--bc-accent);
-      font-weight: 500;
+    }
+
+    .message-timestamp {
+      font-size: 11.5px;
+      font-weight: normal;
+      color: var(--bc-text-tertiary);
+    }
+
+    .message-prose {
+      color: var(--bc-text-primary);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .message-prose p {
       margin-bottom: 12px;
     }
 
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
+    .message-prose p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Thinking Collapsible Process Block */
+    .thinking-collapsible-card {
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-md);
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .thinking-header-toggle {
+      width: 100%;
+      padding: 8px 14px;
+      background: var(--bc-bg-subtle);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 12.5px;
+      color: var(--bc-text-secondary);
+      font-weight: 500;
+    }
+
+    .thinking-pulse-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--bc-accent);
+    }
+
+    .thinking-dot {
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: var(--bc-accent);
     }
 
-    /* Artifact Snippet Card */
-    .artifact-card {
-      margin-top: 14px;
+    .thinking-content-body {
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--bc-text-secondary);
+      line-height: 1.6;
+      border-top: 1px solid var(--bc-border);
+      background: var(--bc-surface);
+      display: none;
+    }
+
+    .thinking-content-body.open {
+      display: block;
+    }
+
+    .reasoning-step-item {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .step-badge {
+      font-family: var(--bc-font-mono);
+      font-size: 11px;
+      color: var(--bc-accent);
+      background: var(--bc-accent-subtle);
+      padding: 1px 6px;
+      border-radius: var(--bc-radius-sm);
+      height: fit-content;
+    }
+
+    /* Embedded Artifact Snippet Card */
+    .embedded-artifact-card {
+      margin-top: 16px;
       border: 1px solid var(--bc-border-strong);
       border-radius: var(--bc-radius-lg);
       background: var(--bc-surface);
@@ -175,60 +530,142 @@
       box-shadow: var(--bc-shadow-sm);
     }
 
-    .artifact-header {
+    .artifact-snippet-bar {
+      padding: 12px 18px;
       background: var(--bc-bg-subtle);
-      padding: 10px 16px;
+      border-bottom: 1px solid var(--bc-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--bc-border);
-      font-size: 13px;
     }
 
-    .artifact-title {
-      font-weight: 600;
-      color: var(--bc-text-primary);
+    .artifact-info-cluster {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 10px;
     }
 
-    .btn-open-artifact {
-      background: var(--bc-surface);
-      border: 1px solid var(--bc-border);
-      padding: 4px 10px;
-      border-radius: var(--bc-radius-sm);
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
+    .artifact-info-cluster svg {
+      width: 18px;
+      height: 18px;
       color: var(--bc-accent);
     }
 
-    /* Floating Prompt Container */
-    .prompt-wrapper {
+    .artifact-title-text {
+      font-family: var(--bc-font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--bc-text-primary);
+    }
+
+    .artifact-badge-type {
+      font-size: 11px;
+      color: var(--bc-text-tertiary);
+      padding: 2px 6px;
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-sm);
+    }
+
+    .btn-inspect-artifact {
+      padding: 5px 12px;
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--bc-accent);
+      cursor: pointer;
+      transition: background var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .btn-inspect-artifact:hover {
+      background: var(--bc-accent-subtle);
+      border-color: var(--bc-accent-border);
+    }
+
+    .artifact-preview-code-block {
+      padding: 14px 18px;
+      font-family: var(--bc-font-mono);
+      font-size: 12.5px;
+      color: var(--bc-text-secondary);
+      background: var(--bc-bg);
+      line-height: 1.6;
+      max-height: 120px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .code-gradient-fade {
       position: absolute;
-      bottom: 24px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, var(--bc-bg));
+      pointer-events: none;
+    }
+
+    /* Floating Docked Prompt Container */
+    .prompt-dock-container {
+      position: absolute;
+      bottom: 20px;
       left: 0;
       right: 0;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
       padding: 0 24px;
+      pointer-events: none;
     }
 
-    .prompt-box {
+    .starter-pills-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      pointer-events: auto;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .starter-suggestion-btn {
+      padding: 5px 12px;
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-md);
+      font-size: 12.5px;
+      color: var(--bc-text-secondary);
+      cursor: pointer;
+      box-shadow: var(--bc-shadow-sm);
+      transition: border-color var(--bc-duration-fast) var(--bc-ease),
+                  color var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .starter-suggestion-btn:hover {
+      border-color: var(--bc-accent);
+      color: var(--bc-text-primary);
+    }
+
+    .prompt-input-card {
       width: 100%;
-      max-width: 780px;
+      max-width: 820px;
       background: var(--bc-surface);
       border: 1px solid var(--bc-border-strong);
       border-radius: var(--bc-radius-xl);
-      padding: 14px 18px 10px;
+      padding: 14px 18px 12px;
       box-shadow: var(--bc-shadow-lg);
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
+      pointer-events: auto;
+      transition: border-color var(--bc-duration-fast) var(--bc-ease);
     }
 
-    .prompt-textarea {
+    .prompt-input-card:focus-within {
+      border-color: var(--bc-accent);
+    }
+
+    .prompt-textarea-field {
       width: 100%;
       border: none;
       outline: none;
@@ -237,77 +674,101 @@
       font-family: inherit;
       font-size: 15px;
       color: var(--bc-text-primary);
-      max-height: 120px;
+      max-height: 140px;
+      line-height: 1.5;
     }
 
-    .prompt-toolbar {
+    .prompt-toolbar-actions {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-top: 4px;
+      border-top: 1px solid var(--bc-border);
+      padding-top: 8px;
     }
 
-    .model-badge {
-      display: inline-flex;
+    .toolbar-left-tools {
+      display: flex;
       align-items: center;
-      gap: 6px;
-      background: var(--bc-bg-subtle);
-      border: 1px solid var(--bc-border);
-      padding: 4px 10px;
-      border-radius: var(--bc-radius-full);
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--bc-text-secondary);
+      gap: 8px;
     }
 
-    .btn-send {
+    .tool-icon-btn {
+      background: transparent;
+      border: none;
+      color: var(--bc-text-tertiary);
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--bc-radius-sm);
+      transition: color var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .tool-icon-btn:hover {
+      color: var(--bc-text-primary);
+    }
+
+    .btn-send-message {
       width: 32px;
       height: 32px;
-      border-radius: 50%;
+      border-radius: var(--bc-radius-md);
       background: var(--bc-accent);
-      color: #FFFFFF;
+      color: var(--bc-text-on-accent);
       border: none;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all var(--bc-duration-fast) var(--bc-ease);
+      transition: background var(--bc-duration-fast) var(--bc-ease);
     }
 
-    .btn-send:hover {
+    .btn-send-message:hover {
       background: var(--bc-accent-hover);
-      transform: scale(1.04);
     }
 
-    /* Artifacts Split Panel (Drawer) */
-    .artifact-drawer {
-      width: 480px;
+    .btn-send-message:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Right Split Artifact Drawer */
+    .artifact-side-drawer {
+      width: 540px;
       border-left: 1px solid var(--bc-border);
       background: var(--bc-surface);
       display: flex;
       flex-direction: column;
       height: 100%;
+      flex-shrink: 0;
       box-shadow: var(--bc-shadow-md);
-      animation: bcDrawerIn var(--bc-duration-slow) var(--bc-ease);
+      transition: transform var(--bc-duration-normal) var(--bc-ease);
     }
 
-    .drawer-header {
-      padding: 14px 20px;
+    .artifact-side-drawer.hidden {
+      display: none;
+    }
+
+    .drawer-top-bar {
+      height: 52px;
+      padding: 0 18px;
       border-bottom: 1px solid var(--bc-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background: var(--bc-surface);
     }
 
-    .drawer-tabs {
+    .drawer-tab-switch {
       display: flex;
-      gap: 6px;
+      gap: 4px;
       background: var(--bc-bg-subtle);
       padding: 3px;
       border-radius: var(--bc-radius-md);
+      border: 1px solid var(--bc-border);
     }
 
-    .tab-btn {
+    .drawer-tab-btn {
       padding: 4px 12px;
       border: none;
       background: transparent;
@@ -316,23 +777,195 @@
       border-radius: var(--bc-radius-sm);
       cursor: pointer;
       color: var(--bc-text-secondary);
+      transition: background var(--bc-duration-fast) var(--bc-ease),
+                  color var(--bc-duration-fast) var(--bc-ease);
     }
 
-    .tab-btn.active {
+    .drawer-tab-btn.active {
       background: var(--bc-surface);
       color: var(--bc-text-primary);
       box-shadow: var(--bc-shadow-sm);
     }
 
-    .drawer-content {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      font-family: var(--bc-font-mono);
-      font-size: 13px;
-      line-height: 1.7;
-      background: var(--bc-bg);
+    .drawer-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
+
+    .drawer-icon-btn {
+      background: transparent;
+      border: 1px solid var(--bc-border);
+      color: var(--bc-text-secondary);
+      padding: 4px 8px;
+      border-radius: var(--bc-radius-sm);
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .drawer-icon-btn:hover {
+      background: var(--bc-bg-subtle);
+      color: var(--bc-text-primary);
+    }
+
+    .drawer-main-content {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bc-bg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tab-content-panel {
+      display: none;
+      padding: 20px;
+      flex: 1;
+    }
+
+    .tab-content-panel.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Code tab */
+    .code-editor-surface {
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-md);
+      padding: 16px;
+      font-family: var(--bc-font-mono);
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: var(--bc-text-primary);
+      overflow-x: auto;
+      flex: 1;
+    }
+
+    /* Live Preview Tab */
+    .preview-sandbox-surface {
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      flex: 1;
+    }
+
+    .sandbox-section-title {
+      font-family: var(--bc-font-serif);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--bc-text-primary);
+      margin-bottom: 8px;
+    }
+
+    .preview-component-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn-preview-primary {
+      padding: 8px 16px;
+      background: var(--bc-accent);
+      color: var(--bc-text-on-accent);
+      border: none;
+      border-radius: var(--bc-radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-preview-contrast {
+      padding: 8px 16px;
+      background: var(--bc-text-primary);
+      color: var(--bc-bg);
+      border: none;
+      border-radius: var(--bc-radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-preview-outline {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--bc-border-strong);
+      color: var(--bc-text-primary);
+      border-radius: var(--bc-radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .contrast-badge-pill {
+      font-family: var(--bc-font-mono);
+      font-size: 11.5px;
+      padding: 4px 8px;
+      border-radius: var(--bc-radius-sm);
+      background: var(--bc-accent-subtle);
+      border: 1px solid var(--bc-accent-border);
+      color: var(--bc-accent);
+    }
+
+    /* Diff View Tab */
+    .diff-table-view {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--bc-font-mono);
+      font-size: 12px;
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-md);
+    }
+
+    .diff-table-view td {
+      padding: 4px 10px;
+      line-height: 1.5;
+    }
+
+    .diff-line-del {
+      background: rgba(239, 68, 68, 0.1);
+      color: #DC2626;
+    }
+
+    .diff-line-add {
+      background: rgba(16, 185, 129, 0.1);
+      color: #059669;
+    }
+
+    .diff-line-ctx {
+      color: var(--bc-text-secondary);
+    }
+
+    /* Toast Notification */
+    .studio-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bc-surface);
+      color: var(--bc-text-primary);
+      border: 1px solid var(--bc-border-strong);
+      padding: 10px 16px;
+      border-radius: var(--bc-radius-md);
+      box-shadow: var(--bc-shadow-md);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      z-index: 100;
+    }
+
+    .studio-toast.show {
+      display: flex;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -345,110 +978,634 @@
 </head>
 <body>
 
-  <header>
-    <div class="brand">
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="#D97757"/>
-      </svg>
-      BC Design Studio
+  <!-- Top Global Header -->
+  <header class="chat-global-header">
+    <div class="header-zone-left">
+      <button class="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Toggle navigation drawer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+
+      <a href="bc-landing-page.html" class="studio-brand-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="currentColor"/>
+        </svg>
+        <span class="studio-brand-name">BattleCode Studio</span>
+      </a>
+
+      <span class="active-session-title" id="activeSessionHeader">Design Token Architecture & Interactive Artifacts</span>
     </div>
-    <button class="theme-btn" onclick="toggleTheme()">🌙 Toggle Theme</button>
+
+    <div class="header-zone-center">
+      <button class="model-selector-btn" onclick="openModelDropdown()" title="Switch AI model">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+          <polyline points="2 17 12 22 22 17"/>
+          <polyline points="2 12 12 17 22 12"/>
+        </svg>
+        <span>BC-4 Architecture</span>
+      </button>
+
+      <span class="token-usage-pill">1,420 / 200k tokens</span>
+    </div>
+
+    <div class="header-zone-right">
+      <button class="icon-action-btn" onclick="toggleTheme()" aria-label="Toggle color theme" title="Toggle theme">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+
+      <button class="icon-action-btn" onclick="shareConversation()" aria-label="Share session link" title="Share session">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="18" cy="5" r="3"/>
+          <circle cx="6" cy="12" r="3"/>
+          <circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+      </button>
+
+      <button class="artifact-drawer-trigger-btn" onclick="toggleArtifactDrawer()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <line x1="9" y1="3" x2="9" y2="21"/>
+        </svg>
+        <span>Artifact Drawer</span>
+      </button>
+    </div>
   </header>
 
-  <div class="workspace">
-    <!-- Chat Stream -->
-    <section class="chat-section">
-      <div class="messages-container">
-        <!-- User Message -->
-        <div class="message">
-          <div class="avatar avatar-user">U</div>
-          <div class="bubble">
-            <div class="sender-name">You</div>
-            <div class="message-text">Show me how BC Design renders a thought process and an interactive artifact.</div>
-          </div>
-        </div>
+  <!-- 3-Pane Workspace -->
+  <div class="studio-workspace-layout">
 
-        <!-- BC Design Response -->
-        <div class="message">
-          <div class="avatar avatar-bc">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="#D97757"/>
-            </svg>
-          </div>
-          <div class="bubble">
-            <div class="sender-name">BC Design</div>
-            
-            <!-- Thinking Pulse -->
-            <div class="thinking-pill bc-thinking">
-              <span class="pulse-dot"></span>
-              Thought for 4 seconds
-            </div>
+    <!-- Left Sidebar: Conversations & History -->
+    <aside class="chat-history-sidebar" id="chatSidebar">
+      <div class="sidebar-actions-zone">
+        <button class="btn-new-conversation" onclick="startNewConversation()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Start conversation
+        </button>
 
-            <div class="message-text">
-              Certainly! Here is an example of the warm, literary tone paired with an interactive split-screen Artifact drawer on the right.
-            </div>
-
-            <!-- Artifact Preview Card -->
-            <div class="artifact-card">
-              <div class="artifact-header">
-                <span class="artifact-title">BCDesignTokens.tsx</span>
-                <button class="btn-open-artifact" onclick="toggleDrawer()">View artifact</button>
-              </div>
-            </div>
-          </div>
+        <div class="sidebar-search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--bc-text-tertiary);">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" placeholder="Search conversations..." oninput="filterConversations(this.value)" />
         </div>
       </div>
 
-      <!-- Prompt Input Container -->
-      <div class="prompt-wrapper">
-        <div class="prompt-box">
-          <textarea class="prompt-textarea" placeholder="Reply to BC Design..." rows="2"></textarea>
-          <div class="prompt-toolbar">
-            <div class="model-badge">
-              BC Design, Current model
+      <div class="conversations-scroll-list" id="conversationsList">
+        <div>
+          <div class="history-group-header">Pinned Threads</div>
+          <a class="history-item-link active" onclick="selectThread(this, 'Design Token Architecture & Interactive Artifacts')">
+            <span class="history-item-text">Design Token Architecture v2</span>
+          </a>
+          <a class="history-item-link" onclick="selectThread(this, 'Procurement Engine & ERP Data Contracts')">
+            <span class="history-item-text">Procurement Engine Schema</span>
+          </a>
+          <a class="history-item-link" onclick="selectThread(this, 'Linear Motion Audit & Zero-Layout Shift')">
+            <span class="history-item-text">Linear Motion Audit</span>
+          </a>
+        </div>
+
+        <div>
+          <div class="history-group-header">Today</div>
+          <a class="history-item-link" onclick="selectThread(this, 'Subject-Grounded Palette Tuning')">
+            <span class="history-item-text">Editorial Palette Tuning</span>
+          </a>
+          <a class="history-item-link" onclick="selectThread(this, 'Zero-wrap Header Specifications')">
+            <span class="history-item-text">Zero-wrap Header Specs</span>
+          </a>
+        </div>
+
+        <div>
+          <div class="history-group-header">Previous 7 Days</div>
+          <a class="history-item-link" onclick="selectThread(this, 'Accessible Focus Ring & Token Contracts')">
+            <span class="history-item-text">Focus Ring & Token Contracts</span>
+          </a>
+          <a class="history-item-link" onclick="selectThread(this, 'Enterprise ERP Data Model')">
+            <span class="history-item-text">Enterprise ERP Contracts</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Sidebar User Tray -->
+      <div class="sidebar-user-tray">
+        <div class="user-profile-meta">
+          <div class="user-avatar-badge">RP</div>
+          <div>
+            <div class="user-name-title">Raden Rizky</div>
+            <span class="user-plan-label">Scholar Pro Plan</span>
+          </div>
+        </div>
+        <a href="bc-dashboard.html" class="icon-action-btn" title="Open workspace dashboard" style="width: 28px; height: 28px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Center: Main Chat Stream -->
+    <main class="chat-main-section">
+      <div class="chat-messages-scroll-area" id="messagesStream">
+
+        <!-- Turn 1: User -->
+        <div class="chat-message-row">
+          <div class="message-avatar-wrap avatar-user-client">RP</div>
+          <div class="message-content-box">
+            <div class="message-sender-heading">
+              <span>Raden Rizky</span>
+              <span class="message-timestamp">10:14 AM</span>
             </div>
-            <button class="btn-send bc-interactive" aria-label="Send">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="19" x2="12" y2="5"></line>
-                <polyline points="5 12 12 5 19 12"></polyline>
+            <div class="message-prose">
+              <p>Can you generate a complete subject-grounded design token system for our workspace with a live interactive artifact to test the components?</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Turn 1: BC Design Assistant -->
+        <div class="chat-message-row">
+          <div class="message-avatar-wrap avatar-assistant-bc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="message-content-box">
+            <div class="message-sender-heading">
+              <span>BC Design Studio</span>
+              <span class="message-timestamp">10:14 AM</span>
+            </div>
+
+            <!-- Thinking Process Block -->
+            <div class="thinking-collapsible-card">
+              <button class="thinking-header-toggle" onclick="toggleThinking(this)">
+                <span class="thinking-pulse-indicator">
+                  <span class="thinking-dot"></span>
+                  Thought process (took 3.2 seconds)
+                </span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </button>
+              <div class="thinking-content-body">
+                <div class="reasoning-step-item">
+                  <span class="step-badge">Step 1</span>
+                  <span>Grounding visual language in literary editorial hierarchy and warm neutral surfaces.</span>
+                </div>
+                <div class="reasoning-step-item">
+                  <span class="step-badge">Step 2</span>
+                  <span>Verifying WCAG 2.x AAA contrast ratios for primary and secondary controls.</span>
+                </div>
+                <div class="reasoning-step-item">
+                  <span class="step-badge">Step 3</span>
+                  <span>Constructing isolated CSS and TypeScript token contract in sidecar artifact.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="message-prose">
+              <p>
+                I have compiled the complete subject-grounded design tokens in the sidecar drawer on your right. The palette is anchored to warm archival parchment (<code style="font-family: var(--bc-font-mono); font-size: 13px;">#FAF9F5</code>), terracotta accent (<code style="font-family: var(--bc-font-mono); font-size: 13px;">#D97757</code>), and high-contrast ink (<code style="font-family: var(--bc-font-mono); font-size: 13px;">#1F1E1B</code>).
+              </p>
+              <p>
+                Dark surfaces avoid harsh pitch black, and all interactive controls include an explicit 2px visible focus ring.
+              </p>
+            </div>
+
+            <!-- Embedded Artifact Snippet Card -->
+            <div class="embedded-artifact-card">
+              <div class="artifact-snippet-bar">
+                <div class="artifact-info-cluster">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <polyline points="16 18 22 12 16 6"/>
+                    <polyline points="8 6 2 12 8 18"/>
+                  </svg>
+                  <span class="artifact-title-text">BCDesignTokens.tsx</span>
+                  <span class="artifact-badge-type">Tokens & Sandbox</span>
+                </div>
+                <button class="btn-inspect-artifact" onclick="openArtifactDrawer('preview')">
+                  Inspect artifact drawer
+                </button>
+              </div>
+              <div class="artifact-preview-code-block">
+                <pre><code>export const bcTokens = {
+  canvas: { light: "#FAF9F5", dark: "#181816" },
+  accent: { primary: "#D97757", hover: "#C15F3E" },
+  ink: { primary: "#1F1E1B", secondary: "#6B6760" },
+  motion: { ease: "cubic-bezier(0.16, 1, 0.3, 1)", duration: "200ms" }
+};</code></pre>
+                <div class="code-gradient-fade"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Docked Prompt Bar -->
+      <div class="prompt-dock-container">
+        <!-- Quick Starter Prompts -->
+        <div class="starter-pills-row">
+          <button class="starter-suggestion-btn" onclick="applyPromptSuggestion('Audit our current layout for zero-layout shift compliance during streaming')">
+            Audit layout stability
+          </button>
+          <button class="starter-suggestion-btn" onclick="applyPromptSuggestion('Generate a high-contrast dark theme button pairing with WCAG validation')">
+            Generate button variants
+          </button>
+          <button class="starter-suggestion-btn" onclick="applyPromptSuggestion('Explain the motion token budget for modals and sidecar drawers')">
+            Explain motion budget
+          </button>
+        </div>
+
+        <div class="prompt-input-card">
+          <textarea
+            id="promptInput"
+            class="prompt-textarea-field"
+            placeholder="Reply or give instructions to BattleCode Studio..."
+            rows="2"
+            onkeydown="handlePromptKeyDown(event)"
+          ></textarea>
+
+          <div class="prompt-toolbar-actions">
+            <div class="toolbar-left-tools">
+              <button class="tool-icon-btn" title="Attach file context" onclick="showToast('File attachment picker simulated')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                </svg>
+              </button>
+              <button class="tool-icon-btn" title="Inspect system prompt" onclick="showToast('System prompt uses BC Design guidelines')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="16" x2="12" y2="12"/>
+                  <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+              </button>
+            </div>
+
+            <button class="btn-send-message" id="sendBtn" onclick="sendMessage()" aria-label="Send instruction">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="19" x2="12" y2="5"/>
+                <polyline points="5 12 12 5 19 12"/>
               </svg>
             </button>
           </div>
         </div>
       </div>
-    </section>
+    </main>
 
-    <!-- Artifacts Drawer (Split Screen) -->
-    <aside class="artifact-drawer" id="artifactDrawer">
-      <div class="drawer-header">
-        <div class="drawer-tabs">
-          <button class="tab-btn active">Code</button>
-          <button class="tab-btn">Preview</button>
+    <!-- Right Split Artifact Drawer -->
+    <aside class="artifact-side-drawer" id="artifactDrawer">
+      <div class="drawer-top-bar">
+        <div class="drawer-tab-switch">
+          <button class="drawer-tab-btn active" id="tabDrawerCode" onclick="switchDrawerTab('code')">Code</button>
+          <button class="drawer-tab-btn" id="tabDrawerPreview" onclick="switchDrawerTab('preview')">Live Preview</button>
+          <button class="drawer-tab-btn" id="tabDrawerDiff" onclick="switchDrawerTab('diff')">Diff</button>
         </div>
-        <button class="theme-btn" style="padding: 2px 8px;" onclick="toggleDrawer()">✕ Close</button>
+
+        <div class="drawer-actions-row">
+          <button class="drawer-icon-btn" onclick="copyArtifactCode()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            <span>Copy</span>
+          </button>
+          <button class="drawer-icon-btn" onclick="toggleArtifactDrawer()" title="Close drawer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
       </div>
-      <div class="drawer-content">
-<pre><code>// BC Design Tokens
+
+      <div class="drawer-main-content">
+        <!-- Tab 1: Code -->
+        <div class="tab-content-panel active" id="panelDrawerCode">
+          <div class="code-editor-surface" id="codeContentDisplay">
+// BC Design Subject-Grounded Tokens
 export const tokens = {
-  canvas: "#FAF9F5",
-  accent: "#D97757",
-  ink: "#1F1E1B",
-  easing: "cubic-bezier(0.16, 1, 0.3, 1)"
-};</code></pre>
+  palette: {
+    canvas: {
+      light: "#FAF9F5",
+      dark: "#181816",
+      subtle: "#F4F3EE"
+    },
+    accent: {
+      terracotta: "#D97757",
+      hover: "#C15F3E",
+      subtle: "rgba(217, 119, 87, 0.12)"
+    },
+    neutral: {
+      ink: "#1F1E1B",
+      secondary: "#6B6760",
+      border: "rgba(31, 30, 27, 0.09)"
+    }
+  },
+  typography: {
+    serif: '"Newsreader", Georgia, serif',
+    sans: '"Inter", -apple-system, sans-serif',
+    mono: '"JetBrains Mono", monospace'
+  },
+  motion: {
+    durationFast: "150ms",
+    durationNormal: "200ms",
+    durationDrawer: "400ms",
+    easing: "cubic-bezier(0.16, 1, 0.3, 1)"
+  },
+  accessibility: {
+    focusRingWidth: "2px",
+    focusRingOffset: "2px",
+    stickyZIndex: 30
+  }
+};
+          </div>
+        </div>
+
+        <!-- Tab 2: Live Component Preview -->
+        <div class="tab-content-panel" id="panelDrawerPreview">
+          <div class="preview-sandbox-surface">
+            <div>
+              <h4 class="sandbox-section-title">Interactive Button States</h4>
+              <p style="font-size: 13px; color: var(--bc-text-secondary); margin-bottom: 12px;">
+                Verified under WCAG contrast benchmarks and 2px focus ring guidelines.
+              </p>
+              <div class="preview-component-grid">
+                <button class="btn-preview-primary" onclick="showToast('Primary action triggered')">Primary Terracotta</button>
+                <button class="btn-preview-contrast" onclick="showToast('High-contrast action triggered')">High Contrast Ink</button>
+                <button class="btn-preview-outline" onclick="showToast('Outline action triggered')">Outline Button</button>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="sandbox-section-title">Contrast Validation</h4>
+              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span class="contrast-badge-pill">Terracotta on Canvas: 4.8:1 AA</span>
+                <span class="contrast-badge-pill">Ink on Canvas: 15.2:1 AAA</span>
+                <span class="contrast-badge-pill">White on Dark Ink: 16.1:1 AAA</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="sandbox-section-title">Input Field Focus State</h4>
+              <input
+                type="text"
+                value="Accessible 2px focus ring enabled"
+                style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid var(--bc-border-strong); border-radius: var(--bc-radius-md); background: var(--bc-bg); color: var(--bc-text-primary); font-family: inherit; font-size: 13.5px;"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Diff / Revisions -->
+        <div class="tab-content-panel" id="panelDrawerDiff">
+          <table class="diff-table-view">
+            <tbody>
+              <tr class="diff-line-ctx"><td>1</td><td>&nbsp;export const tokens = {</td></tr>
+              <tr class="diff-line-del"><td>2</td><td>-   canvas: "#FFFFFF",</td></tr>
+              <tr class="diff-line-add"><td>2</td><td>+   canvas: "#FAF9F5",</td></tr>
+              <tr class="diff-line-del"><td>3</td><td>-   accent: "#7C3AED",</td></tr>
+              <tr class="diff-line-add"><td>3</td><td>+   accent: "#D97757",</td></tr>
+              <tr class="diff-line-add"><td>4</td><td>+   motionEasing: "cubic-bezier(0.16, 1, 0.3, 1)",</td></tr>
+              <tr class="diff-line-ctx"><td>5</td><td>&nbsp;};</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </aside>
+
+  </div>
+
+  <!-- Studio Toast Notification -->
+  <div class="studio-toast" id="studioToast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--bc-accent);">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="16" x2="12" y2="12"/>
+      <line x1="12" y1="8" x2="12.01" y2="8"/>
+    </svg>
+    <span id="toastNotice">Notification message</span>
   </div>
 
   <script>
+    // Theme Switcher
     function toggleTheme() {
       const html = document.documentElement;
       const current = html.getAttribute('data-theme') || 'light';
-      html.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
+      const next = current === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', next);
+      showToast(`Switched to ${next} theme`);
     }
 
-    function toggleDrawer() {
+    // Sidebar Collapse
+    function toggleSidebar() {
+      const sidebar = document.getElementById('chatSidebar');
+      sidebar.classList.toggle('collapsed');
+    }
+
+    // Artifact Drawer Toggle
+    function toggleArtifactDrawer() {
       const drawer = document.getElementById('artifactDrawer');
-      drawer.style.display = drawer.style.display === 'none' ? 'flex' : 'none';
+      drawer.classList.toggle('hidden');
+    }
+
+    function openArtifactDrawer(tab) {
+      const drawer = document.getElementById('artifactDrawer');
+      drawer.classList.remove('hidden');
+      if (tab) switchDrawerTab(tab);
+    }
+
+    // Drawer Tabs
+    function switchDrawerTab(tab) {
+      const tabCode = document.getElementById('tabDrawerCode');
+      const tabPreview = document.getElementById('tabDrawerPreview');
+      const tabDiff = document.getElementById('tabDrawerDiff');
+      const panelCode = document.getElementById('panelDrawerCode');
+      const panelPreview = document.getElementById('panelDrawerPreview');
+      const panelDiff = document.getElementById('panelDrawerDiff');
+
+      [tabCode, tabPreview, tabDiff].forEach(b => b.classList.remove('active'));
+      [panelCode, panelPreview, panelDiff].forEach(p => p.classList.remove('active'));
+
+      if (tab === 'code') {
+        tabCode.classList.add('active');
+        panelCode.classList.add('active');
+      } else if (tab === 'preview') {
+        tabPreview.classList.add('active');
+        panelPreview.classList.add('active');
+      } else if (tab === 'diff') {
+        tabDiff.classList.add('active');
+        panelDiff.classList.add('active');
+      }
+    }
+
+    // Thinking process expand/collapse
+    function toggleThinking(btn) {
+      const body = btn.nextElementSibling;
+      body.classList.toggle('open');
+    }
+
+    // Apply Starter Prompt
+    function applyPromptSuggestion(text) {
+      const input = document.getElementById('promptInput');
+      input.value = text;
+      input.focus();
+    }
+
+    // Keydown in Prompt
+    function handlePromptKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    }
+
+    // Send Message with Simulated Streaming Response
+    function sendMessage() {
+      const input = document.getElementById('promptInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const container = document.getElementById('messagesStream');
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      // Append User message
+      const userMsgHtml = `
+        <div class="chat-message-row">
+          <div class="message-avatar-wrap avatar-user-client">RP</div>
+          <div class="message-content-box">
+            <div class="message-sender-heading">
+              <span>Raden Rizky</span>
+              <span class="message-timestamp">${time}</span>
+            </div>
+            <div class="message-prose">
+              <p>${escapeHtml(text)}</p>
+            </div>
+          </div>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', userMsgHtml);
+      input.value = '';
+
+      // Assistant thinking indicator
+      const thinkingMsgHtml = `
+        <div class="chat-message-row" id="pendingAssistantMessage">
+          <div class="message-avatar-wrap avatar-assistant-bc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="message-content-box">
+            <div class="message-sender-heading">
+              <span>BC Design Studio</span>
+              <span class="message-timestamp">${time}</span>
+            </div>
+            <div class="thinking-pulse-indicator" style="font-size: 13.5px; margin-top: 4px;">
+              <span class="thinking-dot"></span>
+              Synthesizing response within design guidelines...
+            </div>
+          </div>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', thinkingMsgHtml);
+      container.scrollTop = container.scrollHeight;
+
+      // Simulated generation response without shift
+      setTimeout(() => {
+        const pending = document.getElementById('pendingAssistantMessage');
+        if (pending) {
+          pending.innerHTML = `
+            <div class="message-avatar-wrap avatar-assistant-bc">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="message-content-box">
+              <div class="message-sender-heading">
+                <span>BC Design Studio</span>
+                <span class="message-timestamp">${time}</span>
+              </div>
+              <div class="message-prose">
+                <p>I have processed your request for: <em>"${escapeHtml(text)}"</em>.</p>
+                <p>All component states honor our subject-grounded tokens with a visible 2px focus ring, calibrated cubic-bezier easing, and zero layout shift during streaming.</p>
+              </div>
+            </div>
+          `;
+          container.scrollTop = container.scrollHeight;
+        }
+      }, 950);
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Copy Artifact Code
+    function copyArtifactCode() {
+      const code = document.getElementById('codeContentDisplay').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Token code copied to clipboard');
+      });
+    }
+
+    // Select Thread
+    function selectThread(link, title) {
+      document.querySelectorAll('.history-item-link').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      document.getElementById('activeSessionHeader').textContent = title;
+      showToast(`Switched thread to "${title}"`);
+    }
+
+    function startNewConversation() {
+      document.getElementById('activeSessionHeader').textContent = 'New Conversation';
+      document.querySelectorAll('.history-item-link').forEach(l => l.classList.remove('active'));
+      showToast('Started new conversation thread');
+    }
+
+    function filterConversations(val) {
+      const items = document.querySelectorAll('.history-item-link');
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(val.toLowerCase()) ? 'flex' : 'none';
+      });
+    }
+
+    function shareConversation() {
+      showToast('Session link copied to clipboard');
+    }
+
+    function openModelDropdown() {
+      showToast('Available models: BC-4 Architecture, BC-3.5 Fast, BC-Code 2.0');
+    }
+
+    // Toast
+    function showToast(msg) {
+      const toast = document.getElementById('studioToast');
+      document.getElementById('toastNotice').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
     }
   </script>
 </body>

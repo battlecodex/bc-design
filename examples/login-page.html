@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to BC Design - Login</title>
-  
-  <!-- Google Fonts: Newsreader (Literary Serif) & Inter (Clean UI Sans) -->
+  <title>Sign in to BattleCode Studio — BC Design</title>
+
+  <!-- Google Fonts: Newsreader (Editorial Serif), Inter (UI Sans), JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="../.agents/skills/bc-design/references/tokens.css" />
 
   <style>
@@ -19,6 +19,12 @@
       padding: 0;
     }
 
+    :root {
+      --bc-font-serif: "Newsreader", Georgia, serif;
+      --bc-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --bc-font-mono: "JetBrains Mono", monospace;
+    }
+
     body {
       background-color: var(--bc-bg);
       color: var(--bc-text-primary);
@@ -26,229 +32,706 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
+      line-height: 1.5;
       transition: background-color var(--bc-duration-normal) var(--bc-ease),
                   color var(--bc-duration-normal) var(--bc-ease);
+    }
+
+    /* Accessibility focus ring */
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--bc-accent);
+      outline-offset: 2px;
+    }
+
+    /* Split Screen Layout */
+    .auth-page-container {
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+    }
+
+    /* Left Editorial Column */
+    .auth-editorial-panel {
+      flex: 1.15;
+      background: var(--bc-bg-subtle);
+      border-right: 1px solid var(--bc-border);
+      padding: 56px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       position: relative;
     }
 
-    /* Top Navigation Bar */
-    .top-bar {
-      position: absolute;
-      top: 20px;
-      right: 24px;
+    .editorial-brand-mark {
       display: flex;
       align-items: center;
       gap: 12px;
+      text-decoration: none;
+      color: var(--bc-text-primary);
+    }
+
+    .editorial-brand-mark svg {
+      width: 28px;
+      height: 28px;
+      color: var(--bc-accent);
+    }
+
+    .brand-title-text {
+      font-family: var(--bc-font-serif);
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .editorial-hero-content {
+      max-width: 520px;
+      margin: 40px 0;
+    }
+
+    .editorial-quote-mark {
+      font-family: var(--bc-font-serif);
+      font-size: 48px;
+      line-height: 1;
+      color: var(--bc-accent);
+      margin-bottom: 8px;
+    }
+
+    .editorial-headline {
+      font-family: var(--bc-font-serif);
+      font-size: 34px;
+      font-weight: 500;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      color: var(--bc-text-primary);
+      margin-bottom: 20px;
+    }
+
+    .editorial-subtext {
+      font-size: 16px;
+      color: var(--bc-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    /* Token Swatch Preview Card */
+    .token-preview-card {
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-lg);
+      padding: 20px 24px;
+      box-shadow: var(--bc-shadow-sm);
+    }
+
+    .token-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12.5px;
+      font-family: var(--bc-font-mono);
+      color: var(--bc-text-secondary);
+      margin-bottom: 14px;
+    }
+
+    .token-swatch-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .token-swatch-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .swatch-color-box {
+      height: 36px;
+      border-radius: var(--bc-radius-sm);
+      border: 1px solid var(--bc-border);
+    }
+
+    .swatch-label-name {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--bc-text-primary);
+    }
+
+    .swatch-label-hex {
+      font-family: var(--bc-font-mono);
+      font-size: 10.5px;
+      color: var(--bc-text-tertiary);
+    }
+
+    /* Trust & Security Badges */
+    .editorial-footer-notes {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border-top: 1px solid var(--bc-border);
+      padding-top: 24px;
+    }
+
+    .trust-institutions-label {
+      font-size: 12px;
+      color: var(--bc-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 500;
+    }
+
+    .trust-badges-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 13px;
+      color: var(--bc-text-secondary);
+      flex-wrap: wrap;
+    }
+
+    .security-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-family: var(--bc-font-mono);
+      color: var(--bc-text-secondary);
+      background: var(--bc-surface);
+      padding: 4px 10px;
+      border-radius: var(--bc-radius-sm);
+      border: 1px solid var(--bc-border);
+    }
+
+    .security-badge svg {
+      width: 14px;
+      height: 14px;
+      color: var(--bc-accent);
+    }
+
+    /* Right Auth Column */
+    .auth-portal-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px 64px;
+      background: var(--bc-bg);
+      position: relative;
+    }
+
+    .auth-top-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .return-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--bc-text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .return-link:hover {
+      color: var(--bc-text-primary);
+    }
+
+    .return-link svg {
+      width: 16px;
+      height: 16px;
     }
 
     .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: var(--bc-radius-md);
       background: var(--bc-surface);
-      border: 1px solid var(--bc-border-strong);
+      border: 1px solid var(--bc-border);
       color: var(--bc-text-secondary);
-      padding: 8px 14px;
-      border-radius: var(--bc-radius-full);
       font-size: 13px;
       font-weight: 500;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all var(--bc-duration-fast) var(--bc-ease);
-      box-shadow: var(--bc-shadow-sm);
+      font-family: inherit;
+      transition: background var(--bc-duration-fast) var(--bc-ease),
+                  border-color var(--bc-duration-fast) var(--bc-ease);
     }
 
     .theme-toggle-btn:hover {
       background: var(--bc-surface-hover);
+      border-color: var(--bc-border-strong);
       color: var(--bc-text-primary);
-      border-color: var(--bc-accent);
     }
 
-    /* Auth Container */
-    .auth-wrapper {
+    .theme-toggle-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Central Auth Form Box */
+    .auth-form-card {
+      max-width: 440px;
       width: 100%;
-      max-width: 420px;
+      margin: 40px auto;
     }
 
-    .auth-card {
-      background: var(--bc-surface);
+    .auth-title-block {
+      margin-bottom: 24px;
+    }
+
+    .auth-main-heading {
+      font-family: var(--bc-font-serif);
+      font-size: 30px;
+      font-weight: 500;
+      letter-spacing: -0.015em;
+      color: var(--bc-text-primary);
+      margin-bottom: 6px;
+    }
+
+    .auth-lead-subtext {
+      font-size: 14.5px;
+      color: var(--bc-text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Mode Navigation Tabs */
+    .auth-tabs-row {
+      display: flex;
+      gap: 4px;
+      background: var(--bc-bg-subtle);
+      padding: 4px;
+      border-radius: var(--bc-radius-md);
+      margin-bottom: 24px;
       border: 1px solid var(--bc-border);
-      border-radius: var(--bc-radius-xl);
-      padding: 40px 36px;
-      box-shadow: var(--bc-shadow-md);
+    }
+
+    .auth-tab-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      color: var(--bc-text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: var(--bc-radius-sm);
+      cursor: pointer;
+      font-family: inherit;
+      transition: background var(--bc-duration-fast) var(--bc-ease),
+                  color var(--bc-duration-fast) var(--bc-ease);
       text-align: center;
     }
 
-    /* Logo Mark */
-    .logo-container {
-      margin-bottom: 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 52px;
-      height: 52px;
-      border-radius: var(--bc-radius-lg);
-      background: var(--bc-accent-subtle);
-      border: 1px solid var(--bc-accent-border);
-    }
-
-    .logo-container svg {
-      width: 32px;
-      height: 32px;
-    }
-
-    /* Typography */
-    h1.serif-heading {
-      font-family: var(--bc-font-serif);
-      font-size: 32px;
-      font-weight: 500;
-      letter-spacing: -0.02em;
-      line-height: 1.25;
+    .auth-tab-btn.active {
+      background: var(--bc-surface);
       color: var(--bc-text-primary);
-      margin-bottom: 8px;
+      box-shadow: var(--bc-shadow-sm);
     }
 
-    p.subtext {
-      font-size: 15px;
-      color: var(--bc-text-secondary);
-      line-height: 1.5;
-      margin-bottom: 28px;
-    }
-
-    /* Form Elements */
-    .auth-form {
+    /* Form Styles */
+    .auth-form-body {
       display: flex;
       flex-direction: column;
       gap: 16px;
-      text-align: left;
     }
 
-    .form-group {
+    .form-group-field {
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
 
-    label {
+    .form-field-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .form-field-header label {
       font-size: 13px;
       font-weight: 500;
       color: var(--bc-text-secondary);
     }
 
-    .input-field {
+    .text-link-btn {
+      font-size: 12.5px;
+      color: var(--bc-accent);
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+    }
+
+    .text-link-btn:hover {
+      text-decoration: underline;
+    }
+
+    .input-control-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .text-input-field {
       width: 100%;
-      padding: 12px 16px;
+      height: 42px;
+      padding: 0 14px;
       border: 1px solid var(--bc-border-strong);
       border-radius: var(--bc-radius-md);
-      font-size: 15px;
+      font-size: 14.5px;
+      font-family: inherit;
       background: var(--bc-surface);
       color: var(--bc-text-primary);
       outline: none;
-      transition: all var(--bc-duration-fast) var(--bc-ease);
-      font-family: inherit;
+      transition: border-color var(--bc-duration-fast) var(--bc-ease),
+                  box-shadow var(--bc-duration-fast) var(--bc-ease);
     }
 
-    .input-field::placeholder {
+    .text-input-field:focus {
+      border-color: var(--bc-accent);
+      box-shadow: 0 0 0 1px var(--bc-accent);
+    }
+
+    .input-addon-btn {
+      position: absolute;
+      right: 12px;
+      background: transparent;
+      border: none;
+      color: var(--bc-text-tertiary);
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .input-addon-btn:hover {
+      color: var(--bc-text-primary);
+    }
+
+    .input-addon-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Password Strength Indicator */
+    .password-strength-wrap {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .strength-meter-bar {
+      display: flex;
+      gap: 4px;
+      height: 4px;
+    }
+
+    .strength-segment {
+      flex: 1;
+      height: 100%;
+      border-radius: var(--bc-radius-full);
+      background: var(--bc-border);
+      transition: background var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .strength-segment.active-weak {
+      background: #EF4444;
+    }
+
+    .strength-segment.active-medium {
+      background: #F59E0B;
+    }
+
+    .strength-segment.active-strong {
+      background: #10B981;
+    }
+
+    .strength-caption-text {
+      font-size: 12px;
       color: var(--bc-text-tertiary);
     }
 
-    .input-field:focus {
-      border-color: var(--bc-border-focus);
-      box-shadow: var(--bc-ring);
+    /* Checkbox & Options */
+    .checkbox-option-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 2px 0 6px;
     }
 
-    /* Primary Submit Button */
-    .btn-submit {
+    .checkbox-control {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--bc-accent);
+      cursor: pointer;
+    }
+
+    .checkbox-label {
+      font-size: 13px;
+      color: var(--bc-text-secondary);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Submit CTA Button */
+    .btn-auth-submit {
       width: 100%;
-      padding: 13px 18px;
+      height: 44px;
       background: var(--bc-accent);
-      color: var(--bc-text-on-accent);
+      color: var(--bc-text-on-accent, #FFFFFF);
       border: none;
       border-radius: var(--bc-radius-md);
-      font-size: 15px;
+      font-size: 14.5px;
       font-weight: 600;
+      font-family: inherit;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 1px 3px rgba(217, 119, 87, 0.2);
+      margin-top: 6px;
+      box-shadow: 0 1px 3px rgba(217, 119, 87, 0.25);
+      transition: background var(--bc-duration-fast) var(--bc-ease);
     }
 
-    .btn-submit:hover {
+    .btn-auth-submit:hover {
       background: var(--bc-accent-hover);
-      box-shadow: 0 4px 12px rgba(217, 119, 87, 0.3);
+    }
+
+    .btn-auth-submit:active {
+      background: var(--bc-accent-active);
     }
 
     /* Divider */
-    .divider {
+    .auth-or-divider {
       display: flex;
       align-items: center;
-      margin: 24px 0;
+      margin: 20px 0;
+      font-size: 12.5px;
       color: var(--bc-text-tertiary);
-      font-size: 13px;
     }
 
-    .divider::before,
-    .divider::after {
+    .auth-or-divider::before,
+    .auth-or-divider::after {
       content: "";
       flex: 1;
       height: 1px;
       background: var(--bc-border);
     }
 
-    .divider span {
-      padding: 0 14px;
+    .auth-or-divider span {
+      padding: 0 12px;
     }
 
-    /* OAuth Buttons */
-    .social-group {
+    /* OAuth Buttons Grid */
+    .oauth-providers-grid {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .btn-oauth {
+    .btn-oauth-provider {
       width: 100%;
-      padding: 11px 16px;
+      height: 40px;
+      padding: 0 16px;
       background: var(--bc-surface);
-      border: 1px solid var(--bc-border-strong);
+      border: 1px solid var(--bc-border);
       border-radius: var(--bc-radius-md);
       color: var(--bc-text-primary);
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 500;
+      font-family: inherit;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      box-shadow: var(--bc-shadow-sm);
+      transition: background var(--bc-duration-fast) var(--bc-ease),
+                  border-color var(--bc-duration-fast) var(--bc-ease);
     }
 
-    .btn-oauth:hover {
+    .btn-oauth-provider:hover {
       background: var(--bc-surface-hover);
-      border-color: var(--bc-text-secondary);
+      border-color: var(--bc-border-strong);
     }
 
-    /* Footer */
-    .auth-footer {
-      margin-top: 24px;
+    .btn-oauth-provider svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    /* 2FA Verification Screen */
+    .verification-view {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
       text-align: center;
-      font-size: 12px;
-      color: var(--bc-text-tertiary);
-      line-height: 1.6;
     }
 
-    .auth-footer a {
+    .verification-view.active {
+      display: flex;
+    }
+
+    .verification-icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--bc-radius-md);
+      background: var(--bc-accent-subtle);
+      border: 1px solid var(--bc-accent-border);
+      color: var(--bc-accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+    }
+
+    .verification-digits-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .digit-box-input {
+      width: 44px;
+      height: 52px;
+      text-align: center;
+      font-family: var(--bc-font-mono);
+      font-size: 22px;
+      font-weight: 600;
+      border: 1px solid var(--bc-border-strong);
+      border-radius: var(--bc-radius-md);
+      background: var(--bc-surface);
+      color: var(--bc-text-primary);
+      outline: none;
+    }
+
+    .digit-box-input:focus {
+      border-color: var(--bc-accent);
+      box-shadow: 0 0 0 1px var(--bc-accent);
+    }
+
+    .resend-timer-caption {
+      font-size: 13px;
+      color: var(--bc-text-secondary);
+    }
+
+    /* Modal dialog */
+    .modal-backdrop-sheet {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 24px;
+    }
+
+    .modal-backdrop-sheet.active {
+      display: flex;
+    }
+
+    .modal-content-dialog {
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-xl);
+      max-width: 460px;
+      width: 100%;
+      padding: 32px;
+      box-shadow: var(--bc-shadow-lg);
+      position: relative;
+    }
+
+    .modal-close-icon-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: transparent;
+      border: none;
+      color: var(--bc-text-tertiary);
+      cursor: pointer;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close-icon-btn:hover {
+      color: var(--bc-text-primary);
+    }
+
+    .modal-close-icon-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Status Banner Toast */
+    .status-toast-notification {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bc-surface);
+      color: var(--bc-text-primary);
+      border: 1px solid var(--bc-border-strong);
+      padding: 12px 18px;
+      border-radius: var(--bc-radius-md);
+      box-shadow: var(--bc-shadow-md);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      font-size: 13.5px;
+      z-index: 90;
+    }
+
+    .status-toast-notification.show {
+      display: flex;
+    }
+
+    /* Portal Footer */
+    .auth-portal-footer {
+      border-top: 1px solid var(--bc-border);
+      padding-top: 20px;
+      text-align: center;
+      font-size: 12.5px;
+      color: var(--bc-text-tertiary);
+    }
+
+    .auth-portal-footer a {
       color: var(--bc-text-secondary);
       text-decoration: underline;
       text-underline-offset: 3px;
     }
 
-    .auth-footer a:hover {
+    .auth-portal-footer a:hover {
       color: var(--bc-accent);
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .auth-page-container {
+        flex-direction: column;
+      }
+
+      .auth-editorial-panel {
+        display: none;
+      }
+
+      .auth-portal-panel {
+        padding: 28px 24px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -263,102 +746,612 @@
 </head>
 <body>
 
-  <!-- Mode Switcher -->
-  <div class="top-bar">
-    <button class="theme-toggle-btn bc-interactive" id="themeToggle" onclick="toggleTheme()">
-      <span id="themeIcon">🌙</span>
-      <span id="themeLabel">Dark Mode</span>
-    </button>
-  </div>
+  <div class="auth-page-container">
 
-  <main class="auth-wrapper">
-    <div class="auth-card bc-fade-up">
-      <!-- BC Design Starburst Icon -->
-      <div class="logo-container">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="#D97757"/>
-        </svg>
+    <!-- Left Column: Archival & Editorial Brand Showcase -->
+    <aside class="auth-editorial-panel">
+      <div>
+        <a href="bc-landing-page.html" class="editorial-brand-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="currentColor"/>
+          </svg>
+          <span class="brand-title-text">BC Design Studio</span>
+        </a>
+
+        <div class="editorial-hero-content">
+          <div class="editorial-quote-mark">“</div>
+          <h2 class="editorial-headline">
+            Intelligence crafted with restraint, editorial hierarchy, and archival clarity.
+          </h2>
+          <p class="editorial-subtext">
+            BattleCode Studio unites subject-grounded tokens, zero-layout-shift streaming, and structured sidecar artifacts into a calm environment for researchers and engineers.
+          </p>
+
+          <!-- Interactive Token Preview Palette -->
+          <div class="token-preview-card">
+            <div class="token-card-header">
+              <span>CANONICAL SYSTEM PALETTE</span>
+              <span>tokens.css</span>
+            </div>
+            <div class="token-swatch-row">
+              <div class="token-swatch-item">
+                <div class="swatch-color-box" style="background: var(--bc-bg);"></div>
+                <span class="swatch-label-name">Canvas</span>
+                <span class="swatch-label-hex" id="hexCanvas">#FAF9F5</span>
+              </div>
+              <div class="token-swatch-item">
+                <div class="swatch-color-box" style="background: var(--bc-accent);"></div>
+                <span class="swatch-label-name">Terracotta</span>
+                <span class="swatch-label-hex">#D97757</span>
+              </div>
+              <div class="token-swatch-item">
+                <div class="swatch-color-box" style="background: #556B2F;"></div>
+                <span class="swatch-label-name">Sage</span>
+                <span class="swatch-label-hex">#556B2F</span>
+              </div>
+              <div class="token-swatch-item">
+                <div class="swatch-color-box" style="background: var(--bc-text-primary);"></div>
+                <span class="swatch-label-name">Ink</span>
+                <span class="swatch-label-hex" id="hexInk">#1F1E1B</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <h1 class="serif-heading">Welcome to BC Design</h1>
-      <p class="subtext">Enter your email to sign in or create an account.</p>
+      <!-- Trust and Security Notes -->
+      <div class="editorial-footer-notes">
+        <span class="trust-institutions-label">Engineered for knowledge synthesis</span>
+        <div class="trust-badges-row">
+          <span class="security-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            SOC2 Type II
+          </span>
+          <span class="security-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            256-Bit TLS
+          </span>
+          <span class="security-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            HIPAA Ready
+          </span>
+        </div>
+      </div>
+    </aside>
 
-      <form class="auth-form" onsubmit="handleLogin(event)">
-        <div class="form-group">
-          <label for="email">Email address</label>
-          <input 
-            type="email" 
-            id="email" 
-            class="input-field" 
-            placeholder="name@example.com" 
-            required 
-            autocomplete="email"
-          />
+    <!-- Right Column: Authentication Portal -->
+    <main class="auth-portal-panel">
+      <!-- Top Navigation Zone -->
+      <div class="auth-top-toolbar">
+        <a href="bc-landing-page.html" class="return-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Return to overview
+        </a>
+
+        <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle visual theme">
+          <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display: none;">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg id="themeIconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <span id="themeLabelText">Dark theme</span>
+        </button>
+      </div>
+
+      <!-- Main Central Card -->
+      <div class="auth-form-card">
+
+        <!-- Standard Auth Form Flow -->
+        <div id="standardAuthContainer">
+          <div class="auth-title-block">
+            <h1 class="auth-main-heading" id="portalHeaderTitle">Welcome to BC Design</h1>
+            <p class="auth-lead-subtext" id="portalHeaderDesc">Sign in to manage your models, workflows, and workspace contracts.</p>
+          </div>
+
+          <!-- Auth Mode Navigation Tabs -->
+          <div class="auth-tabs-row" role="tablist">
+            <button class="auth-tab-btn active" id="tabSignIn" role="tab" onclick="switchAuthMode('signin')">Sign in</button>
+            <button class="auth-tab-btn" id="tabSignUp" role="tab" onclick="switchAuthMode('signup')">Create account</button>
+            <button class="auth-tab-btn" id="tabSSO" role="tab" onclick="switchAuthMode('sso')">Enterprise SSO</button>
+          </div>
+
+          <!-- Mode 1: Sign In -->
+          <form class="auth-form-body" id="formSignIn" onsubmit="handleAuthSubmit(event, 'signin')">
+            <div class="form-group-field">
+              <div class="form-field-header">
+                <label for="signinEmail">Work email</label>
+              </div>
+              <div class="input-control-wrap">
+                <input
+                  type="email"
+                  id="signinEmail"
+                  class="text-input-field"
+                  placeholder="analyst@institution.org"
+                  required
+                  autocomplete="username"
+                />
+              </div>
+            </div>
+
+            <div class="form-group-field">
+              <div class="form-field-header">
+                <label for="signinPassword">Password</label>
+                <button type="button" class="text-link-btn" onclick="openResetModal()">Forgot password?</button>
+              </div>
+              <div class="input-control-wrap">
+                <input
+                  type="password"
+                  id="signinPassword"
+                  class="text-input-field"
+                  placeholder="Enter workspace password"
+                  required
+                  autocomplete="current-password"
+                />
+                <button type="button" class="input-addon-btn" onclick="togglePasswordVisibility('signinPassword', this)" aria-label="Toggle password visibility">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="checkbox-option-row">
+              <input type="checkbox" id="rememberDevice" class="checkbox-control" checked />
+              <label for="rememberDevice" class="checkbox-label">Keep me signed in for 30 days</label>
+            </div>
+
+            <button  class="btn-auth-submit" id="signinSubmitBtn">
+              Sign in to workspace
+            </button>
+          </form>
+
+          <!-- Mode 2: Create Account -->
+          <form class="auth-form-body" id="formSignUp" style="display: none;" onsubmit="handleAuthSubmit(event, 'signup')">
+            <div class="form-group-field">
+              <div class="form-field-header">
+                <label for="signupFullName">Full name</label>
+              </div>
+              <div class="input-control-wrap">
+                <input
+                  type="text"
+                  id="signupFullName"
+                  class="text-input-field"
+                  placeholder="Dr. Eleanor Vance"
+                  required
+                  autocomplete="name"
+                />
+              </div>
+            </div>
+
+            <div class="form-group-field">
+              <div class="form-field-header">
+                <label for="signupEmail">Work email</label>
+              </div>
+              <div class="input-control-wrap">
+                <input
+                  type="email"
+                  id="signupEmail"
+                  class="text-input-field"
+                  placeholder="name@organization.com"
+                  required
+                  autocomplete="email"
+                />
+              </div>
+            </div>
+
+            <div class="form-group-field">
+              <div class="form-field-header">
+                <label for="signupPassword">Password</label>
+              </div>
+              <div class="input-control-wrap">
+                <input
+                  type="password"
+                  id="signupPassword"
+                  class="text-input-field"
+                  placeholder="Create strong password"
+                  required
+                  autocomplete="new-password"
+                  oninput="checkPasswordStrength(this.value)"
+                />
+                <button type="button" class="input-addon-btn" onclick="togglePasswordVisibility('signupPassword', this)" aria-label="Toggle password visibility">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="password-strength-wrap">
+                <div class="strength-meter-bar">
+                  <div class="strength-segment" id="strSeg1"></div>
+                  <div class="strength-segment" id="strSeg2"></div>
+                  <div class="strength-segment" id="strSeg3"></div>
+                </div>
+                <span class="strength-caption-text" id="strengthLabel">Enter at least 8 characters</span>
+              </div>
+            </div>
+
+            <div class="checkbox-option-row">
+              <input type="checkbox" id="agreeTerms" class="checkbox-control" required />
+              <label for="agreeTerms" class="checkbox-label">I agree to BC Design's Terms and Privacy Policy</label>
+            </div>
+
+            <button  class="btn-auth-submit">
+              Create workspace account
+            </button>
+          </form>
+
+          <!-- Mode 3: Enterprise SSO -->
+          <form class="auth-form-body" id="formSSO" style="display: none;" onsubmit="handleAuthSubmit(event, 'sso')">
+            <div class="form-group-field">
+              <div class="form-field-header">
+                <label for="ssoDomain">Organization SSO domain</label>
+              </div>
+              <div class="input-control-wrap">
+                <input
+                  type="text"
+                  id="ssoDomain"
+                  class="text-input-field"
+                  placeholder="organization.com or company-id"
+                  required
+                />
+              </div>
+            </div>
+
+            <p style="font-size: 13px; color: var(--bc-text-secondary); line-height: 1.5;">
+              BC Design supports SAML 2.0, Okta, Microsoft Azure AD, and Google Workspace Single Sign-On.
+            </p>
+
+            <button  class="btn-auth-submit">
+              Continue with Single Sign-On
+            </button>
+          </form>
+
+          <!-- Social OAuth Section -->
+          <div id="oauthGroupContainer">
+            <div class="auth-or-divider">
+              <span>or continue with</span>
+            </div>
+
+            <div class="oauth-providers-grid">
+              <button class="btn-oauth-provider" type="button" onclick="triggerOAuth('Google')">
+                <svg viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                Continue with Google
+              </button>
+
+              <button class="btn-oauth-provider" type="button" onclick="triggerOAuth('Apple')">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.93-2.85-.9.04-1.99.6-2.63 1.35-.57.65-1.06 1.71-.93 2.73 1 .08 2.01-.48 2.63-1.23z"/>
+                </svg>
+                Continue with Apple
+              </button>
+
+              <button class="btn-oauth-provider" type="button" onclick="triggerOAuth('GitHub')">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+                Continue with GitHub
+              </button>
+            </div>
+          </div>
         </div>
 
-        <button type="submit" class="btn-submit bc-interactive" id="submitBtn">
-          Continue with email
+        <!-- 2FA Verification Screen (Replaces Form on Submission) -->
+        <div class="verification-view" id="verificationView">
+          <div class="verification-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <h2 class="auth-main-heading" style="font-size: 26px;">Two-factor verification</h2>
+          <p class="auth-lead-subtext">
+            Enter the 6-digit security code sent to <strong id="sentEmailTarget" style="color: var(--bc-text-primary);">your email</strong>.
+          </p>
+
+          <form onsubmit="verifyCode(event)">
+            <div class="verification-digits-row">
+              <input type="text" maxlength="1" class="digit-box-input" oninput="handleDigitInput(this, 1)" id="d1" autofocus />
+              <input type="text" maxlength="1" class="digit-box-input" oninput="handleDigitInput(this, 2)" id="d2" />
+              <input type="text" maxlength="1" class="digit-box-input" oninput="handleDigitInput(this, 3)" id="d3" />
+              <input type="text" maxlength="1" class="digit-box-input" oninput="handleDigitInput(this, 4)" id="d4" />
+              <input type="text" maxlength="1" class="digit-box-input" oninput="handleDigitInput(this, 5)" id="d5" />
+              <input type="text" maxlength="1" class="digit-box-input" oninput="handleDigitInput(this, 6)" id="d6" />
+            </div>
+
+            <button  class="btn-auth-submit" style="margin-top: 16px;">
+              Verify security code
+            </button>
+          </form>
+
+          <p class="resend-timer-caption">
+            Didn't receive code? <button type="button" class="text-link-btn" id="resendBtn" onclick="resendCode()">Resend code in 28s</button>
+          </p>
+
+          <button type="button" class="text-link-btn" onclick="backToAuthForm()" style="margin-top: 8px; font-size: 13px;">
+            Sign in with a different account
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Bottom Compliance Footer -->
+      <footer class="auth-portal-footer">
+        Protected by BattleCode Cryptographic Security. View our <a href="#">Consumer Terms</a> and <a href="#">Privacy Charter</a>.
+      </footer>
+    </main>
+
+  </div>
+
+  <!-- Password Reset Modal Dialog -->
+  <div class="modal-backdrop-sheet" id="resetModal" onclick="closeResetModalOnBackdrop(event)">
+    <div class="modal-content-dialog">
+      <button class="modal-close-icon-btn" onclick="closeResetModal()" aria-label="Close dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <h3 class="auth-main-heading" style="font-size: 22px; margin-bottom: 8px;">Reset your password</h3>
+      <p style="font-size: 14px; color: var(--bc-text-secondary); line-height: 1.5; margin-bottom: 20px;">
+        Enter your registered email address and we will dispatch password recovery instructions.
+      </p>
+
+      <form onsubmit="handleResetSubmit(event)" style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="form-group-field">
+          <label for="resetEmail" style="font-size: 13px; font-weight: 500; color: var(--bc-text-secondary);">Account email</label>
+          <input type="email" id="resetEmail" class="text-input-field" placeholder="analyst@organization.org" required />
+        </div>
+        <button  class="btn-auth-submit">
+          Send recovery instructions
         </button>
       </form>
-
-      <div class="divider">
-        <span>or</span>
-      </div>
-
-      <div class="social-group">
-        <button class="btn-oauth bc-interactive" type="button" onclick="oauthClick('Google')">
-          <svg width="18" height="18" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-          </svg>
-          Continue with Google
-        </button>
-
-        <button class="btn-oauth bc-interactive" type="button" onclick="oauthClick('Apple')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.93-2.85-.9.04-1.99.6-2.63 1.35-.57.65-1.06 1.71-.93 2.73 1 .08 2.01-.48 2.63-1.23z"/>
-          </svg>
-          Continue with Apple
-        </button>
-      </div>
-
-      <footer class="auth-footer">
-        By continuing, you agree to BC Design's <a href="#">Consumer Terms</a> and <a href="#">Privacy Policy</a>.
-      </footer>
     </div>
-  </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="status-toast-notification" id="statusToast">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--bc-accent);">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="16" x2="12" y2="12"/>
+      <line x1="12" y1="8" x2="12.01" y2="8"/>
+    </svg>
+    <span id="toastMessage">Action completed successfully</span>
+  </div>
 
   <script>
+    // Theme Switcher Logic
     function toggleTheme() {
       const html = document.documentElement;
       const current = html.getAttribute('data-theme') || 'light';
       const next = current === 'light' ? 'dark' : 'light';
       html.setAttribute('data-theme', next);
-      
-      document.getElementById('themeIcon').textContent = next === 'dark' ? '☀️' : '🌙';
-      document.getElementById('themeLabel').textContent = next === 'dark' ? 'Light Mode' : 'Dark Mode';
+
+      const sunIcon = document.getElementById('themeIconSun');
+      const moonIcon = document.getElementById('themeIconMoon');
+      const labelText = document.getElementById('themeLabelText');
+      const hexCanvas = document.getElementById('hexCanvas');
+      const hexInk = document.getElementById('hexInk');
+
+      if (next === 'dark') {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+        labelText.textContent = 'Light theme';
+        if (hexCanvas) hexCanvas.textContent = '#181816';
+        if (hexInk) hexInk.textContent = '#F0EFEA';
+      } else {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+        labelText.textContent = 'Dark theme';
+        if (hexCanvas) hexCanvas.textContent = '#FAF9F5';
+        if (hexInk) hexInk.textContent = '#1F1E1B';
+      }
     }
 
-    function handleLogin(e) {
+    // Auth Mode Switcher
+    function switchAuthMode(mode) {
+      const tabSignIn = document.getElementById('tabSignIn');
+      const tabSignUp = document.getElementById('tabSignUp');
+      const tabSSO = document.getElementById('tabSSO');
+      const formSignIn = document.getElementById('formSignIn');
+      const formSignUp = document.getElementById('formSignUp');
+      const formSSO = document.getElementById('formSSO');
+      const oauthGroup = document.getElementById('oauthGroupContainer');
+      const title = document.getElementById('portalHeaderTitle');
+      const desc = document.getElementById('portalHeaderDesc');
+
+      [tabSignIn, tabSignUp, tabSSO].forEach(t => t.classList.remove('active'));
+      [formSignIn, formSignUp, formSSO].forEach(f => f.style.display = 'none');
+
+      if (mode === 'signin') {
+        tabSignIn.classList.add('active');
+        formSignIn.style.display = 'flex';
+        oauthGroup.style.display = 'block';
+        title.textContent = 'Welcome to BC Design';
+        desc.textContent = 'Sign in to manage your models, workflows, and workspace contracts.';
+      } else if (mode === 'signup') {
+        tabSignUp.classList.add('active');
+        formSignUp.style.display = 'flex';
+        oauthGroup.style.display = 'block';
+        title.textContent = 'Create your account';
+        desc.textContent = 'Access the full design intelligence workspace and shared catalogs.';
+      } else if (mode === 'sso') {
+        tabSSO.classList.add('active');
+        formSSO.style.display = 'flex';
+        oauthGroup.style.display = 'none';
+        title.textContent = 'Enterprise Single Sign-On';
+        desc.textContent = 'Enter your domain to authenticate with your company identity provider.';
+      }
+    }
+
+    // Password Visibility Toggle
+    function togglePasswordVisibility(fieldId, btn) {
+      const field = document.getElementById(fieldId);
+      const isPassword = field.type === 'password';
+      field.type = isPassword ? 'text' : 'password';
+
+      btn.innerHTML = isPassword ? `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+          <line x1="1" y1="1" x2="23" y2="23"/>
+        </svg>
+      ` : `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      `;
+    }
+
+    // Password Strength Checker
+    function checkPasswordStrength(val) {
+      const s1 = document.getElementById('strSeg1');
+      const s2 = document.getElementById('strSeg2');
+      const s3 = document.getElementById('strSeg3');
+      const label = document.getElementById('strengthLabel');
+
+      [s1, s2, s3].forEach(s => s.className = 'strength-segment');
+
+      if (!val || val.length === 0) {
+        label.textContent = 'Enter at least 8 characters';
+        return;
+      }
+
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+
+      if (score === 1) {
+        s1.classList.add('active-weak');
+        label.textContent = 'Weak: add numbers and symbols';
+      } else if (score === 2) {
+        s1.classList.add('active-medium');
+        s2.classList.add('active-medium');
+        label.textContent = 'Good: add a special symbol';
+      } else if (score >= 3) {
+        s1.classList.add('active-strong');
+        s2.classList.add('active-strong');
+        s3.classList.add('active-strong');
+        label.textContent = 'Strong password';
+      }
+    }
+
+    // Form Submission & 2FA Transition
+    function handleAuthSubmit(e, mode) {
       e.preventDefault();
-      const email = document.getElementById('email').value;
-      const btn = document.getElementById('submitBtn');
-      const originalText = btn.innerHTML;
-      
-      btn.innerHTML = '<span class="bc-shimmer-text">Verifying...</span>';
-      btn.style.pointerEvents = 'none';
+      let targetEmail = '';
+      if (mode === 'signin') {
+        targetEmail = document.getElementById('signinEmail').value;
+      } else if (mode === 'signup') {
+        targetEmail = document.getElementById('signupEmail').value;
+      } else {
+        targetEmail = document.getElementById('ssoDomain').value;
+      }
+
+      showToast(`Verifying credentials for ${targetEmail}...`);
 
       setTimeout(() => {
-        alert(`Verification email sent to: ${email}`);
-        btn.innerHTML = originalText;
-        btn.style.pointerEvents = 'auto';
-      }, 1000);
+        document.getElementById('standardAuthContainer').style.display = 'none';
+        const verView = document.getElementById('verificationView');
+        verView.classList.add('active');
+        document.getElementById('sentEmailTarget').textContent = targetEmail;
+        document.getElementById('d1').focus();
+      }, 700);
     }
 
-    function oauthClick(provider) {
-      alert(`Redirecting to ${provider} authentication...`);
+    // Digit Input Handler
+    function handleDigitInput(input, index) {
+      if (input.value && index < 6) {
+        const nextInput = document.getElementById(`d${index + 1}`);
+        if (nextInput) nextInput.focus();
+      }
+    }
+
+    // Verify 2FA Code
+    function verifyCode(e) {
+      e.preventDefault();
+      const code = [1,2,3,4,5,6].map(i => document.getElementById(`d${i}`).value).join('');
+      if (code.length < 6) {
+        showToast('Please enter all 6 digits of the code.');
+        return;
+      }
+
+      showToast('Authentication approved! Redirecting to workspace...');
+      setTimeout(() => {
+        window.location.href = 'bc-dashboard.html';
+      }, 900);
+    }
+
+    function backToAuthForm() {
+      document.getElementById('verificationView').classList.remove('active');
+      document.getElementById('standardAuthContainer').style.display = 'block';
+    }
+
+    function resendCode() {
+      showToast('A fresh security code was sent.');
+    }
+
+    function triggerOAuth(provider) {
+      showToast(`Initiating OAuth verification with ${provider}...`);
+      setTimeout(() => {
+        window.location.href = 'bc-dashboard.html';
+      }, 900);
+    }
+
+    // Reset Modal
+    function openResetModal() {
+      document.getElementById('resetModal').classList.add('active');
+    }
+
+    function closeResetModal() {
+      document.getElementById('resetModal').classList.remove('active');
+    }
+
+    function closeResetModalOnBackdrop(e) {
+      if (e.target.id === 'resetModal') closeResetModal();
+    }
+
+    function handleResetSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('resetEmail').value;
+      closeResetModal();
+      showToast(`Password recovery link dispatched to ${email}`);
+    }
+
+    // Toast Notification
+    function showToast(msg) {
+      const toast = document.getElementById('statusToast');
+      document.getElementById('toastMessage').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3200);
     }
   </script>
 </body>

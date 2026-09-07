@@ -1,4 +1,4 @@
-# BC Design System for React
+# BC Design System for Reac
 
 Production architecture, hooks, compound components, and performance patterns for React (Vite / CRA / Remix / Next.js).
 
@@ -22,7 +22,7 @@ export function useBCDesignTheme() {
     const root = document.documentElement;
     const isDark = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     const resolved = isDark ? 'dark' : 'light';
-    
+
     root.setAttribute('data-theme', resolved);
     if (isDark) {
       root.classList.add('dark');
@@ -112,15 +112,15 @@ export const BCDesignButton: React.FC<BCDesignButtonProps> = ({
 When streaming AI text token-by-token, avoid re-rendering prompt boxes or unrelated parent components:
 
 ```tsx
-// Isolate text streaming into a memoized leaf component
+// Isolate text streaming into a memoized leaf componen
 import React, { memo } from 'react';
 
-export const StreamingMessage = memo(function StreamingMessage({ 
-  content, 
-  isThinking 
-}: { 
-  content: string; 
-  isThinking?: boolean; 
+export const StreamingMessage = memo(function StreamingMessage({
+  content,
+  isThinking
+}: {
+  content: string;
+  isThinking?: boolean;
 }) {
   return (
     <div className="flex gap-4 py-4 leading-relaxed text-[15px]">
@@ -143,4 +143,78 @@ export const StreamingMessage = memo(function StreamingMessage({
     </div>
   );
 });
+```
+
+---
+
+## 4. 3D Spatial Hook & GPU Memory Safety (`useSpatialScene`)
+
+React components mount, unmount, and re-render frequently. A naive Three.js integration in React causes severe GPU memory leaks and WebGL context loss (`Too many active WebGL contexts`).
+
+Always encapsulate 3D lifecycle management in a dedicated hook with complete disposal:
+
+```tsx
+// hooks/useSpatialScene.ts
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+
+interface SpatialInitOptions {
+  onInit: (ctx: { scene: THREE.Scene; camera: THREE.PerspectiveCamera; renderer: THREE.WebGLRenderer }) => void;
+  onRender?: (time: number) => void;
+}
+
+export function useSpatialScene({ onInit, onRender }: SpatialInitOptions) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // 1. Initialize Scene & Renderer with capped DPR
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    onInit({ scene, camera, renderer });
+
+    // 2. Render loop
+    let animId: number;
+    const clock = new THREE.Clock();
+    const animate = () => {
+      animId = requestAnimationFrame(animate);
+      if (onRender) onRender(clock.getElapsedTime());
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    const handleResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+    window.addEventListener('resize', handleResize);
+
+    // 3. Complete GPU Disposal on Unmoun
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', handleResize);
+      scene.traverse((obj) => {
+        if (obj instanceof THREE.Mesh) {
+          obj.geometry?.dispose();
+          if (Array.isArray(obj.material)) {
+            obj.material.forEach((m) => m.dispose());
+          } else {
+            obj.material?.dispose();
+          }
+        }
+      });
+      renderer.dispose();
+    };
+  }, [onInit, onRender]);
+
+  return canvasRef;
+}
 ```

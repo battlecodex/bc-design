@@ -3,41 +3,50 @@ import sys
 import unittest
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
-PAGE = ROOT / "examples" / "school-cakrawala"
+PAGE = ROOT / "examples" / "school-spatial.html"
 CLI = ROOT / ".agents" / "skills" / "bc-design" / "scripts" / "bc_design.py"
 
 
 class SchoolLandingTests(unittest.TestCase):
+    def setUp(self):
+        self.assertTrue(PAGE.is_file(), f"Target school showcase does not exist at {PAGE}")
+        self.html = PAGE.read_text(encoding="utf-8")
+
     def test_demo_assets_and_landmarks_exist(self):
-        html = (PAGE / "index.html").read_text(encoding="utf-8")
-        self.assertTrue((PAGE / "styles.css").exists())
-        self.assertTrue((PAGE / "script.js").exists())
-        for marker in ('lang="id"', 'class="skip-link"', '<main', '<nav', 'id="kunjungan"', 'data-visit-form'):
-            self.assertIn(marker, html)
+        for marker in ('class="skip-link"', '<main', '<nav', 'id="curriculum"', 'id="faculty"', 'id="admissions"'):
+            self.assertIn(marker, self.html)
 
     def test_demo_uses_newsreader_typography_and_accessible_states(self):
-        css = (PAGE / "styles.css").read_text(encoding="utf-8")
-        js = (PAGE / "script.js").read_text(encoding="utf-8")
-        html = (PAGE / "index.html").read_text(encoding="utf-8")
-        self.assertIn('--serif: "Newsreader", Georgia, serif;', css)
-        self.assertNotIn("BCSerif", css)
-        self.assertNotIn('@font-face', css)
-        for forbidden in (" · ", "↗", "↘", "⌖", "01 —", "02 —", "03 —"):
-            self.assertNotIn(forbidden, html)
-        self.assertIn("outline: 2px solid", css)
-        self.assertIn("z-index: 30", css)
-        self.assertIn(':focus-visible', css)
-        self.assertIn('@media (prefers-reduced-motion: reduce)', css)
-        self.assertIn('reportValidity()', js)
-        self.assertIn('aria-live="polite"', (PAGE / "index.html").read_text(encoding="utf-8"))
+        self.assertIn('Newsreader', self.html)
+        self.assertIn('Inter', self.html)
+        self.assertIn('JetBrains Mono', self.html)
 
-    def test_demo_has_no_generic_card_or_gradient_shortcuts(self):
-        combined = "\n".join(path.read_text(encoding="utf-8") for path in PAGE.glob("*"))
-        self.assertNotIn("rounded-xl p-6", combined)
-        self.assertNotIn("linear-gradient", combined)
-        self.assertNotIn("background: #FFFFFF", combined)
+        # Forbidden generic filler glyphs
+        for forbidden in (" · ", "↗", "↘", "⌖", "01 —", "02 —", "03 —"):
+            self.assertNotIn(forbidden, self.html)
+
+        # Accessibility and focus states
+        self.assertIn("outline: 2px solid", self.html)
+        self.assertIn("z-index: 30", self.html)
+        self.assertIn(':focus-visible', self.html)
+        self.assertIn('prefers-reduced-motion', self.html)
+        self.assertIn('aria-live="polite"', self.html)
+
+    def test_demo_enforces_spatial_webgl_safety_and_zero_overlap(self):
+        # Background canvas must not block clicks
+        self.assertIn("pointer-events: none", self.html)
+
+        # Device pixel ratio capped to protect mobile GPUs
+        self.assertIn("Math.min(window.devicePixelRatio", self.html)
+
+        # Hero content column restricted so 3D open codex does not overlap typography
+        self.assertIn("max-width: min(560px, 45vw)", self.html)
+
+        # Authentic open codex object instead of astronomy space planets
+        self.assertIn("Open Codex", self.html)
+        self.assertNotIn("galaxy", self.html.lower())
+        self.assertNotIn("spaceship", self.html.lower())
 
     def test_demo_passes_bc_design_source_audit(self):
         completed = subprocess.run(

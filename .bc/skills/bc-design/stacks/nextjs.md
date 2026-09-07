@@ -89,7 +89,7 @@ export async function POST(req: Request) {
     async start(controller) {
       // 1. Emit thinking state
       controller.enqueue(encoder.encode(`event: status\ndata: {"isThinking": true}\n\n`));
-      
+
       // Simulate synthesis delay
       await new Promise((r) => setTimeout(r, 800));
 
@@ -112,4 +112,96 @@ export async function POST(req: Request) {
     },
   });
 }
+
+---
+
+## 3. 3D Spatial & WebGL in Next.js App Router (SSR Safety)
+
+Three.js, WebGL shaders, and Canvas 2D contexts depend on browser globals (`window`, `document`, `navigator`) that do not exist during Next.js Server-Side Rendering.
+
+### Pattern: Dynamic Client Boundary (`ssr: false`)
+
+Isolate the spatial component into a dedicated client module and import it dynamically to prevent SSR hydration crashes:
+
+```tsx
+// components/SpatialStage.tsx
+'use client';
+
+import React, { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+
+export default function SpatialStage() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+
+    // 1. Scene & Renderer with DPR Capping
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 0.5, 7.5);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // 2. Add lighting and subject-grounded 3D artifact
+    const ambient = new THREE.AmbientLight(0xfaf9f5, 1.2);
+    scene.add(ambient);
+
+    let animationFrameId: number;
+    const animate = () => {
+      animationFrameId = requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    const handleResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+    window.addEventListener('resize', handleResize);
+
+    // 3. Mandatory Cleanup on Unmount (GPU Memory Safety)
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', handleResize);
+      renderer.dispose();
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 w-full h-full pointer-events-none z-[1]"
+      aria-hidden="true"
+    />
+  );
+}
+```
+
+Then in your page:
+
+```tsx
+// app/page.tsx
+import dynamic from 'next/dynamic';
+
+const SpatialStage = dynamic(() => import('@/components/SpatialStage'), {
+  ssr: false,
+  loading: () => <div className="fixed inset-0 bg-[var(--bc-bg)] z-[1]" />,
+});
+
+export default function HomePage() {
+  return (
+    <main className="relative min-h-screen">
+      <SpatialStage />
+      <div className="relative z-10 p-8">
+        {/* Editorial content */}
+      </div>
+    </main>
+  );
+}
+```
 ```

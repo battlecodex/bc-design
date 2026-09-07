@@ -1,7 +1,7 @@
 # ✦ BC Design System for AI Agents
 
 > An open-source, universal design intelligence engine for clear, accessible, subject-grounded interfaces.
-> Built from practical building blocks: **88 visual styles, 192 palettes, 74 typography pairings, 25 chart patterns, 119 UX checks, 22 searchable stack catalogs (8 focused guides), design tokens, component contracts, and streaming-safe interaction guidance**.
+> Built from practical building blocks: **88 visual styles, 192 palettes, 74 typography pairings, 25 chart patterns, 119 UX checks, 22 searchable stack catalogs (8 focused guides), 31 spatial-effect references, design tokens, component contracts, and streaming-safe interaction guidance**.
 
 ---
 
@@ -40,10 +40,10 @@ py -3 scripts/install.py --ai vscode
 py -3 scripts/install.py --ai all
 ```
 
-Build a clean, deterministic release archive (cache files and local generated design systems are excluded):
+Validate repository integrity, skill mirror parity, and catalog consistency:
 
 ```bash
-py -3 scripts/package.py
+py -3 scripts/validate.py
 ```
 
 ---
@@ -67,11 +67,12 @@ All siblings share the router's local catalogs and CLI. They do not create dupli
 | Feature Dimension | Generic starting point | BC Design System |
 | :--- | :--- | :--- |
 | **Aesthetic Craft** | Generic Tailwind / shadcn styling. Tends to generate stereotypical AI purple/blue gradients and cold enterprise gray. | **Subject-grounded editorial design**: neutral structure, purposeful typography, restrained subject-derived accents, hairline borders, and one earned signature moment. |
-| **Visual Assets & Illustrations** | Text descriptions and ASCII tables only. No visual illustrations. | **Real Hand-Drawn SVG Crayon Artwork** (tactile thought bubbles with chalk squiggles) + **6 bundled HTML examples** (including interactive demos). |
+| **Visual Assets & Illustrations** | Text descriptions and ASCII tables only. No visual illustrations. | **Real Hand-Drawn SVG Crayon Artwork** (tactile thought bubbles with chalk squiggles) + **10 bundled HTML examples**, including spatial product stages and shader studies. |
 | **AI / LLM Specific UX** | Standard web UX rules only. No LLM-specific safeguards. | **Streaming Token Isolation** (never animate container dimensions during generation to prevent layout thrashing), Thinking Pulse ambient glow, artifact drawers. |
 | **Typography Intelligence** | Basic font suggestions without optical sizing. | **Optical Sizing (`opsz: 72`) Newsreader** paired with clean `Inter` and `JetBrains Mono`. Includes Google Fonts drop-in and Tailwind config. |
 | **Button Hierarchy & Contrast** | Often uses saturated colored buttons everywhere. | **BC Design hierarchy**: Solid White (`#FFFFFF`) with dark text for primary modal CTAs in dark mode; Terracotta reserved for key actions. |
 | **Multi-Framework Depth** | Summaries for React/Tailwind. | **22 searchable stack catalogs** plus **8 focused implementation guides** for common web and native stacks. |
+| **Spatial 3D** | Decorative WebGL added as an interchangeable visual effect. | **Subject-grounded spatial stages**: a real product metaphor first, then a calm Three.js, WebGL, or Canvas implementation with canvas pass-through, reduced motion, DPR caps, and disposal guidance. |
 | **CLI Dependencies** | Requires Node.js or a global package install. | **Pure Python Standard Library (Zero Dependencies)**. Runs out-of-the-box on `py -3`. |
 
 ---
@@ -148,6 +149,33 @@ Creates `design-system/aether-health/MASTER.md`.
 
 ---
 
+## Spatial 3D & scrollytelling
+
+Spatial work in BC Design is a product-specific storytelling tool, not decorative wallpaper. The spatial catalog contains **31 references** across industry stages, mathematical shader foundations, and tactile UI primitives. The CLI currently ships five generated templates: `school-spatial`, `erp-spatial`, `ribbon-field`, `predictive-arc`, and `spatial-scrollytelling`.
+
+Every spatial direction starts with a concrete product metaphor: an academy receives an open codex rather than a galaxy; an ERP receives a modular supply-chain hub rather than a spinning globe. The implementation rules require a non-interactive canvas layer, readable foreground content, capped device pixel ratio on mobile, complete WebGL teardown, and a calm reduced-motion fallback.
+
+```bash
+# Inspect the spatial catalog and preset definitions
+py -3 scripts/bc_design.py --spatial list
+
+# Search 31 subject-grounded spatial references
+py -3 scripts/bc_design.py "academy codex" --domain spatial
+
+# Generate a standalone, light-theme school stage
+py -3 scripts/bc_design.py --spatial school-spatial --spatial-theme light --output-dir examples/school-preview.html
+
+# Generate a standalone WebGL ribbon field
+py -3 scripts/bc_design.py --spatial ribbon-field --spatial-palette terracotta --output-dir examples/ribbon.html
+
+# Generate the Predictive Arc as a React component
+py -3 scripts/bc_design.py --spatial predictive-arc --spatial-format react --output-dir src/components/PredictiveArc.tsx
+```
+
+Read the [Spatial 3D reference](./.agents/skills/bc-design/references/spatial-3d.md) for the contextual matrix, implementation patterns, and accessibility/performance gate.
+
+---
+
 ## 🎨 Design Intelligence Modules
 
 ### Catalog alignment
@@ -162,6 +190,7 @@ BC Design keeps the broad catalog as reference knowledge while the shared alignm
 | **Chart Types** | **25 visualization patterns** with selection and implementation guidance | [references/charts.md](./.agents/skills/bc-design/references/charts.md) | `py -3 scripts/bc_design.py "area" --domain chart` |
 | **Landing Patterns** | **10 documented conversion layouts**: Hero+Prompt, Split Feature+Art, Academy Hub, Role Grid, Sandbox Tweaks, Enterprise Trust, Pricing, Editorial Story, Auth-First, Benchmark Matrix | [references/landing-patterns.md](./.agents/skills/bc-design/references/landing-patterns.md) | `py -3 scripts/bc_design.py "hero prompt" --domain landing` |
 | **UX Guidelines** | **119 quality checks** covering accessibility, animation, streaming, forms, hierarchy, loading, and responsive behavior | [references/ux-guidelines.md](./.agents/skills/bc-design/references/ux-guidelines.md) | `py -3 scripts/bc_design.py "animation" --domain ux` |
+| **Spatial Effects** | **31 subject-grounded 3D, shader, and tactile-UI references** with runtime, theme, use case, and forbidden-gimmick guidance | [references/spatial-3d.md](./.agents/skills/bc-design/references/spatial-3d.md) | `py -3 scripts/bc_design.py "academy codex" --domain spatial` |
 
 ---
 
@@ -171,10 +200,10 @@ Eight stacks have focused Markdown guides below; the remaining catalog-only stac
 
 | Framework / Stack | Focus Areas | Guide Link | CLI Command |
 | :--- | :--- | :--- | :--- |
-| ⚛️ **React** | State, hooks, compound components, streaming isolation | [stacks/react.md](./.agents/skills/bc-design/stacks/react.md) | `py -3 scripts/bc_design.py --stack react` |
-| 🚀 **Next.js** | App Router, Server Components, zero-CLS fonts, SSE streaming | [stacks/nextjs.md](./.agents/skills/bc-design/stacks/nextjs.md) | `py -3 scripts/bc_design.py --stack nextjs` |
-| 💚 **Vue 3** | Composition API, Pinia theme store, page transitions | [stacks/vue.md](./.agents/skills/bc-design/stacks/vue.md) | `py -3 scripts/bc_design.py --stack vue` |
-| 🧡 **Svelte 5** | Svelte 5 Runes (`$state`), SvelteKit, cubic transitions | [stacks/svelte.md](./.agents/skills/bc-design/stacks/svelte.md) | `py -3 scripts/bc_design.py --stack svelte` |
+| ⚛️ **React** | State, hooks, compound components, streaming isolation, and complete spatial-scene disposal | [stacks/react.md](./.agents/skills/bc-design/stacks/react.md) | `py -3 scripts/bc_design.py --stack react` |
+| 🚀 **Next.js** | App Router, Server Components, zero-CLS fonts, SSE streaming, and SSR-safe spatial client boundaries | [stacks/nextjs.md](./.agents/skills/bc-design/stacks/nextjs.md) | `py -3 scripts/bc_design.py --stack nextjs` |
+| 💚 **Vue 3** | Composition API, Pinia theme store, page transitions, and WebGL lifecycle cleanup | [stacks/vue.md](./.agents/skills/bc-design/stacks/vue.md) | `py -3 scripts/bc_design.py --stack vue` |
+| 🧡 **Svelte 5** | Svelte 5 Runes (`$state`), SvelteKit, cubic transitions, and spatial teardown | [stacks/svelte.md](./.agents/skills/bc-design/stacks/svelte.md) | `py -3 scripts/bc_design.py --stack svelte` |
 | 🍏 **SwiftUI** | iOS 17+ / macOS, Color extensions, ViewModifiers | [stacks/swiftui.md](./.agents/skills/bc-design/stacks/swiftui.md) | `py -3 scripts/bc_design.py --stack swiftui` |
 | 📱 **React Native** | Expo / Bare RN, KeyboardAvoidingView, navigation | [stacks/react-native.md](./.agents/skills/bc-design/stacks/react-native.md) | `py -3 scripts/bc_design.py --stack react-native` |
 | 💙 **Flutter** | Material 3 ThemeData, GoogleFonts, custom widgets | [stacks/flutter.md](./.agents/skills/bc-design/stacks/flutter.md) | `py -3 scripts/bc_design.py --stack flutter` |
@@ -184,10 +213,16 @@ Eight stacks have focused Markdown guides below; the remaining catalog-only stac
 
 ## 💻 Live Interactive Demos
 
-Explore the bundled standalone HTML examples:
-* **[examples/bc-dashboard.html](./examples/bc-dashboard.html)**: Standalone reference demo (Hero, split modal, tutorial cards, and role grid).
-* **[examples/login-page.html](./examples/login-page.html)**: Reference login surface with light/dark toggle.
-* **[examples/bc-chat.html](./examples/bc-chat.html)**: Interactive BC Design workspace featuring the prompt bar, thinking pulse, and sliding artifact drawer.
+Explore selected bundled standalone HTML examples:
+
+* **[BC dashboard](./examples/bc-dashboard.html)**: Hero, split modal, tutorial cards, and role grid.
+* **[BC chat](./examples/bc-chat.html)**: Prompt bar, thinking pulse, and sliding artifact drawer.
+* **[Login surface](./examples/login-page.html)**: Reference authentication surface with light/dark toggle.
+* **[Spatial showcase](./examples/bc-spatial-showcase.html)**: Layered scrollytelling stage with an editorial 3D depth system.
+* **[School spatial](./examples/school-spatial.html)**: Interactive academic codex stage for an education product.
+* **[ERP spatial](./examples/bc-erp-spatial.html)**: Modular supply-chain visualization for enterprise operations.
+* **[Ribbon field](./examples/bc-ribbon-field.html)**: WebGL mathematical ribbon substrate.
+* **[Predictive arc](./examples/bc-predictive-arc.html)**: Canvas attention-arc telemetry study.
 
 ---
 

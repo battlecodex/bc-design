@@ -25,6 +25,7 @@ CSV_CONFIG = {
     "motion": {"file": "motion.csv", "search_cols": ["Category", "Intensity Tier", "Keywords", "Trigger", "Do", "Don't"], "output_cols": ["Category", "Intensity Tier", "Trigger", "Duration", "Easing", "Do", "Don't", "Performance Notes"]},
     "icons": {"file": "icons.csv", "search_cols": ["Category", "Icon Name", "Keywords", "Usage", "Best For", "Semantic Role", "Allowed Contexts"], "output_cols": ["Category", "Icon Name", "Library", "Import Code", "Usage", "Best For", "Semantic Role", "Allowed Contexts"]},
     "google-fonts": {"file": "google-fonts.csv", "search_cols": ["Family", "Category", "Classifications", "Keywords", "Styles", "Subsets"], "output_cols": ["Family", "Category", "Classifications", "Styles", "Variable Axes", "Google Fonts URL"]},
+    "spatial": {"file": "spatial-effects.csv", "search_cols": ["Effect ID", "Effect Name", "Category", "Keywords", "Runtime", "Best For", "Description"], "output_cols": ["Effect Name", "Category", "Runtime", "Light Mode", "Dark Mode", "Best For", "Description", "CLI Command"]},
 }
 
 # Friendly names used in documentation can resolve to canonical catalog stems.

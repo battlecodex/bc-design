@@ -20,11 +20,13 @@ SEVERITY = {
     "copied-platform-chrome": "warning",
     "repeated-generic-cta": "warning",
     "focus-ring-width": "error",
+    "accent-button-text-contrast": "error",
     "sticky-z-index-token": "warning",
     "streaming-layout-animation": "error",
     "motion-duration-budget": "warning",
     "motion-easing-token": "warning",
     "reduced-motion-support": "error",
+    "spatial-uncapped-pixel-ratio": "warning",
 }
 
 CATEGORY = {
@@ -46,7 +48,9 @@ CATEGORY = {
     "streaming-layout-animation": "motion",
     "reduced-motion-support": "accessibility",
     "focus-ring-width": "accessibility",
+    "accent-button-text-contrast": "accessibility",
     "sticky-z-index-token": "accessibility",
+    "spatial-uncapped-pixel-ratio": "performance",
 }
 
 RECOMMENDATIONS = {
@@ -64,11 +68,13 @@ RECOMMENDATIONS = {
     "unicode-icon-glyph": "Replace the glyph with a 1.5px monoline SVG and an accessible name.",
     "decorative-index-marker": "Remove the marker or make the sequence meaningful and ordered.",
     "focus-ring-width": "Use a visible 2px focus ring with sufficient contrast.",
+    "accent-button-text-contrast": "Avoid dark ink text on mid-tone accent/terracotta buttons. Use crisp white (#FFFFFF) text or switch primary actions to the canonical high-contrast button (.bc-btn-contrast).",
     "sticky-z-index-token": "Use the semantic sticky-navigation layer token (30).",
     "streaming-layout-animation": "Animate opacity/transform only while streamed content is changing.",
     "motion-duration-budget": "Use a BC duration token; reserve longer timing for a documented state.",
     "motion-easing-token": "Use a BC easing token or the approved deceleration curve.",
     "reduced-motion-support": "Add a prefers-reduced-motion: reduce fallback in the same source unit.",
+    "spatial-uncapped-pixel-ratio": "Cap WebGL pixel ratio with Math.min(window.devicePixelRatio, 2) to protect mobile GPU thermal budget.",
 }
 
 EVIDENCE_MARKERS = {
@@ -86,11 +92,13 @@ EVIDENCE_MARKERS = {
     "unicode-icon-glyph": ("aria-hidden", "⌖", "★", "✦"),
     "decorative-index-marker": ("01", "02", "03"),
     "focus-ring-width": ("focus-visible", "outline"),
+    "accent-button-text-contrast": ("text-on-accent", "1f1e1b", "181816", "d97757", "e28466"),
     "sticky-z-index-token": ("sticky", "z-index"),
     "streaming-layout-animation": ("transition", "animation", "stream"),
     "motion-duration-budget": ("transition", "animation"),
     "motion-easing-token": ("transition", "animation", "ease"),
     "reduced-motion-support": ("transition", "animation", "keyframes"),
+    "spatial-uncapped-pixel-ratio": ("setpixelratio",),
 }
 
 

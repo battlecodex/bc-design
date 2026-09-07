@@ -14,7 +14,7 @@ If a hard gate fails, the interface is not ready to ship:
 - **R-18 Testimonials:** no fabricated testimonials or unverified AI avatars.
 - **R-23 Visual Assets:** use honest placeholders or genuine subject-relevant assets.
 - **R-24 Navigation:** no dead links or placeholder anchors.
-- **R-25 Color Contrast:** minimum WCAG AA 4.5:1. Parchment `#FAF9F5` with ink `#1F1E1B` measures 15.82:1 AAA; terracotta buttons use dark ink text.
+- **R-25 Color Contrast:** minimum WCAG AA 4.5:1. Parchment `#FAF9F5` with ink `#1F1E1B` measures 15.82:1 AAA. Primary actions use canonical high-contrast buttons (`.bc-btn-contrast`: `#1F1E1B` with `#FFFFFF` text in light mode, `#FFFFFF` with `#1F1E1B` in dark mode); terracotta/accent buttons use crisp white `#FFFFFF` text (never dark ink).
 - **R-26 Interactive Elements:** controls must perform their stated action.
 - **R-27 UI States:** cover default, hover, active, focus-visible, disabled, loading, empty, and error states.
 - **R-28 FAQ:** accordions are genuine and contain relevant questions when an FAQ is needed.
