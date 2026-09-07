@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT / ".agents" / "skills" / "bc-design" / "scripts"))
 from normalize_catalog import build_report
 
 
-EXCLUDED_DIRS = {".git", "__pycache__", ".pytest_cache", "dist", "design-system"}
+EXCLUDED_DIRS = {".git", "__pycache__", ".pytest_cache", "dist", "design-system", "docs"}
 EXCLUDED_SUFFIXES = {".pyc", ".pyo"}
 EXCLUDED_NAMES = {"full-test.log"}
 

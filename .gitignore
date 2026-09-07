@@ -6,5 +6,7 @@ __pycache__/
 htmlcov/
 full-test.log
 dist/*.zip
+docs/
+design-system/
 .DS_Store
 Thumbs.db
