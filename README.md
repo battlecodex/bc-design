@@ -1,8 +1,8 @@
 # ✦ BC Design System for AI Agents
 
-> An open-source, universal design intelligence engine for clear, accessible, subject-grounded interfaces.
+> An open-source design skill for Claude Code, Codex, Antigravity, and Kiro. It gives the agent a warm editorial house style, GSAP motion orchestration, subject-grounded 3D, project memory through `DESIGN.md`, and audits across eighteen UI and UX dimensions.
 > Built from practical building blocks: **88 visual styles, 192 palettes, 74 typography pairings, 25 chart patterns, 119 UX checks, 22 searchable stack catalogs (8 focused guides), 31 spatial-effect references, design tokens, component contracts, and streaming-safe interaction guidance**.
-> The catalog data derives from [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) the spatial generators adapt [ThreeUI](https://github.com/MengTo/threeui), and the craft rules adapt [anti-slop](https://github.com/miqdadbadjuber/anti-slop) and [taste-skill](https://github.com/Leonxlnx/taste-skill), all MIT; see [Third-party notices](./THIRD_PARTY_NOTICES.md).
+> The catalog data derives from [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), the spatial generators adapt [ThreeUI](https://github.com/MengTo/threeui), and the craft rules adapt [anti-slop](https://github.com/miqdadbadjuber/anti-slop) and [taste-skill](https://github.com/Leonxlnx/taste-skill), all MIT; see [Third-party notices](./THIRD_PARTY_NOTICES.md).
 
 ---
 
@@ -100,7 +100,7 @@ Questions, reviews, and audits change nothing. When you ask for a plan or option
 | **Multi-Framework Depth** | Summaries for React/Tailwind. | **22 searchable stack catalogs** plus **8 focused implementation guides** for common web and native stacks. |
 | **Motion Orchestration** | Scattered CSS keyframes, each element animating on its own. | **GSAP timelines on BC tokens**: one choreographed sequence per moment, ScrollTrigger narratives, `gsap.matchMedia` reduced-motion fallbacks, and cleanup through `gsap.context`. |
 | **Spatial 3D** | Decorative WebGL added as an interchangeable visual effect. | **Subject-grounded spatial stages**: a real product metaphor first, then a calm Three.js, WebGL, or Canvas implementation with canvas pass-through, reduced motion, DPR caps, and disposal guidance. |
-| **CLI Dependencies** | Requires Node.js or a global package install. | **Pure Python Standard Library (Zero Dependencies)**. Runs out-of-the-box on `py -3`. |
+| **CLI Dependencies** | Requires Node.js or a global package install. | **Pure Python standard library**. The CLI, audit, pre-flight, prune, and components scripts run out of the box on `py -3`; only `render_check.py` and `study.py` need Playwright. |
 
 ---
 
@@ -256,11 +256,11 @@ BC Design keeps the broad catalog as reference knowledge while the shared alignm
 
 | Domain | Depth | Guide Link | CLI Query |
 | :--- | :--- | :--- | :--- |
-| **Design Styles** | **88 cataloged styles** with use cases, risks, implementation notes, and accessibility checks | [references/styles.md](./.agents/skills/bc-design/references/styles.md) | `py -3 scripts/bc_design.py "canonical" --domain style` |
+| **Design Styles** | **88 cataloged styles** with use cases, risks, implementation notes, and accessibility checks | [references/styles.md](./.agents/skills/bc-design/references/styles.md) | `py -3 scripts/bc_design.py "editorial" --domain style` |
 | **Color Palettes** | **192 product palettes** with semantic roles and contrast-oriented guidance | [references/palettes.md](./.agents/skills/bc-design/references/palettes.md) | `py -3 scripts/bc_design.py "saas" --domain color` |
-| **Typography** | **74 font pairings** plus a local catalog of open-source font metadata | [references/typography.md](./.agents/skills/bc-design/references/typography.md) | `py -3 scripts/bc_design.py "canonical" --domain typography` |
-| **Chart Types** | **25 visualization patterns** with selection and implementation guidance | [references/charts.md](./.agents/skills/bc-design/references/charts.md) | `py -3 scripts/bc_design.py "area" --domain chart` |
-| **Landing Patterns** | **10 documented conversion layouts**: Hero+Prompt, Split Feature+Art, Academy Hub, Role Grid, Sandbox Tweaks, Enterprise Trust, Pricing, Editorial Story, Auth-First, Benchmark Matrix | [references/landing-patterns.md](./.agents/skills/bc-design/references/landing-patterns.md) | `py -3 scripts/bc_design.py "hero prompt" --domain landing` |
+| **Typography** | **74 font pairings** plus a local catalog of open-source font metadata | [references/typography.md](./.agents/skills/bc-design/references/typography.md) | `py -3 scripts/bc_design.py "editorial serif" --domain typography` |
+| **Chart Types** | **25 visualization patterns** with selection and implementation guidance | [references/charts.md](./.agents/skills/bc-design/references/charts.md) | `py -3 scripts/bc_design.py "trend" --domain chart` |
+| **Landing Patterns** | **10 conversion layouts**, eight with full specifications: Hero+Prompt, Split Feature+Art, Academy Hub, Role Grid, Sandbox Tweaks, Enterprise Trust, Pricing, Editorial Story, Auth-First, Benchmark Matrix | [references/landing-patterns.md](./.agents/skills/bc-design/references/landing-patterns.md) | `py -3 scripts/bc_design.py "hero prompt" --domain landing` |
 | **UX Guidelines** | **119 quality checks** covering accessibility, animation, streaming, forms, hierarchy, loading, and responsive behavior | [references/ux-guidelines.md](./.agents/skills/bc-design/references/ux-guidelines.md) | `py -3 scripts/bc_design.py "animation" --domain ux` |
 | **Spatial Effects** | **31 subject-grounded 3D, shader, and tactile-UI references** with runtime, theme, use case, and forbidden-gimmick guidance | [references/spatial-3d.md](./.agents/skills/bc-design/references/spatial-3d.md) | `py -3 scripts/bc_design.py "academy codex" --domain spatial` |
 
@@ -295,6 +295,10 @@ Explore selected bundled standalone HTML examples:
 * **[ERP spatial](./examples/bc-erp-spatial.html)**: Modular supply-chain visualization for enterprise operations.
 * **[Ribbon field](./examples/bc-ribbon-field.html)**: WebGL mathematical ribbon substrate.
 * **[Predictive arc](./examples/bc-predictive-arc.html)**: Canvas attention-arc telemetry study.
+* **[Landing page](./examples/bc-landing-page.html)**: Editorial product landing page in the house style.
+* **[ERP workspace](./examples/bc-erp.html)**: Dense operational dashboard for enterprise work.
+* **[GSAP atelier](./.agents/skills/bc-design/assets/motion/gsap-atelier.html)**: Luxury page with an orchestrated hero and a scroll-scrubbed 3D exploded watch movement.
+* **[Editorial patterns](./.agents/skills/bc-design/assets/patterns/editorial-patterns.html)**: Every house composition pattern on one reference page.
 
 ---
 
