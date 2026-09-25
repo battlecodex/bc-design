@@ -12,10 +12,11 @@ what the project already has:
                           shadcnblocks, ReUI, 21st.dev, and others; effects
                           from React Bits and others) to offer as an upgrade
 
-It never installs anything. Present the options, recommend one per
-component, and install or paste only what the user approves. Library
-contents change, so confirm a candidate exists and read its license before
-proposing it as final.
+It never installs anything itself. On an explicit build, redesign, or
+restyle request the agent applies the best option per component and names
+the alternatives in its handoff; it asks first only when an option adds a
+package or is paid. Library contents change, so confirm a candidate exists
+and read its license before adopting it.
 
 Standard library only.
 """
@@ -83,11 +84,11 @@ def brainstorm(component, row, context):
         missing = [p for p in primitives if p not in context["shadcn_files"]]
         base = "shadcn/ui " + ", ".join(primitives)
         base += f" (installed: {', '.join(installed) or 'none'}"
-        base += f"; add with npx shadcn@latest add {' '.join(missing)} after approval)" if missing else ")"
+        base += f"; add with npx shadcn@latest add {' '.join(missing)})" if missing else ")"
     elif primitives and context["libraries"]:
         base = f"The equivalent of shadcn {', '.join(primitives)} from the installed library: {'; '.join(context['libraries'])}"
     elif primitives:
-        base = f"shadcn/ui {', '.join(primitives)} (adds shadcn/ui to the project; needs approval)"
+        base = f"shadcn/ui {', '.join(primitives)} (adds shadcn/ui as a new package: ask first)"
     else:
         base = "No primitive; compose it from the project's layout and typography"
     return {
@@ -119,9 +120,9 @@ def format_brainstorm(options):
         lines.append(f"  Restyle: {option['restyle']}")
         lines.append("")
     lines.append(
-        "Offer these options to the user with one recommendation per component. Confirm a candidate exists and read its "
-        "license before proposing it as final. Install or paste nothing until the user approves; then restyle to BC tokens, "
-        "audit, and run render_check.py."
+        "Choose one option per component and apply it; name the alternatives in the handoff. Ask the user first only when an "
+        "option adds a package or is paid. Confirm a candidate exists and read its license before adopting it, then restyle "
+        "to BC tokens, audit, and run render_check.py."
     )
     return "\n".join(lines)
 

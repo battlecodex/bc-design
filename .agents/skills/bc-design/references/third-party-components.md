@@ -6,9 +6,9 @@ Copy-paste component libraries save time, and many ship exactly the effects this
 
 BC Design's warm editorial language is meant to run on current component libraries, not on hand-rolled markup. For React projects the default base is **shadcn/ui** (Radix primitives with Tailwind), themed with [`assets/components/shadcn-bc-theme.css`](../assets/components/shadcn-bc-theme.css). That file maps every shadcn variable onto the house palette: parchment canvas, ink primary actions, hairline borders, a terracotta focus ring, and the illustration palette for charts. Blocks from registries built on shadcn (shadcnblocks, ReUI, Evil Charts, and others) inherit the same look.
 
-## Brainstorm, offer, then install on approval
+## Brainstorm, choose, and apply
 
-For every component in scope, lay out the options and let the user choose. Run:
+For every component in scope, weigh the options and pick the best one. Run:
 
 ```bash
 python .agents/skills/bc-design/scripts/components.py hero pricing chart navbar
@@ -19,22 +19,23 @@ It tailors three options per component to what the project already has:
 
 - **A. Keep and restyle** the project's own implementation, when one exists.
 - **B. Installed base:** a primitive from the component library the project already uses (reported by pre-flight), or the shadcn/ui primitive that would be added.
-- **C. New library:** candidate blocks (shadcnblocks, ReUI, Spectrum UI, coss ui, 21st.dev) and effects (React Bits, Rare UI, Vanta UI) worth offering as an upgrade.
+- **C. New library:** candidate blocks (shadcnblocks, ReUI, Spectrum UI, coss ui, 21st.dev) and effects (React Bits, Rare UI, Vanta UI) that would modernize it.
 
-Present it as a short table per component with one recommendation and the reason, for example:
+Record the choice as a short table per component, with the reason, and include it in the handoff, for example:
 
 | Component | Option | Recommendation |
 | --- | --- | --- |
 | Hero | A: restyle `src/sections/Hero.tsx`; C: a shadcnblocks hero block; C: a React Bits text reveal as the signature | Restyle A and add the text reveal rebuilt on GSAP, because the layout already works |
 
-Then ask: *"Keep these as they are, or switch to the recommended components?"* Rules:
+Rules:
 
-- **Offer freely, install only on approval.** Suggesting a newer library or block is expected; installing a package, a registry, or pasting third-party code happens only after the user says yes to that item.
-- **Recommend, do not list everything.** One recommendation per component, with at most two alternatives.
-- **Confirm before calling it final.** Library contents change; open the candidate, confirm it exists and fits, and read its license before presenting it as the choice.
-- **A redesign starts from A and B.** Replacing working components is an option to offer, not a default.
+- **Apply the best option on an explicit request.** When the user asked to build, redesign, or restyle, use the recommended option directly: restyling the project's components, adding primitives of a library the project already uses (for example `npx shadcn@latest add tabs`), or pasting copy-paste code from a registry that brings no new package.
+- **Ask once before adding a package or a paid item.** A new dependency in `package.json`, a new UI or animation library, or a paid (Pro) block needs a yes first. Ask these together at the end and finish everything else meanwhile.
+- **Name the alternatives in the handoff.** One recommendation per component, with at most two alternatives the user can switch to.
+- **Confirm before adopting.** Library contents change; open the candidate, confirm it exists and fits, and read its license before using it.
+- **Prefer working components.** In a redesign, restyling a component that already works usually beats replacing it; replace it when the upgrade is clearly better, and say why.
 
-After approval, every adopted component goes through the checklist below.
+Every adopted component goes through the checklist below.
 
 ## Before a component ships
 

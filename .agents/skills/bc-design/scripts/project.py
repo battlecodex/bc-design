@@ -287,7 +287,7 @@ def format_preflight(findings, cached_on=None):
     if findings.get("components"):
         preserve.append("component library")
         lines.append(
-            "  Component rule: start from the installed components, run components.py to offer upgrades from newer libraries, and install only what the user approves."
+            "  Component rule: start from the installed components and run components.py to choose upgrades; ask before adding a new package."
         )
     if preserve:
         lines.append(f"BC Design will preserve: {', '.join(preserve)}. Say so to override any of them.")

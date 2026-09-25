@@ -63,12 +63,12 @@ class BrainstormTests(unittest.TestCase):
         self.assertIn("shadcnblocks", hero["new_library_blocks"])
         self.assertIn("React Bits", hero["new_library_effects"])
         self.assertIn("installed: dialog", dialog["installed_base"])
-        self.assertIn("npx shadcn@latest add sheet alert-dialog after approval", dialog["installed_base"])
+        self.assertIn("add with npx shadcn@latest add sheet alert-dialog", dialog["installed_base"])
 
-    def test_without_a_component_library_shadcn_is_offered_with_approval(self):
+    def test_adding_shadcn_as_a_new_package_asks_first(self):
         with tempfile.TemporaryDirectory() as tempdir:
             option = components.brainstorm("tabs", components.load_catalog()["tabs"], components.project_context(Path(tempdir)))
-        self.assertIn("needs approval", option["installed_base"])
+        self.assertIn("new package: ask first", option["installed_base"])
 
     def test_cli_resolves_aliases_and_never_installs(self):
         with tempfile.TemporaryDirectory() as tempdir:
@@ -80,7 +80,7 @@ class BrainstormTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 0, completed.stderr)
         self.assertIn("dialog (primitive)", completed.stdout)
         self.assertIn("chart (data)", completed.stdout)
-        self.assertIn("Install or paste nothing until the user approves", completed.stdout)
+        self.assertIn("Ask the user first only when an option adds a package or is paid", completed.stdout)
         self.assertEqual(before, after)
 
     def test_unknown_component_is_an_error(self):

@@ -22,7 +22,7 @@ python .agents/skills/bc-design/scripts/project.py log
 Run `project.py preflight` before the first question to the user and before any visual decision.
 
 1. **DESIGN.md first.** If `DESIGN.md` (or `design.md`) exists at the root, read it in full. It overrides the BC house defaults, and new pages share its system instead of choosing a new one.
-2. **Existing decisions next.** The scan reports the framework, font stack, palette (`:root` properties, Tailwind `@theme` or config, DTCG token files), spacing scale, motion libraries, and component libraries (shadcn/ui with its installed components and extra registries, Radix, Headless UI, MUI, and others), each with a `file:line` citation. Installed components are the starting point; `components.py` then offers upgrades from newer libraries, installed only on approval.
+2. **Existing decisions next.** The scan reports the framework, font stack, palette (`:root` properties, Tailwind `@theme` or config, DTCG token files), spacing scale, motion libraries, and component libraries (shadcn/ui with its installed components and extra registries, Radix, Headless UI, MUI, and others), each with a `file:line` citation. Installed components are the starting point; `components.py` then picks upgrades from newer libraries, and adding a new package still needs a yes.
 3. **Say what you will keep.** Show the findings to the user with a one-line summary: what BC Design will preserve (fonts, palette, spacing) and what it will introduce. The user can override any preserved item.
 4. **Flag conflicts.** When evidence disagrees (a font package installed but a different font hard-coded), name both locations and ask which one wins.
 
