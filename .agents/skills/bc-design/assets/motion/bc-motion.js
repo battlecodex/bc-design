@@ -18,7 +18,8 @@
   var duration = {
     fast: 0.15, // --bc-duration-fast
     normal: 0.25, // --bc-duration-normal
-    slow: 0.4, // --bc-duration-slow, the longest single tween
+    slow: 0.4, // --bc-duration-slow, the longest UI tween
+    reveal: 0.6, // --bc-duration-reveal, once-only hero and section reveals (max 0.75)
   };
 
   var REDUCED = "(prefers-reduced-motion: reduce)";
@@ -64,17 +65,17 @@
 
   /**
    * Hero entrance in reading order. steps is a list of selectors; each step
-   * overlaps the previous one so the whole sequence stays near 1.2s.
+   * overlaps the previous one so the whole sequence stays near 1.4s.
    */
   function heroSequence(steps, options) {
     options = options || {};
     return orchestrate(
       options.scope,
       function (tools) {
-        var tl = tools.timeline();
+        var tl = tools.timeline({ defaults: { ease: ease.out, duration: duration.reveal } });
         steps.forEach(function (selector, index) {
           var distance = index === 0 ? 12 : 20;
-          tl.from(selector, { autoAlpha: 0, y: distance }, index === 0 ? 0 : "-=0.28");
+          tl.from(selector, { autoAlpha: 0, y: distance }, index === 0 ? 0 : "-=0.45");
         });
       },
       function (gsap) {
@@ -94,7 +95,7 @@
           tools.gsap.from(element, {
             autoAlpha: 0,
             y: 24,
-            duration: duration.slow,
+            duration: duration.reveal,
             ease: ease.out,
             scrollTrigger: { trigger: element, start: options.start || "top 82%", once: true },
           });

@@ -21,7 +21,7 @@ Luxury here means restraint, precision, and material quality. It never means mor
 3. **Hierarchy through weight and color before scale.** An oversized headline that shouts is not premium. Let a well-set serif at a moderate size, plus ink and secondary-ink contrast, carry importance.
 4. **One signature moment per page.** Choose a single memorable element: a spatial 3D stage, an orchestrated hero sequence, a tactile diagram, or an editorial photograph. Everything else stays quiet so the signature can be seen.
 5. **Precision in the details.** Hairlines align to the grid, numerals use tabular figures in data, optical margins hang punctuation in pull quotes, and icons share one 1.5px stroke. Misaligned details break the effect.
-6. **Composed motion.** Motion is choreographed, not sprinkled. Enter sequences follow reading order in a single GSAP timeline, finish within about 1.2 seconds, and never replay on every scroll. See [gsap-orchestration.md](./gsap-orchestration.md).
+6. **Composed motion.** Motion is choreographed, not sprinkled. Enter sequences follow reading order in a single GSAP timeline, use the 600ms reveal tier, finish within about 1.4 seconds, and never replay on every scroll. Interaction feedback stays at 150–250ms. See [gsap-orchestration.md](./gsap-orchestration.md).
 7. **Honest content.** Real product facts, real imagery or a clearly marked placeholder, and specific copy. Invented statistics, testimonials, and compliance badges destroy trust instantly.
 8. **Every state is finished.** Loading, empty, error, hover, focus, and reduced-motion states get the same care as the hero.
 

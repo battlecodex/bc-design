@@ -10,7 +10,7 @@ Use this skill when motion is part of the interface contract. Motion should expl
 ## Workflow
 
 1. Name the state or spatial relationship the motion communicates.
-2. Choose a tier: micro 150ms, component 250ms, structural 350–400ms, or approved thinking 1800ms.
+2. Choose a tier: micro 150ms, component 250ms, structural 350–400ms, reveal 500–750ms (`--bc-duration-reveal`, once-only hero and section entrances), or approved thinking 1800ms.
 3. Pick the engine: CSS transitions on BC tokens for single-element feedback; a GSAP timeline for anything that sequences several elements, follows scroll, or drives a 3D scene.
 4. Use a semantic BC easing token (`expo.out` in GSAP); avoid browser-default easing keywords.
 5. Prefer opacity and transform; never animate width, height, margin, or padding of a container receiving streamed tokens.
@@ -25,7 +25,8 @@ Use this skill when motion is part of the interface contract. Motion should expl
 - 3D spatial camera interaction must use smooth inertia damping (friction factor <= 0.08) and never snap abruptly.
 - Do not use motion to hide layout instability or missing content.
 - Keep easing and duration on tokens so a theme can change motion coherently.
-- One timeline per moment; an entrance sequence finishes within about 1.2s, and section reveals play once.
+- One timeline per moment; an entrance sequence finishes within about 1.4s, and section reveals play once.
+- The reveal tier never answers a click, hover, or keystroke; interaction feedback stays at 250ms or less.
 - Exits are faster than entrances (about two thirds of the entrance duration) and leave in the direction the user dismissed them.
 
 ## References

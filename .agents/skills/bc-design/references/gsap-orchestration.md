@@ -20,7 +20,8 @@ With a bundler, install `gsap` and import `gsap` and `ScrollTrigger` from it. In
 | Scroll scrub | n/a | `"none"` | Tweens driven by `scrub` |
 | `--bc-duration-fast` | 150ms | `0.15` | Micro feedback |
 | `--bc-duration-normal` | 250ms | `0.25` | Component entrance |
-| `--bc-duration-slow` | 400ms | `0.4` | Structural moves, drawers, the longest single tween in a sequence |
+| `--bc-duration-slow` | 400ms | `0.4` | Structural moves, drawers, the longest UI tween |
+| `--bc-duration-reveal` | 600ms | `0.6` | Once-only hero and section reveals; never above 0.75 |
 
 `expo.out` is exactly `cubic-bezier(0.16, 1, 0.3, 1)`, so CSS and GSAP motion match. Avoid `bounce`, `elastic`, and `back` eases; they break the house calm.
 
@@ -28,9 +29,9 @@ With a bundler, install `gsap` and import `gsap` and `ScrollTrigger` from it. In
 
 ## Choreography rules
 
-1. **One timeline per moment.** A hero entrance, a section reveal, or a 3D camera move is one `gsap.timeline()` with `defaults: { ease: "expo.out", duration: 0.4 }`. Do not fire independent tweens that happen to overlap.
+1. **One timeline per moment.** A hero entrance, a section reveal, or a 3D camera move is one `gsap.timeline()` with `defaults: { ease: "expo.out" }` and a duration from the token table. Do not fire independent tweens that happen to overlap.
 2. **Follow reading order.** Sequence eyebrow, headline, body, action, then media. Overlap steps with the position parameter (`"-=0.25"` or `"<0.08"`) so the sequence feels like one gesture.
-3. **Budget the whole sequence.** A single tween stays at 0.4s or less. An entrance sequence finishes within about 1.2s. Stagger lists at 0.04–0.06s per item and cap the total at 0.3s.
+3. **Budget the whole sequence.** Tweens that answer an interaction stay at 0.4s or less. Large content that appears once (the hero, a section entering the viewport) may use the reveal tier, 0.5–0.75s, with `expo.out`. An entrance sequence finishes within about 1.4s. Stagger lists at 0.04–0.06s per item and cap the total at 0.3s.
 4. **Animate transforms and opacity only.** Use `x`, `y`, `scale`, `rotation`, `autoAlpha`, and `clipPath`. Never tween `width`, `height`, `top`, `left`, `margin`, or `padding`; the audit flags them as `gsap-layout-property`.
 5. **Reveal once.** Section reveals use `ScrollTrigger` with `once: true`. Replaying content on every scroll reads as a demo, not a product.
 6. **Scrub only for narrative.** Use `scrub: 0.6` with `pin` for a scroll story or a 3D exploded view, and keep the scrubbed section to one or two viewports. The text must stay readable at every scroll position.
@@ -56,19 +57,19 @@ mm.add(
       return;
     }
 
-    const hero = gsap.timeline({ defaults: { ease: "expo.out", duration: 0.4 } });
+    const hero = gsap.timeline({ defaults: { ease: "expo.out", duration: 0.6 } });
     hero
       .from("[data-hero='eyebrow']", { autoAlpha: 0, y: 12 })
-      .from("[data-hero='title']", { autoAlpha: 0, y: 24 }, "-=0.25")
-      .from("[data-hero='body']", { autoAlpha: 0, y: 16 }, "-=0.25")
-      .from("[data-hero='action']", { autoAlpha: 0, y: 12 }, "-=0.2")
+      .from("[data-hero='title']", { autoAlpha: 0, y: 24 }, "-=0.45")
+      .from("[data-hero='body']", { autoAlpha: 0, y: 16 }, "-=0.45")
+      .from("[data-hero='action']", { autoAlpha: 0, y: 12 }, "-=0.45")
       .from("[data-hero='media']", { autoAlpha: 0, scale: 0.98 }, "<");
 
     gsap.utils.toArray("[data-reveal]").forEach((section) => {
       gsap.from(section, {
         autoAlpha: 0,
         y: 24,
-        duration: 0.4,
+        duration: 0.6,
         ease: "expo.out",
         scrollTrigger: { trigger: section, start: "top 80%", once: true },
       });

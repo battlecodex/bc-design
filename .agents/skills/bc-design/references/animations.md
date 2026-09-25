@@ -23,6 +23,7 @@ BC Design's motion language is **deliberate, literary, and respectful of cogniti
 * **Micro-interactions (150ms - 200ms)**: Button press, checkbox toggle, tooltip scale.
 * **Component Entrance (200ms - 250ms)**: Cards appearing, dropdown menus, tab switches (`bcFadeUp`).
 * **Spatial / Structural (350ms - 400ms)**: Sidebar collapse, Artifacts drawer slide-in (`bcDrawerIn`).
+* **Reveal (500ms - 750ms, `--bc-duration-reveal`)**: A hero or section that enters once. Use the deceleration curve, travel 12–24px, and never use this tier for interaction feedback.
 * **Ambient / Generative (1800ms token)**: Model thinking pulse and streaming shimmers. Longer loops require a documented product reason and a reduced-motion fallback.
 
 ---

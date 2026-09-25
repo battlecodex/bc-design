@@ -38,6 +38,18 @@ class CraftAuditTests(unittest.TestCase):
         self.assertNotIn("accent-fill-white-text", self.rules(".btn { background: var(--bc-accent-strong); color: #fff; }", suffix=".css"))
         self.assertNotIn("accent-fill-white-text", self.rules(".dot { background: var(--bc-accent); }", suffix=".css"))
 
+    def test_reveal_token_is_allowed_but_long_literal_durations_are_not(self):
+        self.assertNotIn(
+            "motion-duration-budget",
+            self.rules(".reveal { transition: opacity var(--bc-duration-reveal) var(--bc-ease); }\n@media (prefers-reduced-motion: reduce) { .reveal { transition: none; } }", suffix=".css"),
+        )
+        self.assertIn(
+            "motion-duration-budget",
+            self.rules(".reveal { transition: opacity 600ms var(--bc-ease); }\n@media (prefers-reduced-motion: reduce) { .reveal { transition: none; } }", suffix=".css"),
+        )
+        tokens = (CLI.parents[1] / "references" / "tokens.css").read_text(encoding="utf-8")
+        self.assertIn("--bc-duration-reveal: 600ms;", tokens)
+
     def test_every_rule_reports_under_a_review_dimension(self):
         import importlib.util
 

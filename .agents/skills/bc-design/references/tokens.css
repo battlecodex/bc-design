@@ -100,6 +100,7 @@
   --bc-duration-fast: 150ms;
   --bc-duration-normal: 250ms;
   --bc-duration-slow: 400ms;
+  --bc-duration-reveal: 600ms;    /* Once-only hero and section reveals; never above 750ms, never for UI feedback */
   --bc-duration-shimmer: 1800ms;
 }
 

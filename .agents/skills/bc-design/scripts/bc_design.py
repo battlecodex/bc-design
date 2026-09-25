@@ -390,7 +390,7 @@ def _motion_violations(content, source_file):
         violations.append(
             (
                 "motion-duration-budget",
-                "Keep ordinary motion at 150–250ms (up to 400ms for drawers/modals); use the shimmer token for 1800ms thinking states.",
+                "Keep ordinary motion at 150–250ms (up to 400ms for drawers/modals); use var(--bc-duration-reveal) for once-only reveals and the shimmer token for 1800ms thinking states.",
                 source_file,
             )
         )
