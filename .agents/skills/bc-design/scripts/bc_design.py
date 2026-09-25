@@ -74,7 +74,9 @@ def generate_design_system(query, project_name=None, variance=None, motion=None,
     catalog_palette = product_match.get("Color Palette Focus", "") if product_match else ""
 
     # 1. Subject Matter Grounding
-    if catalog_product and any(k in f"{catalog_product} {product_match.get('Keywords', '')}".lower() for k in ["education", "educational", "learning", "school", "student", "kindergarten", "preschool"]):
+    # "machine-learning" is not an education signal, so drop it before matching whole words.
+    product_words = set(re.findall(r"\w+", re.sub(r"machine[- ]learning", " ", f"{catalog_product} {product_match.get('Keywords', '')}".lower())))
+    if catalog_product and product_words & {"education", "educational", "learning", "school", "student", "kindergarten", "preschool"}:
         industry = "Education & Learning"
         primary_color = "#1F1E1B (Neutral Ink)"
         secondary_color = "#D97757 (Restrained Terracotta Accent)"
