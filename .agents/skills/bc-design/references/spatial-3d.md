@@ -111,7 +111,9 @@ directionalKey.position.set(5, 8, 4);
 
 ## 3. The Pinned Scrollytelling Stage Layout
 
-A standard BC Design spatial section uses a sticky 100vh viewport pinned while narrative chapters scroll past:
+For new work, pin and scrub the stage with a GSAP ScrollTrigger timeline, as in [gsap-orchestration.md](./gsap-orchestration.md) and the worked exploded-view example [`assets/motion/gsap-atelier.html`](../assets/motion/gsap-atelier.html). Pin only on wide screens; on small screens and under reduced motion, show every caption and one composed frame.
+
+The markup below shows the equivalent hand-built structure with a sticky 100vh viewport pinned while narrative chapters scroll past:
 
 ```html
 <section class="bc-spatial-showcase" id="spatialShowcase">

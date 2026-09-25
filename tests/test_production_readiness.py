@@ -11,7 +11,6 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL = ROOT / ".agents" / "skills"
-MIRROR = ROOT / ".bc" / "skills"
 CLI = CANONICAL / "bc-design" / "scripts" / "bc_design.py"
 SKILLS = (
     "bc-design",
@@ -104,40 +103,7 @@ class ProductionReadinessTests(unittest.TestCase):
         self.assertNotIn("education teal", output)
         self.assertNotIn("quiet learning ground", output)
 
-    def test_complete_skill_family_is_identical_in_bc_mirror(self):
-        for name in SKILLS:
-            left_root = CANONICAL / name
-            right_root = MIRROR / name
-            left = {
-                path.relative_to(left_root): path.read_bytes()
-                for path in left_root.rglob("*")
-                if path.is_file() and path.suffix != ".pyc"
-            }
-            right = {
-                path.relative_to(right_root): path.read_bytes()
-                for path in right_root.rglob("*")
-                if path.is_file() and path.suffix != ".pyc"
-            }
-            self.assertEqual(left, right, name)
 
-    def test_validator_detects_extra_mirror_files(self):
-        from scripts import validate as validator
-
-        with tempfile.TemporaryDirectory() as tempdir:
-            root = Path(tempdir)
-            canonical = root / ".agents" / "skills"
-            mirror = root / ".bc" / "skills"
-            (canonical / "bc-design").mkdir(parents=True)
-            (mirror / "bc-design").mkdir(parents=True)
-            (canonical / "bc-design" / "SKILL.md").write_text("same", encoding="utf-8")
-            (mirror / "bc-design" / "SKILL.md").write_text("same", encoding="utf-8")
-            (mirror / "bc-design" / "stale.md").write_text("stale", encoding="utf-8")
-            original_root = validator.ROOT
-            try:
-                validator.ROOT = root
-                self.assertTrue(any("stale.md" in error for error in validator.validate_mirror_parity()))
-            finally:
-                validator.ROOT = original_root
 
     def test_validator_detects_nested_zip_artifacts(self):
         from scripts import validate as validator

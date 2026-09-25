@@ -1,4 +1,0 @@
-interface:
-  display_name: "BC Design"
-  short_description: "Route interface design, redesign, restyling, and quality review"
-  default_prompt: "Use $bc-design to choose the right design mode and produce a subject-grounded, verified interface direction."

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="BattleCode Studio — A literary humanist intelligence workspace crafted with archival parchment, terracotta accents, and streaming token isolation." />
-  <title>BattleCode Studio — Literary Humanist Intelligence</title>
+  <title>BattleCode Studio | Literary Humanist Intelligence</title>
 
   <!-- Google Fonts: Newsreader (Editorial Serif) & Inter (UI Sans) & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,10 +41,10 @@
       --bc-font-serif: "Newsreader", "Georgia", serif;
       --bc-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --bc-font-mono: "JetBrains Mono", monospace;
-      --bc-radius-sm: 6px;
-      --bc-radius-md: 10px;
-      --bc-radius-lg: 16px;
-      --bc-radius-xl: 24px;
+      --bc-radius-sm: 4px;
+      --bc-radius-md: 8px;
+      --bc-radius-lg: 12px;
+      --bc-radius-xl: 16px;
       --bc-radius-full: 9999px;
       --bc-ease: cubic-bezier(0.16, 1, 0.3, 1);
       --bc-duration-fast: 150ms;
@@ -300,7 +300,7 @@
       font-size: 15px;
       font-weight: 600;
       color: #FFFFFF;
-      background: var(--bc-accent);
+      background: var(--bc-accent-strong);
       border-radius: var(--bc-radius-md);
       transition: background-color var(--bc-duration-fast) var(--bc-ease),
                   transform var(--bc-duration-fast) var(--bc-ease),
@@ -312,7 +312,7 @@
     }
 
     .btn-terracotta:hover {
-      background: var(--bc-accent-hover);
+      background: var(--bc-accent-active);
       transform: translateY(-1px);
       box-shadow: 0 6px 20px rgba(217, 119, 87, 0.36);
     }
@@ -640,7 +640,7 @@
       height: 36px;
       padding: 0 12px;
       border-radius: var(--bc-radius-md);
-      background: var(--bc-accent);
+      background: var(--bc-accent-strong);
       color: #FFFFFF;
       font-size: 12px;
       font-weight: 600;
@@ -651,7 +651,7 @@
     }
 
     .replay-stream-btn:hover {
-      background: var(--bc-accent-hover);
+      background: var(--bc-accent-active);
     }
 
     /* ==========================================================================
@@ -993,7 +993,7 @@
       top: -12px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--bc-accent);
+      background: var(--bc-accent-strong);
       color: #FFFFFF;
       font-size: 11px;
       font-weight: 600;
@@ -1316,6 +1316,30 @@
       }
     }
 
+    @media (max-width: 520px) {
+      .action-zone .btn-secondary,
+      .brand-zone .brand-badge {
+        display: none;
+      }
+      .brand-zone {
+        min-width: 0;
+      }
+      .header-inner {
+        padding-left: 16px;
+        padding-right: 16px;
+        gap: 12px;
+      }
+      .brand-name {
+        font-size: 17px;
+      }
+      .action-zone .btn-primary {
+        padding: 0 12px;
+      }
+      .action-zone {
+        gap: 8px;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -1335,7 +1359,7 @@
     <div class="container header-inner">
       <!-- Zone 1: Identity & Brand -->
       <div class="brand-zone">
-        <a href="#" style="display:flex; align-items:center; gap:10px;">
+        <a href="./bc-landing-page.html" aria-label="BattleCode Studio home" style="display:flex; align-items:center; gap:10px;">
           <!-- 1.5px Monoline Brand Star -->
           <svg class="brand-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
@@ -1419,7 +1443,7 @@
 
         <div class="hero-social-proof">
           <div class="proof-avatars">
-            <div class="proof-avatar" style="background:#E28466; color:#fff;">AL</div>
+            <div class="proof-avatar" style="background:#B35637; color:#fff;">AL</div>
             <div class="proof-avatar" style="background:#34526F; color:#fff;">TK</div>
             <div class="proof-avatar" style="background:#7D8A68; color:#fff;">SR</div>
             <div class="proof-avatar" style="background:#E09F3E; color:#fff;">MR</div>
@@ -1753,7 +1777,7 @@
         <div class="pg-text-col">
           <h3>Zero-Dependency CLI & Assistant Hooks</h3>
           <p>
-            Run the design intelligence engine anywhere. Compatible with Cursor, Windsurf, VS Code, and Google Antigravity.
+            Run the design intelligence engine anywhere. Installs as a native skill for Claude Code, Codex, Google Antigravity, and Kiro.
           </p>
           <ul class="pg-feature-list">
             <li class="pg-feature-item">
@@ -1938,7 +1962,7 @@
             </li>
             <li class="price-feature-row">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--bc-accent);"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>Multi-assistant CLI & Cursor plugin sync</span>
+              <span>Native skill installs for four assistants</span>
             </li>
             <li class="price-feature-row">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--bc-accent);"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -1959,7 +1983,7 @@
           <ul class="price-features">
             <li class="price-feature-row">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--bc-accent);"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>Zero data retention (HIPAA & SOC 2 Type II)</span>
+              <span>Zero data retention by default</span>
             </li>
             <li class="price-feature-row">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--bc-accent);"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -2060,7 +2084,7 @@
             </svg>
           </button>
           <div class="faq-answer">
-            When an AI model streams text, conventional web containers recalculate layout margins, padding, and height on every single token arrival. This causes jarring layout thrashing and visual fatigue. Streaming Token Isolation enforces CSS containment and locked dimension anchors so the text flows effortlessly without moving the interface underneath the user's eyes.
+            When an AI model streams text, conventional web containers recalculate layout margins, padding, and height on every single token arrival. This causes jarring layout thrashing and visual fatigue. Streaming Token Isolation enforces CSS containment and locked dimension anchors so the text flows steadily without moving the interface underneath the user's eyes.
           </div>
         </div>
 
@@ -2072,7 +2096,7 @@
             </svg>
           </button>
           <div class="faq-answer">
-            The bundled Python script (<code style="font-family:var(--bc-font-mono);">scripts/install.py</code>) is written using pure standard library Python. In a single command, it configures instructions and rules for Cursor, Windsurf, Google Antigravity, GitHub Copilot, Kiro, Codex, Qoder, and VS Code.
+            The bundled Python script (<code style="font-family:var(--bc-font-mono);">scripts/install.py</code>) is written using pure standard library Python. In a single command, it installs the skill family and instruction file for Claude Code, Codex, Google Antigravity, and Kiro.
           </div>
         </div>
 
@@ -2156,10 +2180,10 @@
         <div class="footer-col">
           <h5>Philosophy</h5>
           <ul>
-            <li><a href="#">Literary Humanism</a></li>
-            <li><a href="#">Streaming Safety</a></li>
-            <li><a href="#">Accessibility Contract</a></li>
-            <li><a href="#">Brand Guidelines</a></li>
+            <li><a href="#principles">Literary Humanism</a></li>
+            <li><a href="#playground">Streaming Safety</a></li>
+            <li><a href="#faq">Accessibility Contract</a></li>
+            <li><a href="../.agents/skills/bc-design/references/visual-language.md">Brand Guidelines</a></li>
           </ul>
         </div>
       </div>
@@ -2256,10 +2280,12 @@
         runStreamSimulation(sampleResponses[activeScenario]);
       });
 
-      demoReplayTrigger.addEventListener('click', () => {
-        document.getElementById('studio').scrollIntoView({ behavior: 'smooth' });
-        runStreamSimulation(sampleResponses[activeScenario]);
-      });
+      if (demoReplayTrigger) {
+        demoReplayTrigger.addEventListener('click', () => {
+          document.getElementById('studio').scrollIntoView({ behavior: 'smooth' });
+          runStreamSimulation(sampleResponses[activeScenario]);
+        });
+      }
 
       // Scenario tabs in Hero
       const studioTabs = document.querySelectorAll('.studio-tab');

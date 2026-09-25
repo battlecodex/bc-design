@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Maison Oriel | Independent Horology Atelier</title>
+  <meta name="description" content="Maison Oriel builds mechanical watches by hand in a small atelier. Explore the movement layer by layer." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bc-canvas: #FAF9F5;
+      --bc-surface: #FFFFFF;
+      --bc-ink: #1F1E1B;
+      --bc-ink-secondary: #5C584F;
+      --bc-hairline: rgba(31, 30, 27, 0.09);
+      --bc-accent: #C2A26A;
+      --bc-accent-strong: #8A5B19;
+      --bc-accent-active: #744C14;
+      --bc-on-accent: #FFFFFF;
+      --bc-font-display: "Newsreader", Georgia, serif;
+      --bc-font-ui: "Inter", system-ui, sans-serif;
+      --bc-ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --bc-duration-fast: 150ms;
+      --bc-radius: 6px;
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bc-canvas: #181816;
+        --bc-surface: #211F1C;
+        --bc-ink: #FAF9F5;
+        --bc-ink-secondary: #B8B2A6;
+        --bc-hairline: rgba(250, 249, 245, 0.1);
+        --bc-accent-strong: #D6B27A;
+        --bc-accent-active: #E2C08C;
+        --bc-on-accent: #181816;
+        color-scheme: dark;
+      }
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bc-canvas);
+      color: var(--bc-ink);
+      font-family: var(--bc-font-ui);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--bc-accent-strong);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -48px;
+      padding: 8px 12px;
+      background: var(--bc-ink);
+      color: var(--bc-canvas);
+      z-index: 40;
+    }
+
+    .skip-link:focus-visible {
+      top: 12px;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: var(--bc-canvas);
+      border-bottom: 1px solid var(--bc-hairline);
+    }
+
+    .site-header__inner,
+    .wrap {
+      width: min(1160px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .site-header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .wordmark {
+      font-family: var(--bc-font-display);
+      font-size: 22px;
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+
+    .site-nav {
+      display: flex;
+      gap: 28px;
+      font-size: 15px;
+    }
+
+    .site-nav a {
+      text-decoration: none;
+      color: var(--bc-ink-secondary);
+      transition: color var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .site-nav a:hover {
+      color: var(--bc-ink);
+    }
+
+    .hero {
+      padding: 128px 0 112px;
+      border-bottom: 1px solid var(--bc-hairline);
+    }
+
+    .hero__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: 64px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 20px;
+      font-size: 14px;
+      color: var(--bc-accent-strong);
+    }
+
+    .hero__title {
+      margin: 0;
+      font-family: var(--bc-font-display);
+      font-weight: 400;
+      font-size: clamp(44px, 6.2vw, 76px);
+      line-height: 1.04;
+      letter-spacing: -0.015em;
+      font-variation-settings: "opsz" 72;
+    }
+
+    .hero__body {
+      margin: 28px 0 0;
+      max-width: 34em;
+      font-size: 19px;
+      color: var(--bc-ink-secondary);
+    }
+
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 48px;
+      padding: 0 24px;
+      border-radius: var(--bc-radius);
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background-color var(--bc-duration-fast) var(--bc-ease), color var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .button--primary {
+      background: var(--bc-ink);
+      color: var(--bc-canvas);
+    }
+
+    .button--primary:hover {
+      background: var(--bc-accent-strong);
+      color: var(--bc-on-accent);
+    }
+
+    .button--quiet {
+      border: 1px solid var(--bc-hairline);
+      color: var(--bc-ink);
+    }
+
+    .button--quiet:hover {
+      border-color: var(--bc-ink-secondary);
+    }
+
+    .hero__aside {
+      border-left: 1px solid var(--bc-hairline);
+      padding-left: 32px;
+      font-size: 15px;
+      color: var(--bc-ink-secondary);
+    }
+
+    .hero__aside dl {
+      margin: 0;
+      display: grid;
+      gap: 20px;
+    }
+
+    .hero__aside dt {
+      color: var(--bc-ink);
+      font-weight: 500;
+    }
+
+    .hero__aside dd {
+      margin: 4px 0 0;
+    }
+
+    .movement {
+      position: relative;
+      border-bottom: 1px solid var(--bc-hairline);
+    }
+
+    .movement__pin {
+      position: relative;
+      height: 100vh;
+      min-height: 560px;
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: center;
+      width: min(1160px, calc(100% - 48px));
+      margin: 0 auto;
+      gap: 48px;
+    }
+
+    .movement__captions {
+      position: relative;
+    }
+
+    .caption {
+      max-width: 26em;
+    }
+
+    .caption + .caption {
+      margin-top: 40px;
+    }
+
+    /* Set by the desktop scroll story only, so captions stay readable without JavaScript. */
+    .movement__captions.is-scrubbing {
+      min-height: 260px;
+    }
+
+    .movement__captions.is-scrubbing .caption {
+      position: absolute;
+      inset: 0 auto auto 0;
+      margin-top: 0;
+    }
+
+    .caption h2 {
+      margin: 0 0 16px;
+      font-family: var(--bc-font-display);
+      font-weight: 400;
+      font-size: 40px;
+      line-height: 1.1;
+    }
+
+    .caption p {
+      margin: 0;
+      color: var(--bc-ink-secondary);
+    }
+
+    .caption__step {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: var(--bc-accent-strong);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stage {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      max-height: 78vh;
+      justify-self: center;
+    }
+
+    .stage canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .stage__fallback {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--bc-ink-secondary);
+      font-size: 15px;
+    }
+
+    .stage.is-live .stage__fallback {
+      display: none;
+    }
+
+    .craft {
+      padding: 128px 0;
+      border-bottom: 1px solid var(--bc-hairline);
+    }
+
+    .section-title {
+      margin: 0 0 56px;
+      max-width: 18em;
+      font-family: var(--bc-font-display);
+      font-weight: 400;
+      font-size: clamp(32px, 4vw, 48px);
+      line-height: 1.12;
+    }
+
+    .craft__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 48px;
+    }
+
+    .craft__list li {
+      border-top: 1px solid var(--bc-ink);
+      padding-top: 24px;
+    }
+
+    .craft__list h3 {
+      margin: 0 0 12px;
+      font-size: 17px;
+      font-weight: 500;
+    }
+
+    .craft__list p {
+      margin: 0;
+      color: var(--bc-ink-secondary);
+    }
+
+    .visit {
+      padding: 128px 0;
+    }
+
+    .visit__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: 64px;
+      align-items: start;
+    }
+
+    .visit p {
+      margin: 0 0 32px;
+      max-width: 32em;
+      color: var(--bc-ink-secondary);
+    }
+
+    .visit address {
+      font-style: normal;
+      color: var(--bc-ink-secondary);
+      border-left: 1px solid var(--bc-hairline);
+      padding-left: 32px;
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--bc-hairline);
+      padding: 32px 0 48px;
+      font-size: 14px;
+      color: var(--bc-ink-secondary);
+    }
+
+    @media (max-width: 860px) {
+      .hero {
+        padding: 72px 0 64px;
+      }
+
+      .hero__grid,
+      .visit__grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero__aside,
+      .visit address {
+        border-left: 0;
+        border-top: 1px solid var(--bc-hairline);
+        padding: 24px 0 0;
+      }
+
+      .movement__pin {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        height: auto;
+        min-height: 0;
+        padding: 64px 0;
+        gap: 24px;
+      }
+
+      .caption + .caption {
+        margin-top: 32px;
+      }
+
+      .caption h2 {
+        font-size: 30px;
+      }
+
+      .craft,
+      .visit {
+        padding: 72px 0;
+      }
+
+      .craft__list {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .site-nav {
+        gap: 18px;
+        font-size: 14px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="wordmark" href="#main">Maison Oriel</a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="#movement">Movement</a>
+        <a href="#craft">Craft</a>
+        <a href="#visit">Visit</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero__grid">
+        <div>
+          <p class="eyebrow" data-hero="eyebrow">Independent atelier, Geneva</p>
+          <h1 class="hero__title" id="hero-title" data-hero="title">A watch you can read from the inside.</h1>
+          <p class="hero__body" data-hero="body">Every Oriel movement is finished by hand and cased with an open back, so the balance wheel, the gear train, and the bridges stay in view.</p>
+          <div class="hero__actions" data-hero="action">
+            <a class="button button--primary" href="#visit">Book an atelier visit</a>
+            <a class="button button--quiet" href="#movement">See the movement</a>
+          </div>
+        </div>
+        <aside class="hero__aside" data-hero="aside" aria-label="Calibre details">
+          <dl>
+            <div>
+              <dt>Calibre O-1</dt>
+              <dd>Manual winding, small seconds</dd>
+            </div>
+            <div>
+              <dt>Finishing</dt>
+              <dd>Hand-bevelled bridges, brushed gold train</dd>
+            </div>
+            <div>
+              <dt>Case</dt>
+              <dd>38mm, sapphire exhibition back</dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <section class="movement" id="movement" aria-labelledby="movement-title">
+      <div class="movement__pin">
+        <div class="movement__captions">
+          <article class="caption" data-caption>
+            <span class="caption__step">Layer 1 of 3</span>
+            <h2 id="movement-title">The case holds everything in place.</h2>
+            <p>A steel case and a sapphire back protect the movement. Each layer below comes out of the case in turn.</p>
+          </article>
+          <article class="caption" data-caption>
+            <span class="caption__step">Layer 2 of 3</span>
+            <h2>The dial sits above the gear train.</h2>
+            <p>Beneath the dial, four wheels step the mainspring's energy down to a steady beat.</p>
+          </article>
+          <article class="caption" data-caption>
+            <span class="caption__step">Layer 3 of 3</span>
+            <h2>The bridges carry the finish.</h2>
+            <p>Each bridge edge is bevelled and polished by hand before the movement is assembled.</p>
+          </article>
+        </div>
+        <div class="stage" id="stage" role="img" aria-label="Three-dimensional view of the Oriel movement separating into case, dial, gear train, and bridges">
+          <p class="stage__fallback">The movement view needs WebGL. The steps on this page describe each layer.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="craft" id="craft" aria-labelledby="craft-title" data-reveal>
+      <div class="wrap">
+        <h2 class="section-title" id="craft-title">Made slowly, by the people who sign it.</h2>
+        <ul class="craft__list" data-stagger>
+          <li>
+            <h3>One watchmaker per movement</h3>
+            <p>The same hands assemble, regulate, and case each calibre, and their initials are engraved on the mainplate.</p>
+          </li>
+          <li>
+            <h3>Regulated in five positions</h3>
+            <p>Every movement is timed dial up, dial down, and crown in three directions before it leaves the bench.</p>
+          </li>
+          <li>
+            <h3>Serviced at the atelier</h3>
+            <p>Oriel watches return to the bench where they were built for cleaning, oiling, and regulation.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="visit" id="visit" aria-labelledby="visit-title" data-reveal>
+      <div class="wrap visit__grid">
+        <div>
+          <h2 class="section-title" id="visit-title">Visit the bench.</h2>
+          <p>Appointments last an hour. You will handle a cased O-1, watch a movement being regulated, and choose a dial finish.</p>
+          <a class="button button--primary" href="mailto:atelier@maison-oriel.example">Request an appointment</a>
+        </div>
+        <address>
+          Maison Oriel<br />
+          Rue du Rhône, Geneva<br />
+          Tuesday to Saturday, by appointment
+        </address>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">Maison Oriel is a fictional atelier used to demonstrate BC Design motion orchestration.</div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="./bc-motion.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      if (!window.gsap || !window.BCMotion) return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      // 1. Hero entrance: one timeline in reading order.
+      BCMotion.heroSequence([
+        "[data-hero='eyebrow']",
+        "[data-hero='title']",
+        "[data-hero='body']",
+        "[data-hero='action']",
+        "[data-hero='aside']",
+      ]);
+
+      // 2. Quiet sections reveal once.
+      BCMotion.revealOnce("[data-reveal]");
+      BCMotion.staggerList("[data-stagger] > li", { trigger: "[data-stagger]" });
+
+      // 3. The signature moment: a scroll-scrubbed exploded view of the movement.
+      var stage = document.getElementById("stage");
+      if (!window.THREE || !stage) return;
+
+      var renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      } catch (error) {
+        return;
+      }
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      stage.appendChild(renderer.domElement);
+      stage.classList.add("is-live");
+
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+      camera.position.set(0, 2.1, 7.8);
+      camera.lookAt(0, 0.5, 0);
+
+      // Metal needs something to reflect; a warm hemisphere stands in for a studio.
+      scene.add(new THREE.HemisphereLight(0xfff7ea, 0x8a7a66, 1.6));
+      var key = new THREE.DirectionalLight(0xffe6c2, 2.1);
+      key.position.set(4, 7, 5);
+      scene.add(key);
+      var rim = new THREE.DirectionalLight(0xc2d0ff, 0.6);
+      rim.position.set(-5, 2, -4);
+      scene.add(rim);
+
+      var brass = new THREE.MeshStandardMaterial({ color: 0xc9a86a, metalness: 0.55, roughness: 0.34 });
+      var steel = new THREE.MeshStandardMaterial({ color: 0xc8c3b9, metalness: 0.45, roughness: 0.3 });
+      var dialMaterial = new THREE.MeshStandardMaterial({ color: 0xe7dfcf, metalness: 0.05, roughness: 0.72 });
+      var ruby = new THREE.MeshStandardMaterial({ color: 0x9b2335, metalness: 0.2, roughness: 0.2 });
+      var disposables = [brass, steel, dialMaterial, ruby];
+
+      function track(geometry) {
+        disposables.push(geometry);
+        return geometry;
+      }
+
+      function gear(radius, teeth, material) {
+        var group = new THREE.Group();
+        var rimMesh = new THREE.Mesh(track(new THREE.TorusGeometry(radius, 0.035, 12, 96)), material);
+        rimMesh.rotation.x = Math.PI / 2;
+        group.add(rimMesh);
+        var toothGeometry = track(new THREE.BoxGeometry(0.06, 0.05, 0.1));
+        for (var t = 0; t < teeth; t += 1) {
+          var angle = (t / teeth) * Math.PI * 2;
+          var tooth = new THREE.Mesh(toothGeometry, material);
+          tooth.position.set(Math.cos(angle) * (radius + 0.06), 0, Math.sin(angle) * (radius + 0.06));
+          tooth.rotation.y = -angle;
+          group.add(tooth);
+        }
+        var spokeGeometry = track(new THREE.BoxGeometry(radius * 2, 0.03, 0.05));
+        for (var s = 0; s < 3; s += 1) {
+          var spoke = new THREE.Mesh(spokeGeometry, material);
+          spoke.rotation.y = (s / 3) * Math.PI;
+          group.add(spoke);
+        }
+        var jewel = new THREE.Mesh(track(new THREE.CylinderGeometry(0.05, 0.05, 0.06, 20)), ruby);
+        group.add(jewel);
+        return group;
+      }
+
+      var watch = new THREE.Group();
+      scene.add(watch);
+
+      var caseLayer = new THREE.Group();
+      var caseRing = new THREE.Mesh(track(new THREE.TorusGeometry(1.55, 0.14, 24, 128)), steel);
+      caseRing.rotation.x = Math.PI / 2;
+      caseLayer.add(caseRing);
+      var caseBack = new THREE.Mesh(track(new THREE.CylinderGeometry(1.5, 1.5, 0.06, 96)), steel);
+      caseBack.position.y = -0.1;
+      caseLayer.add(caseBack);
+
+      var trainLayer = new THREE.Group();
+      var wheels = [
+        { r: 0.62, teeth: 40, x: 0, z: 0 },
+        { r: 0.38, teeth: 28, x: 0.78, z: 0.42 },
+        { r: 0.3, teeth: 22, x: -0.62, z: 0.58 },
+        { r: 0.46, teeth: 32, x: -0.34, z: -0.82 },
+      ].map(function (spec) {
+        var wheel = gear(spec.r, spec.teeth, brass);
+        wheel.position.set(spec.x, 0, spec.z);
+        trainLayer.add(wheel);
+        return { mesh: wheel, speed: 0.9 / spec.r };
+      });
+
+      var bridgeLayer = new THREE.Group();
+      var bridgeGeometry = track(new THREE.BoxGeometry(2.3, 0.08, 0.34));
+      [0.35, -0.55].forEach(function (z, index) {
+        var bridge = new THREE.Mesh(bridgeGeometry, steel);
+        bridge.position.z = z;
+        bridge.rotation.y = index ? 0.5 : -0.35;
+        bridgeLayer.add(bridge);
+      });
+
+      var dialLayer = new THREE.Group();
+      var dial = new THREE.Mesh(track(new THREE.CylinderGeometry(1.42, 1.42, 0.05, 96)), dialMaterial);
+      dialLayer.add(dial);
+      var indexGeometry = track(new THREE.BoxGeometry(0.03, 0.02, 0.18));
+      for (var i = 0; i < 12; i += 1) {
+        var marker = new THREE.Mesh(indexGeometry, brass);
+        var a = (i / 12) * Math.PI * 2;
+        marker.position.set(Math.cos(a) * 1.18, 0.04, Math.sin(a) * 1.18);
+        marker.rotation.y = -a;
+        dialLayer.add(marker);
+      }
+
+      [caseLayer, trainLayer, bridgeLayer, dialLayer].forEach(function (layer) {
+        watch.add(layer);
+      });
+      caseLayer.position.y = 0;
+      trainLayer.position.y = 0.12;
+      bridgeLayer.position.y = 0.22;
+      dialLayer.position.y = 0.3;
+      watch.rotation.set(0.08, -0.5, 0);
+
+      function resize() {
+        var size = stage.clientWidth;
+        renderer.setSize(size, size, false);
+        camera.aspect = 1;
+        camera.updateProjectionMatrix();
+        render();
+      }
+      resize();
+      window.addEventListener("resize", resize);
+
+      function render() {
+        renderer.render(scene, camera);
+      }
+
+      // A still, partly separated view used by small screens and reduced motion.
+      function separatedPose() {
+        dialLayer.position.y = 1.5;
+        bridgeLayer.position.y = 1.0;
+        trainLayer.position.y = 0.5;
+        watch.rotation.set(0.3, 0.25, 0);
+        camera.position.set(0, 2.5, 9.2);
+        camera.lookAt(0, 0.9, 0);
+        render();
+      }
+
+      BCMotion.orchestrate(
+        null,
+        function (tools) {
+          var visible = false;
+          var idle = function (time, deltaTime) {
+            if (!visible) return;
+            var step = deltaTime / 1000;
+            wheels.forEach(function (wheel, index) {
+              wheel.mesh.rotation.y += (index % 2 ? -1 : 1) * wheel.speed * step * 0.35;
+            });
+            render();
+          };
+          tools.gsap.ticker.add(idle);
+          var observer = new IntersectionObserver(function (entries) {
+            visible = entries[0].isIntersecting;
+          });
+          observer.observe(stage);
+
+          // Desktop pins the stage and scrubs the exploded view. Small screens
+          // show every caption and a separated pose instead of a scrub.
+          var layout = tools.gsap.matchMedia();
+          layout.add("(min-width: 861px)", function () {
+            var captionGroup = document.querySelector(".movement__captions");
+            var captions = tools.gsap.utils.toArray("[data-caption]");
+            captionGroup.classList.add("is-scrubbing");
+            tools.gsap.set(captions.slice(1), { autoAlpha: 0 });
+            var story = tools.gsap.timeline({
+              defaults: { ease: tools.ease.scrub },
+              scrollTrigger: {
+                trigger: ".movement__pin",
+                start: "top top",
+                end: "+=180%",
+                scrub: 0.6,
+                pin: true,
+              },
+            });
+            // Layers separate over the full scroll; each caption hands over
+            // without overlapping the next one.
+            story
+              .to(watch.rotation, { x: 0.32, y: 0.3, duration: 1 }, 0)
+              .to(camera.position, { y: 2.6, z: 9.4, duration: 1 }, 0)
+              .to(dialLayer.position, { y: 2.3, duration: 0.45 }, 0)
+              .to(captions[0], { autoAlpha: 0, y: -16, duration: 0.08 }, 0.26)
+              .fromTo(captions[1], { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.08 }, 0.36)
+              .to(bridgeLayer.position, { y: 1.55, duration: 0.45 }, 0.45)
+              .to(trainLayer.position, { y: 0.8, duration: 0.45 }, 0.5)
+              .to(captions[1], { autoAlpha: 0, y: -16, duration: 0.08 }, 0.62)
+              .fromTo(captions[2], { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.08 }, 0.72)
+              .eventCallback("onUpdate", function () {
+                camera.lookAt(0, 1.0, 0);
+                render();
+              });
+            return function () {
+              captionGroup.classList.remove("is-scrubbing");
+            };
+          });
+          layout.add("(max-width: 860px)", function () {
+            separatedPose();
+          });
+
+          return function () {
+            layout.revert();
+            tools.gsap.ticker.remove(idle);
+            observer.disconnect();
+          };
+        },
+        function () {
+          // Reduced motion: one composed frame, every caption visible from CSS.
+          separatedPose();
+        }
+      );
+
+      window.addEventListener("pagehide", function () {
+        disposables.forEach(function (item) {
+          item.dispose();
+        });
+        renderer.dispose();
+      });
+    })();
+  </script>
+</body>
+</html>

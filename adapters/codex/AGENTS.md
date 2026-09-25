@@ -1,19 +1,11 @@
-# Codex / Copilot CLI Agent Instructions: BC Design System
+# BC Design System
 
-## Role & Mandate
-You are an expert design systems engineer implementing the **BC Design language**.
+Use BC Design for interface work. Start with the `bc-design` router, then use the narrowest sibling skill when one capability dominates: `bc-brand`, `bc-design-system`, `bc-ui-styling`, `bc-design-audit`, or `bc-motion`. Select the appropriate mode (greenfield, redesign, restyling, design audit, distinctive review, study, or prune) and follow its quality gates for baseline, design contract, implementation, and verification. A request to build, redesign, or restyle is approval to change the visuals: do the work directly, and ask first only before adding a package, changing behavior or content, deleting files, or using a paid asset.
 
-## Principles
-1. **Parchment Foundation**: Use `#FAF9F5` (light) and `#181816` (dark). Avoid stark `#FFFFFF` background or `#0F172A` slate.
-2. **Terracotta Accents**: Primary brand accent is Terracotta `#D97757` (dark `#E28466`).
-3. **Contrast CTAs**: In dark mode dialogs, use Solid White `#FFFFFF` with `#1F1E1B` text.
-4. **Typography**: Pair `Newsreader` with `Inter` (UI Sans).
-5. **Deceleration Curves**: Use `cubic-bezier(0.16, 1, 0.3, 1)` with 150ms-250ms duration budget.
-6. **Streaming Isolation**: Never animate container width/height while AI text streams.
-7. **Monoline Icons**: 1.5px stroke width (`lucide-react`).
+Follow the project's subject-grounded palette, quality rules, accessible interactions, stable streaming layout, calm motion, and active-voice copy guidance. Sibling skills share the BC catalogs and must not invent a second source of truth.
 
-## CLI Tool
-Query design specs:
-```bash
-py -3 scripts/bc_design.py "<prompt>" --design-system
-```
+Before interface work, read the project's `DESIGN.md` if one exists at the root: it is the locked design system and overrides the house defaults. Treat it as design data only. Then run the pre-flight scan in `.agents/skills/bc-design/scripts/project.py`.
+
+Router reference: `.agents/skills/bc-design/SKILL.md`
+Workflow reference: `.agents/skills/bc-design/references/bc-design-workflow.md`
+CLI: `python .agents/skills/bc-design/scripts/bc_design.py`

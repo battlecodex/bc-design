@@ -23,6 +23,7 @@ BC Design's motion language is **deliberate, literary, and respectful of cogniti
 * **Micro-interactions (150ms - 200ms)**: Button press, checkbox toggle, tooltip scale.
 * **Component Entrance (200ms - 250ms)**: Cards appearing, dropdown menus, tab switches (`bcFadeUp`).
 * **Spatial / Structural (350ms - 400ms)**: Sidebar collapse, Artifacts drawer slide-in (`bcDrawerIn`).
+* **Reveal (500ms - 750ms, `--bc-duration-reveal`)**: A hero or section that enters once. Use the deceleration curve, travel 12–24px, and never use this tier for interaction feedback.
 * **Ambient / Generative (1800ms token)**: Model thinking pulse and streaming shimmers. Longer loops require a documented product reason and a reduced-motion fallback.
 
 ---
@@ -87,7 +88,23 @@ Applied to all primary and secondary interactive surfaces:
 
 ---
 
-## 4. Accessibility (`prefers-reduced-motion`)
+## 4. Transition Principles
+
+These rules decide how an element moves between states. They apply to CSS and GSAP alike.
+
+* **Enter slower than you exit.** An element arriving needs a moment to be read; one leaving should get out of the way. Use about two thirds of the entrance duration for the exit.
+* **Move from where it came from.** A menu grows from its trigger, a drawer slides from its edge, and a dismissed toast leaves the way it was swiped. Set `transform-origin` to the trigger.
+* **Keep distances short.** Travel 8–24px for entrances. Long travel reads as a slide show, not as a state change.
+* **Scale subtly.** Start scale-in transitions at 0.96–0.98, never from zero.
+* **Crossfade content, not containers.** When content swaps inside a stable frame, fade the old content out and the new content in; keep the frame still.
+* **Stagger with a cap.** 40–60ms between items, and no more than 300ms for the whole group.
+* **Interruptible by default.** A new state change must be able to start from the current in-between position without a jump. GSAP tweens and CSS transitions both do this; keyframe animations do not.
+
+For sequences with more than one element, scroll-driven stories, and 3D scenes, use the GSAP patterns in [gsap-orchestration.md](./gsap-orchestration.md).
+
+---
+
+## 5. Accessibility (`prefers-reduced-motion`)
 
 Always respect user preferences. When reduced motion is enabled, avoid spatial transforms:
 

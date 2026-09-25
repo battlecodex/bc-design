@@ -4,9 +4,10 @@
 Zero external dependencies (pure Python standard library).
 Validates:
 1. Catalog alignment and normalized counts against skill.json.
-2. Complete byte-for-byte parity between .agents/skills/ and .bc/skills/.
-3. Presence and integrity of internal spatial assets and runnable generators.
-4. Non-existence of binary ZIP archives, caches, or machine-specific paths.
+2. Presence and integrity of internal spatial assets and runnable generators.
+3. Non-existence of binary ZIP archives, caches, or machine-specific paths.
+4. Runtime instruction files in adapters/ and the root match install.py output.
+5. Upstream notices ship inside the installed skill directory.
 """
 
 from __future__ import annotations
@@ -22,6 +23,8 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILL_DIR = ROOT / ".agents" / "skills" / "bc-design"
 sys.path.insert(0, str(SKILL_DIR / "scripts"))
 from normalize_catalog import build_report  # noqa: E402
+sys.path.insert(0, str(ROOT / "scripts"))
+import sync_adapters  # noqa: E402
 from spatial import SPATIAL_GENERATOR_PRESETS, SPATIAL_PRESET_ALIASES  # noqa: E402
 
 EXCLUDED_SUFFIXES = {".pyc", ".pyo"}
@@ -97,38 +100,6 @@ def validate_manifest(fix: bool = False) -> list[str]:
     return errors
 
 
-def validate_mirror_parity() -> list[str]:
-    """Verify byte-for-byte parity between .agents/skills/ and .bc/skills/."""
-    errors: list[str] = []
-    canonical = ROOT / ".agents" / "skills"
-    mirror = ROOT / ".bc" / "skills"
-
-    def files_under(base: Path) -> dict[Path, Path]:
-        if not base.is_dir():
-            return {}
-        result = {}
-        for path in base.rglob("*"):
-            if not path.is_file():
-                continue
-            if any(part in EXCLUDED_PARTS for part in path.parts) or path.suffix in EXCLUDED_SUFFIXES:
-                continue
-            result[path.relative_to(base)] = path
-        return result
-
-    canonical_files = files_under(canonical)
-    mirror_files = files_under(mirror)
-    for relative in sorted(canonical_files.keys() | mirror_files.keys()):
-        left = canonical_files.get(relative)
-        right = mirror_files.get(relative)
-        if left is None:
-            errors.append(f"Extra mirror file: .bc/skills/{relative}")
-        elif right is None:
-            errors.append(f"Missing mirror file: .bc/skills/{relative}")
-        elif left.read_bytes() != right.read_bytes():
-            errors.append(f"Mirror drift detected: {relative}")
-
-    return errors
-
 
 def validate_prohibited_artifacts() -> list[str]:
     """Verify no ZIP archives or cache directories exist in the working tree."""
@@ -163,17 +134,28 @@ def validate_prohibited_artifacts() -> list[str]:
 def validate_spatial_assets() -> list[str]:
     """Verify standalone spatial asset templates exist inside the skill directory."""
     errors: list[str] = []
-    asset_roots = (
-        SKILL_DIR / "assets" / "spatial",
-        ROOT / ".bc" / "skills" / "bc-design" / "assets" / "spatial",
-    )
-    required_assets = ["school-codex.html", "spatial-showcase.html"]
-    for assets_dir in asset_roots:
-        for name in required_assets:
-            target = assets_dir / name
-            if not target.is_file():
-                errors.append(f"Required spatial generator asset missing: {target}")
+    assets_dir = SKILL_DIR / "assets" / "spatial"
+    for name in ("school-codex.html", "spatial-showcase.html"):
+        target = assets_dir / name
+        if not target.is_file():
+            errors.append(f"Required spatial generator asset missing: {target}")
     return errors
+
+
+def validate_third_party_notices() -> list[str]:
+    """Verify the MIT notices for bundled upstream material travel with installs."""
+    notices = SKILL_DIR / "THIRD_PARTY_NOTICES.md"
+    if not notices.is_file():
+        return [f"Third-party notices missing from skill directory: {notices.relative_to(ROOT)}"]
+    text = notices.read_text(encoding="utf-8")
+    required = (
+        "Copyright (c) 2024 Next Level Builder",
+        "Copyright (c) 2026 Meng To",
+        "Copyright (c) 2026 Miqdad Badjuber (antislop)",
+        "Copyright (c) 2026 Leonxlnx",
+        "Copyright (c) 2026 Hallmark contributors",
+    )
+    return [f"Third-party notices missing '{notice}'" for notice in required if notice not in text]
 
 
 def validate_brand_and_clean_paths() -> list[str]:
@@ -211,10 +193,11 @@ def validate_all(fix: bool = False) -> list[str]:
         errors.append(f"Unclassified catalog entries detected: {report['totals']['unclassified']}")
 
     errors.extend(validate_manifest(fix=fix))
-    errors.extend(validate_mirror_parity())
     errors.extend(validate_prohibited_artifacts())
     errors.extend(validate_spatial_assets())
     errors.extend(validate_brand_and_clean_paths())
+    errors.extend(sync_adapters.check())
+    errors.extend(validate_third_party_notices())
     return errors
 
 
@@ -231,7 +214,7 @@ def main(argv=None) -> int:
         return 1
 
     metrics = computed_catalog_metrics()
-    print("VALIDATION SUCCESS: Repository, mirror parity, catalogs, and assets are in full compliance.")
+    print("VALIDATION SUCCESS: Repository, adapters, notices, catalogs, and assets are in full compliance.")
     print(f"Catalogs: {metrics}")
     return 0
 

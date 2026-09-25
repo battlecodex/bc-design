@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fieldnote | BC Design Composition Patterns</title>
+  <meta name="description" content="A reference page for the BC Design house style: centered editorial sections, a sentence selector, stacked illustration tiles, a hairline feature list, and an ink footer." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* Pattern reference. Fieldnote is a fictional product. */
+    :root {
+      --bc-canvas: #FAF9F5;
+      --bc-canvas-2: #F0EEE6;
+      --bc-surface: #FFFFFF;
+      --bc-ink: #141413;
+      --bc-ink-secondary: #5E5D59;
+      --bc-ink-tertiary: #73716A;
+      --bc-border: #E8E6DC;
+      --bc-border-strong: #D1CFC5;
+      --bc-accent: #D97757;
+      --bc-accent-strong: #B35637;
+      --bc-illus-clay: #D97757;
+      --bc-illus-sky: #6A9BCC;
+      --bc-illus-heather: #CBCADB;
+      --bc-illus-olive: #788C5D;
+      --bc-illus-sage: #BCD1CA;
+      --bc-illus-apricot: #EBCBB4;
+      --bc-font-display: "Newsreader", Georgia, serif;
+      --bc-font-ui: "Inter", system-ui, sans-serif;
+      --bc-radius-sm: 4px;
+      --bc-radius-md: 8px;
+      --bc-radius-lg: 12px;
+      --bc-radius-xl: 16px;
+      --bc-ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --bc-duration-fast: 150ms;
+      --bc-duration-normal: 250ms;
+      --bc-shadow-float: 0 1px 2px rgba(20, 20, 19, 0.04), 0 8px 24px rgba(20, 20, 19, 0.08);
+      color-scheme: light;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bc-canvas);
+      color: var(--bc-ink);
+      font-family: var(--bc-font-ui);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--bc-accent-strong);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .wrap {
+      width: min(1200px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .display {
+      font-family: var(--bc-font-display);
+      font-weight: 400;
+      font-variation-settings: "opsz" 72;
+      letter-spacing: -0.01em;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 20px;
+      border-radius: var(--bc-radius-md);
+      font: 500 15px/1 var(--bc-font-ui);
+      text-decoration: none;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background-color var(--bc-duration-fast) var(--bc-ease), border-color var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .button--ink {
+      background: var(--bc-ink);
+      color: var(--bc-canvas);
+    }
+
+    .button--ink:hover {
+      background: #30302E;
+    }
+
+    .button--outline {
+      border-color: var(--bc-border-strong);
+      background: var(--bc-canvas);
+      color: var(--bc-ink);
+    }
+
+    .button--outline:hover {
+      border-color: var(--bc-ink-tertiary);
+    }
+
+    /* Pattern: header with ink primary and outline secondary */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: var(--bc-canvas);
+    }
+
+    .site-header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+      gap: 24px;
+    }
+
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--bc-font-display);
+      font-size: 24px;
+      text-decoration: none;
+    }
+
+    .site-nav {
+      display: flex;
+      gap: 28px;
+      font-size: 15px;
+    }
+
+    .site-nav a {
+      text-decoration: none;
+      color: var(--bc-ink-secondary);
+    }
+
+    .site-nav a:hover {
+      color: var(--bc-ink);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Pattern: centered editorial hero */
+    .hero {
+      padding: 112px 0 64px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      margin: 0 auto;
+      max-width: 13em;
+      font-size: clamp(44px, 6vw, 72px);
+      font-weight: 300;
+      line-height: 1.08;
+    }
+
+    .hero .lead {
+      margin: 24px auto 0;
+      max-width: 30em;
+      font-size: 22px;
+      line-height: 1.5;
+      color: var(--bc-ink-secondary);
+    }
+
+    .hero__actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 36px;
+    }
+
+    /* Pattern: sentence selector */
+    .selector {
+      padding: 96px 0 112px;
+      background: var(--bc-canvas-2);
+    }
+
+    .selector__sentence {
+      margin: 0 auto 64px;
+      max-width: 22em;
+      text-align: center;
+      font-size: clamp(28px, 3.4vw, 40px);
+      line-height: 1.3;
+    }
+
+    .selector__sentence label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+
+    .selector__sentence select {
+      appearance: none;
+      border: 0;
+      border-bottom: 1.5px solid var(--bc-ink);
+      border-radius: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      padding: 0 2px;
+      cursor: pointer;
+    }
+
+    .selector__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr);
+      gap: 48px;
+      align-items: start;
+    }
+
+    .option-list h3 {
+      margin: 0 0 16px;
+      font-family: var(--bc-font-display);
+      font-weight: 400;
+      font-size: 26px;
+    }
+
+    .option-list ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .option-list button {
+      display: block;
+      width: 100%;
+      padding: 6px 0;
+      border: 0;
+      background: none;
+      text-align: left;
+      font: 15px/1.5 var(--bc-font-ui);
+      color: var(--bc-ink-tertiary);
+      cursor: pointer;
+    }
+
+    .option-list button[aria-pressed="true"] {
+      color: var(--bc-ink);
+      font-weight: 500;
+    }
+
+    /* Pattern: stacked illustration tiles behind a product screen */
+    .stack {
+      position: relative;
+      padding-top: 40px;
+    }
+
+    .stack__tile {
+      position: absolute;
+      left: 50%;
+      height: 60px;
+      border-radius: var(--bc-radius-lg) var(--bc-radius-lg) 0 0;
+      transform: translateX(-50%);
+    }
+
+    .stack__tile--back {
+      top: 0;
+      width: 80%;
+      background: var(--bc-illus-clay);
+    }
+
+    .stack__tile--middle {
+      top: 20px;
+      width: 90%;
+      background: var(--bc-illus-heather);
+    }
+
+    .stack__front {
+      position: relative;
+      border-radius: var(--bc-radius-lg);
+      background: var(--bc-illus-sage);
+      padding: 48px 40px 0;
+      overflow: hidden;
+    }
+
+    .stack__front svg.pattern-lines {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .screen {
+      position: relative;
+      border-radius: var(--bc-radius-md) var(--bc-radius-md) 0 0;
+      background: var(--bc-surface);
+      box-shadow: var(--bc-shadow-float);
+      min-height: 280px;
+      padding: 28px 32px;
+    }
+
+    .screen__bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .screen__bar span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--bc-border-strong);
+    }
+
+    .screen h4 {
+      margin: 0 0 8px;
+      font-family: var(--bc-font-display);
+      font-weight: 400;
+      font-size: 24px;
+    }
+
+    .screen p {
+      margin: 0 0 16px;
+      font-size: 15px;
+      color: var(--bc-ink-secondary);
+    }
+
+    .screen dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px 16px;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .screen dt {
+      color: var(--bc-ink-tertiary);
+    }
+
+    .screen dd {
+      margin: 0;
+    }
+
+    /* Pattern: centered editorial section + hairline feature list */
+    .features {
+      padding: 128px 0;
+    }
+
+    .section-head {
+      text-align: center;
+      margin: 0 auto 64px;
+      max-width: 32em;
+    }
+
+    .section-head svg {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 16px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(34px, 4.2vw, 52px);
+      line-height: 1.12;
+    }
+
+    .section-head p {
+      margin: 16px 0 0;
+      color: var(--bc-ink-secondary);
+    }
+
+    .feature-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr);
+      gap: 40px;
+      align-items: start;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .feature-list li {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: 32px;
+      padding: 28px 0;
+      border-top: 1px solid var(--bc-border);
+    }
+
+    .feature-list li:last-child {
+      border-bottom: 1px solid var(--bc-border);
+    }
+
+    .feature-list h3 {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      margin: 0;
+      font-family: var(--bc-font-display);
+      font-weight: 400;
+      font-size: 20px;
+    }
+
+    .feature-list h3 svg {
+      flex: none;
+      width: 16px;
+      height: 16px;
+      transform: translateY(2px);
+    }
+
+    .feature-list p {
+      margin: 0;
+      font-size: 15px;
+      color: var(--bc-ink-secondary);
+    }
+
+    /* Pattern: floating proof card with an honest placeholder */
+    .proof-card {
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-lg);
+      box-shadow: var(--bc-shadow-float);
+      padding: 18px 20px;
+      font-size: 14px;
+    }
+
+    .proof-card__mark {
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .proof-card__figure {
+      display: block;
+      width: 72px;
+      height: 32px;
+      border-radius: var(--bc-radius-sm);
+      background: var(--bc-canvas-2);
+      margin-bottom: 6px;
+    }
+
+    .proof-card p {
+      margin: 0;
+      color: var(--bc-ink-tertiary);
+    }
+
+    /* Pattern: illustrated tiles */
+    .journal {
+      padding: 0 0 128px;
+    }
+
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .tile {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-lg);
+      background: var(--bc-surface);
+      overflow: hidden;
+      text-decoration: none;
+      transition: border-color var(--bc-duration-fast) var(--bc-ease);
+    }
+
+    .tile:hover {
+      border-color: var(--bc-border-strong);
+    }
+
+    .tile__art {
+      display: grid;
+      place-items: center;
+      aspect-ratio: 16 / 10;
+    }
+
+    .tile__art svg {
+      width: 42%;
+      height: auto;
+    }
+
+    .tile__body {
+      padding: 20px 22px 24px;
+    }
+
+    .tile__date {
+      display: block;
+      font-size: 13px;
+      color: var(--bc-ink-tertiary);
+      margin-bottom: 10px;
+    }
+
+    .tile h3 {
+      margin: 0;
+      font-family: var(--bc-font-display);
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    /* Pattern: quiet announcement */
+    .announcement {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 40;
+      display: grid;
+      grid-template-columns: 1fr 96px;
+      gap: 16px;
+      width: min(380px, calc(100vw - 32px));
+      padding: 18px;
+      background: var(--bc-surface);
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-xl);
+      box-shadow: var(--bc-shadow-float);
+    }
+
+    .announcement[hidden] {
+      display: none;
+    }
+
+    .announcement__label {
+      font-size: 13px;
+      color: var(--bc-ink-tertiary);
+    }
+
+    .announcement h2 {
+      margin: 6px 0 14px;
+      font-family: var(--bc-font-display);
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .announcement__art {
+      border-radius: var(--bc-radius-md);
+      background: var(--bc-illus-clay);
+      display: grid;
+      place-items: center;
+    }
+
+    .announcement__close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--bc-border);
+      border-radius: var(--bc-radius-md);
+      background: var(--bc-surface);
+      cursor: pointer;
+    }
+
+    /* Pattern: ink footer */
+    .site-footer {
+      background: var(--bc-ink);
+      color: #B0AEA5;
+      padding: 72px 0 48px;
+      font-size: 14px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 4fr) repeat(3, minmax(0, 2fr));
+      gap: 40px;
+    }
+
+    .site-footer h2 {
+      margin: 0 0 14px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #87867F;
+    }
+
+    .site-footer ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .site-footer a {
+      color: #FAF9F5;
+      text-decoration: none;
+    }
+
+    .site-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .site-footer .wordmark {
+      color: #FAF9F5;
+    }
+
+    .footer-note {
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1px solid #30302E;
+    }
+
+    @media (max-width: 900px) {
+      .site-nav {
+        display: none;
+      }
+
+      .hero {
+        padding: 72px 0 40px;
+      }
+
+      .selector__grid,
+      .feature-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .option-list ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 16px;
+      }
+
+      .option-list button {
+        width: auto;
+      }
+
+      .feature-list li {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .tiles,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .features,
+      .journal {
+        padding-bottom: 72px;
+      }
+
+      .features {
+        padding-top: 72px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .wrap {
+        width: calc(100% - 32px);
+      }
+
+      .header-actions .button--outline {
+        display: none;
+      }
+
+      .stack__front {
+        padding: 32px 16px 0;
+      }
+
+      .screen {
+        padding: 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="wordmark" href="#top">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z" /><path d="M9 10h6M9 14h6M9 18h3" /></svg>
+        Fieldnote
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="#workflows">Workflows</a>
+        <a href="#features">Features</a>
+        <a href="#journal">Journal</a>
+      </nav>
+      <div class="header-actions">
+        <a class="button button--outline" href="#footer">Talk to the team</a>
+        <a class="button button--ink" href="#workflows">Try Fieldnote</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap">
+        <h1 class="display" id="hero-title" data-hero="title">Research notes that turn into decisions.</h1>
+        <p class="lead" data-hero="body">Fieldnote keeps interviews, highlights, and the decisions they lead to in one shared notebook, so the next person starts where you stopped.</p>
+        <div class="hero__actions" data-hero="action">
+          <a class="button button--ink" href="#workflows">See it with your role</a>
+          <a class="button button--outline" href="#features">Read how it works</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="selector" id="workflows" aria-labelledby="selector-title" data-reveal>
+      <div class="wrap">
+        <h2 id="selector-title" hidden>Workflows by role</h2>
+        <p class="selector__sentence display">
+          I work in
+          <label for="role">Role</label>
+          <select id="role" data-sync="role">
+            <option value="research">research</option>
+            <option value="product">product</option>
+            <option value="design">design</option>
+          </select>
+          and I need to
+          <label for="task">Task</label>
+          <select id="task" data-sync="task">
+            <option value="synthesize">synthesize interviews</option>
+            <option value="share">share a readout</option>
+            <option value="decide">log a decision</option>
+          </select>.
+        </p>
+
+        <div class="selector__grid">
+          <div class="option-list">
+            <h3>Role</h3>
+            <ul>
+              <li><button type="button" data-set="role" data-value="research" aria-pressed="true">Research</button></li>
+              <li><button type="button" data-set="role" data-value="product" aria-pressed="false">Product</button></li>
+              <li><button type="button" data-set="role" data-value="design" aria-pressed="false">Design</button></li>
+            </ul>
+          </div>
+
+          <div class="stack" aria-live="polite">
+            <div class="stack__tile stack__tile--back" aria-hidden="true"></div>
+            <div class="stack__tile stack__tile--middle" aria-hidden="true"></div>
+            <div class="stack__front">
+              <svg class="pattern-lines" viewBox="0 0 400 300" preserveAspectRatio="none" fill="none" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="1.5" aria-hidden="true">
+                <path d="M-10 60 C 80 20, 140 110, 230 70 S 380 40, 420 90" />
+                <path d="M-10 190 C 70 150, 170 240, 260 190 S 360 170, 420 220" />
+              </svg>
+              <div class="screen">
+                <div class="screen__bar" aria-hidden="true"><span></span><span></span><span></span></div>
+                <h4 id="preview-title">Interview synthesis</h4>
+                <p id="preview-body">Highlights from twelve interviews, grouped into themes you can cite in the readout.</p>
+                <dl>
+                  <dt>Source</dt>
+                  <dd id="preview-source">Interview notebook</dd>
+                  <dt>Owner</dt>
+                  <dd id="preview-owner">Research team</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+          <div class="option-list">
+            <h3>Task</h3>
+            <ul>
+              <li><button type="button" data-set="task" data-value="synthesize" aria-pressed="true">Synthesize interviews</button></li>
+              <li><button type="button" data-set="task" data-value="share" aria-pressed="false">Share a readout</button></li>
+              <li><button type="button" data-set="task" data-value="decide" aria-pressed="false">Log a decision</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features" aria-labelledby="features-title" data-reveal>
+      <div class="wrap">
+        <div class="section-head">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 30c-3-2-5-6-3-9 2-4 7-3 9 0" />
+            <path d="M20 21l6-9c1-2 4-1 3 1l-4 8" />
+            <path d="M25 21l5-6c1-1 3 0 2 2l-5 7" />
+            <path d="M14 30l4 8h14l4-10c1-3-2-4-4-2l-3 4" />
+            <rect x="30" y="6" width="12" height="15" rx="1" />
+            <path d="M33 11h6M33 15h4" />
+          </svg>
+          <h2 class="display" id="features-title">Notes that stay useful after the meeting</h2>
+          <p>Everything a team learns lands in one place, with the source one click away.</p>
+        </div>
+
+        <div class="feature-layout">
+          <div></div>
+          <ul class="feature-list">
+            <li>
+              <h3><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 3h12v8H6l-4 3z" /></svg>Quotes keep their source</h3>
+              <p>Every highlight links back to the moment in the interview, so a claim in a readout is always one click from its evidence.</p>
+            </li>
+            <li>
+              <h3><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8l3 3 7-7" /></svg>Decisions have a history</h3>
+              <p>Log what the team decided, who decided it, and which notes it rests on. Reopen it when new evidence arrives.</p>
+            </li>
+            <li>
+              <h3><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="7" cy="7" r="4.5" /><path d="M10.5 10.5L14 14" /></svg>Search reads like a colleague</h3>
+              <p>Ask what customers said about onboarding and get the three interviews that answer it, not a list of keyword matches.</p>
+            </li>
+          </ul>
+          <aside class="proof-card" aria-label="Customer result">
+            <div class="proof-card__mark">Customer story</div>
+            <span class="proof-card__figure" aria-hidden="true"></span>
+            <p>Placeholder: add a sourced result from a named customer before publishing.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="journal" id="journal" aria-labelledby="journal-title" data-reveal>
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="display" id="journal-title">From the Fieldnote journal</h2>
+        </div>
+        <ul class="tiles">
+          <li>
+            <a class="tile" href="#journal">
+              <div class="tile__art" style="background: var(--bc-illus-clay);">
+                <svg viewBox="0 0 120 90" fill="none" stroke="#141413" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M20 18h58a8 8 0 0 1 8 8v24a8 8 0 0 1-8 8H46l-14 12V58H20a8 8 0 0 1-8-8V26a8 8 0 0 1 8-8z" fill="#FAF9F5" />
+                  <path d="M92 44c10-8 18-4 18 6 0 9-9 14-16 12" />
+                </svg>
+              </div>
+              <div class="tile__body">
+                <span class="tile__date">Sep 24, 2026</span>
+                <h3>How we run a twelve-interview study in two weeks</h3>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a class="tile" href="#journal">
+              <div class="tile__art" style="background: var(--bc-illus-sky);">
+                <svg viewBox="0 0 120 90" fill="none" stroke="#141413" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="60" cy="42" r="8" fill="#FAF9F5" />
+                  <circle cx="30" cy="24" r="6" /><circle cx="92" cy="22" r="6" /><circle cx="28" cy="66" r="6" /><circle cx="94" cy="64" r="6" />
+                  <path d="M36 27l17 10M86 25L67 37M34 63l19-15M88 61L67 47" />
+                </svg>
+              </div>
+              <div class="tile__body">
+                <span class="tile__date">Sep 22, 2026</span>
+                <h3>Connecting a decision to the notes behind it</h3>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a class="tile" href="#journal">
+              <div class="tile__art" style="background: var(--bc-illus-olive);">
+                <svg viewBox="0 0 120 90" fill="none" stroke="#141413" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M22 70V20M22 70h78" />
+                  <path d="M30 60c10-4 14-18 24-20s14 10 24 6 12-18 18-22" stroke="#FAF9F5" />
+                  <path d="M88 24l8-4 2 9" stroke="#FAF9F5" />
+                </svg>
+              </div>
+              <div class="tile__body">
+                <span class="tile__date">Sep 19, 2026</span>
+                <h3>What changed when our readouts cited their sources</h3>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <aside class="announcement" id="announcement" aria-labelledby="announcement-title">
+    <div>
+      <span class="announcement__label">Latest update</span>
+      <h2 id="announcement-title">Decision logs now sync with your roadmap.</h2>
+      <a class="button button--ink" href="#features">See what changed</a>
+    </div>
+    <div class="announcement__art" aria-hidden="true">
+      <svg viewBox="0 0 60 60" width="52" height="52" fill="none" stroke="#141413" stroke-width="2" stroke-linecap="round"><path d="M14 44V16h24l8 8v20z" fill="#FAF9F5" /><path d="M20 28h18M20 35h12" /></svg>
+    </div>
+    <button class="announcement__close" type="button" aria-label="Dismiss update" data-dismiss="announcement">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+    </button>
+  </aside>
+
+  <footer class="site-footer" id="footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a class="wordmark" href="#top">Fieldnote</a>
+        </div>
+        <nav aria-labelledby="footer-product">
+          <h2 id="footer-product">Product</h2>
+          <ul>
+            <li><a href="#workflows">Workflows</a></li>
+            <li><a href="#features">Features</a></li>
+          </ul>
+        </nav>
+        <nav aria-labelledby="footer-learn">
+          <h2 id="footer-learn">Learn</h2>
+          <ul>
+            <li><a href="#journal">Journal</a></li>
+          </ul>
+        </nav>
+        <div>
+          <h2>Contact</h2>
+          <p style="margin: 0;">hello@fieldnote.example</p>
+        </div>
+      </div>
+      <p class="footer-note">Fieldnote is a fictional product used to demonstrate BC Design composition patterns.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+  <script src="../motion/bc-motion.js"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      // Sentence selector: the selects and the option lists stay in sync.
+      var previews = {
+        synthesize: ["Interview synthesis", "Highlights from twelve interviews, grouped into themes you can cite in the readout.", "Interview notebook"],
+        share: ["Readout draft", "A one-page summary with every claim linked to the interview it came from.", "Readout template"],
+        decide: ["Decision log", "What was decided, who decided it, and the notes it rests on.", "Decision register"],
+      };
+      var owners = { research: "Research team", product: "Product team", design: "Design team" };
+      var state = { role: "research", task: "synthesize" };
+
+      function render() {
+        document.querySelectorAll("[data-set]").forEach(function (button) {
+          button.setAttribute("aria-pressed", String(state[button.dataset.set] === button.dataset.value));
+        });
+        document.getElementById("role").value = state.role;
+        document.getElementById("task").value = state.task;
+        var preview = previews[state.task];
+        document.getElementById("preview-title").textContent = preview[0];
+        document.getElementById("preview-body").textContent = preview[1];
+        document.getElementById("preview-source").textContent = preview[2];
+        document.getElementById("preview-owner").textContent = owners[state.role];
+      }
+
+      document.querySelectorAll("[data-set]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          state[button.dataset.set] = button.dataset.value;
+          render();
+        });
+      });
+      document.querySelectorAll("[data-sync]").forEach(function (select) {
+        select.addEventListener("change", function () {
+          state[select.dataset.sync] = select.value;
+          render();
+        });
+      });
+
+      var dismiss = document.querySelector("[data-dismiss]");
+      if (dismiss) {
+        dismiss.addEventListener("click", function () {
+          document.getElementById(dismiss.dataset.dismiss).hidden = true;
+        });
+      }
+
+      // Motion: a hero entrance and once-only section reveals on the reveal tier.
+      if (window.gsap && window.BCMotion) {
+        BCMotion.heroSequence(["[data-hero='title']", "[data-hero='body']", "[data-hero='action']"]);
+        BCMotion.revealOnce("[data-reveal]");
+      }
+    })();
+  </script>
+</body>
+</html>

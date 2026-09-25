@@ -1,0 +1,29 @@
+component,category,shadcn_primitive,block_sources,effect_sources,house_fit,restyle
+navbar,page-section,navigation-menu,shadcnblocks;ReUI;Spectrum UI;21st.dev,,Sticky parchment bar with wordmark left and an ink primary action right; hairline bottom border,Ink primary plus outline secondary; sticky z-index 30; hide secondary links under 860px
+hero,page-section,,shadcnblocks;ReUI;Spectrum UI;21st.dev,React Bits;Rare UI;Vanta UI,Centered serif headline at display weight 300-400 with one lead paragraph; one signature moment at most,Remove glow and gradient text; hero reveal on the 600ms tier via BCMotion.heroSequence
+feature-list,page-section,,shadcnblocks;ReUI;21st.dev,,Hairline feature list (icon plus serif title left and description right) beats a grid of identical cards,Replace card grids with hairline rows; 1.5px monoline icons
+bento,page-section,,shadcnblocks;21st.dev;BeUI,React Bits,Only for unequal independent tiles; vary cell size and content; illustration tiles on the --bc-illus palette,Cap at 5 cells; no glow borders; audit monotonous-card-kit
+pricing,page-section,card;tabs;switch,shadcnblocks;ReUI;21st.dev,,Two or three plans in hairline columns; ink primary action on the recommended plan only,Tabular figures for prices; no fake discount badges
+testimonials,page-section,card,shadcnblocks;21st.dev,,Real quotes with name and role only; otherwise a labelled placeholder,Never keep sample people or avatars; serif pull quote
+logo-cloud,page-section,,shadcnblocks;21st.dev,React Bits,Real customer marks in one muted tone; static by default,Replace sample logos; marquee only with a pause control and reduced-motion stop
+stats,page-section,,shadcnblocks;21st.dev,React Bits,Sourced numbers only; tabular figures,Count-up animation only on the reveal tier and never on unsourced numbers
+faq,page-section,accordion,shadcnblocks;ReUI;21st.dev,,Accordion with hairline dividers; product-specific questions only,Keyboard operable; 250ms height via grid rows not max-height
+cta,page-section,button,shadcnblocks;21st.dev,,Ink section or parchment band with one serif line and one ink button,Specific verb label; no arrow glyph suffix
+footer,page-section,,shadcnblocks;ReUI;21st.dev,,Ink footer with grouped link columns in light gray,Every link needs a real destination
+blog-cards,page-section,card,shadcnblocks;21st.dev,,Illustrated journal tiles on the --bc-illus palette with date and serif title,Original illustration only; 12px radius
+button,primitive,button,ReUI;coss ui;Spectrum UI,Simply Buttons;21st.dev,Solid ink primary; 1px outline secondary; text link tertiary; 8px radius,Map shadcn variants default outline ghost link onto ink outline and text roles
+form,primitive,form;input;label;textarea;select;checkbox,ReUI;coss ui,,Visible labels above inputs; errors say what happened and how to fix it,2px focus ring on --bc-accent-strong; 8px radius
+dialog,primitive,dialog;sheet;alert-dialog,ReUI;coss ui,,16px radius panel on a quiet scrim; one primary action,Structural tier 350-400ms; focus trap and restore
+dropdown-menu,primitive,dropdown-menu;popover,ReUI;coss ui,,Floating layer with a soft shadow and hairline border,Origin from the trigger; 150-250ms
+command-palette,primitive,command,ReUI;21st.dev,,Search-first palette for power users; serif empty state,Keyboard shortcut shown; results announce to screen readers
+tabs,primitive,tabs,ReUI;coss ui,React Bits,Underline tabs in ink; no pill tabs,Indicator slides with transform only
+table,data,table,ReUI;21st.dev,,Left-aligned text; tabular figures; hairline rows; sticky header,Wide tables scroll inside their frame on phones
+chart,data,chart,Evil Charts,,shadcn charts run on Recharts; restrained series colors,Series colors from --bc-illus tokens; label axes; keep a data table fallback
+toast,primitive,sonner,ReUI,,Quiet announcement card in a corner; dismissible,No auto-dismiss for errors; polite live region
+sidebar,primitive,sidebar,shadcnblocks;ReUI,,Canvas-2 sidebar with ink active state,Collapsible on phones; focus returns to the toggle
+empty-state,page-section,,21st.dev,,Small monoline illustration with one serif line and one action,Say what the user can do next
+text-animation,motion,,,React Bits;21st.dev;Rare UI,Only as the page's one signature moment; readable at every frame,Rebuild on GSAP with gsap.matchMedia and the reveal tier; no looping text effects
+background,motion,,,React Bits;Vanta UI;backgrounds.supply,Quiet organic line patterns behind illustration tiles; never behind body text,Measure contrast over the busiest frame; static under reduced motion
+3d-scene,motion,,,BC spatial generators;ThreeUI,A subject-grounded 3D stage as the signature moment,Use bc_design.py --spatial or gsap-atelier.html; cap pixel ratio at 2
+icons,asset,,Lucide;Keyline Icons;Phosphor,,One monoline family per interface at 1.5px stroke,Keyline stroke style set to 1.5px; see icons.md
+retro-theme,theme,,8bitcn,,A deliberate retro theme; not the house style,Use only when the brand calls for it

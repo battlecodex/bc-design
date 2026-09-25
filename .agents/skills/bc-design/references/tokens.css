@@ -21,6 +21,16 @@
   --bc-accent-active: #AA4F32;    /* Pressed state */
   --bc-accent-subtle: #FDF3EE;    /* Soft terracotta tint for badges/highlights */
   --bc-accent-border: #F4D3C5;    /* Delicate border for active/highlighted items */
+  --bc-accent-strong: #B35637;    /* Text-bearing accent fills and accent text: 4.88:1 with white, 4.63:1 on parchment */
+
+  /* Illustration palette: flat, muted tiles behind hand-drawn monoline art.
+     For illustration and category tiles only; never for text, buttons, or status. */
+  --bc-illus-clay: #D97757;
+  --bc-illus-sky: #6A9BCC;
+  --bc-illus-heather: #CBCADB;
+  --bc-illus-olive: #788C5D;
+  --bc-illus-sage: #BCD1CA;
+  --bc-illus-apricot: #EBCBB4;
 
   /* Secondary Earth & Pastel Thumbnail Accents (Seen in Light Mode Learn Cards) */
   --bc-pastel-sage: #A8C2B7;      /* Sage / Eucalyptus green thumbnail */
@@ -35,7 +45,7 @@
   /* Text & Ink */
   --bc-text-primary: #1F1E1B;     /* Deep ink black with warm undertone */
   --bc-text-secondary: #6B6760;   /* Muted warm stone for body & descriptions */
-  --bc-text-tertiary: #99948B;    /* Placeholders & subtle metadata */
+  --bc-text-tertiary: #73716A;    /* Placeholders & subtle metadata: 4.64:1 on parchment */
   --bc-text-on-accent: #FFFFFF;   /* Crisp white text/icons on terracotta buttons and badges */
 
   /* Borders & Dividers */
@@ -74,10 +84,10 @@
   /* ==========================================================================
      Radii (Soft Rounded Curves)
      ========================================================================== */
-  --bc-radius-sm: 6px;
-  --bc-radius-md: 10px;
-  --bc-radius-lg: 14px;
-  --bc-radius-xl: 20px;
+  --bc-radius-sm: 4px;            /* Small controls, tags, inline code */
+  --bc-radius-md: 8px;            /* Buttons and inputs */
+  --bc-radius-lg: 12px;           /* Cards and illustration tiles */
+  --bc-radius-xl: 16px;           /* Large panels and dialogs */
   --bc-radius-full: 9999px;
 
   /* ==========================================================================
@@ -90,6 +100,7 @@
   --bc-duration-fast: 150ms;
   --bc-duration-normal: 250ms;
   --bc-duration-slow: 400ms;
+  --bc-duration-reveal: 600ms;    /* Once-only hero and section reveals; never above 750ms, never for UI feedback */
   --bc-duration-shimmer: 1800ms;
 }
 
@@ -107,14 +118,15 @@
   /* Terracotta in Dark Mode (Slightly boosted vibrancy) */
   --bc-accent: #E28466;
   --bc-accent-hover: #EA967B;
-  --bc-accent-active: #C15F3E;
+  --bc-accent-active: #AA4F32;
   --bc-accent-subtle: #34221A;
   --bc-accent-border: #4D2D20;
+  --bc-accent-strong: #B35637;
 
   /* Text & Ink */
   --bc-text-primary: #FAF9F5;     /* Warm off-white */
   --bc-text-secondary: #A39E93;   /* Warm medium gray */
-  --bc-text-tertiary: #6E6A62;    /* Dark muted metadata */
+  --bc-text-tertiary: #8C877D;    /* Dark muted metadata: 4.98:1 on espresso */
   --bc-text-on-accent: #FFFFFF;   /* Crisp white text/icons on dark-mode terracotta */
 
   /* Borders & Dividers */
@@ -453,7 +465,7 @@
 
 /* 12. Artifact "Tweaks" Badge & Terracotta Popover (Screenshot 5) */
 .bc-badge-terracotta {
-  background: var(--bc-accent);
+  background: var(--bc-accent-strong);
   color: var(--bc-text-on-accent);
   font-size: 13px;
   font-weight: 500;
@@ -467,7 +479,7 @@
 }
 
 .bc-badge-terracotta:hover {
-  background: var(--bc-accent-hover);
+  background: var(--bc-accent-active);
 }
 
 .bc-popover-box {
@@ -492,8 +504,13 @@
   box-shadow: 0 0 0 2px rgba(217, 119, 87, 0.15);
 }
 
+.bc-input-terracotta:focus-visible {
+  outline: 2px solid var(--bc-accent-strong);
+  outline-offset: 2px;
+}
+
 .bc-btn-terracotta {
-  background: var(--bc-accent);
+  background: var(--bc-accent-strong);
   color: var(--bc-text-on-accent);
   border: none;
   padding: 8px 18px;
@@ -505,7 +522,7 @@
 }
 
 .bc-btn-terracotta:hover {
-  background: var(--bc-accent-hover);
+  background: var(--bc-accent-active);
 }
 
 /* Respect user motion preferences across every BC utility. */

@@ -21,12 +21,20 @@ SEVERITY = {
     "repeated-generic-cta": "warning",
     "focus-ring-width": "error",
     "accent-button-text-contrast": "error",
+    "accent-fill-white-text": "error",
     "sticky-z-index-token": "warning",
     "streaming-layout-animation": "error",
     "motion-duration-budget": "warning",
     "motion-easing-token": "warning",
     "reduced-motion-support": "error",
     "spatial-uncapped-pixel-ratio": "warning",
+    "em-dash-copy": "warning",
+    "buzzword-copy": "warning",
+    "unverified-claim": "error",
+    "dead-navigation-link": "warning",
+    "focus-outline-removed": "error",
+    "gsap-reduced-motion": "error",
+    "gsap-layout-property": "warning",
 }
 
 CATEGORY = {
@@ -49,8 +57,66 @@ CATEGORY = {
     "reduced-motion-support": "accessibility",
     "focus-ring-width": "accessibility",
     "accent-button-text-contrast": "accessibility",
+    "accent-fill-white-text": "accessibility",
     "sticky-z-index-token": "accessibility",
     "spatial-uncapped-pixel-ratio": "performance",
+    "em-dash-copy": "copy",
+    "buzzword-copy": "copy",
+    "unverified-claim": "content",
+    "dead-navigation-link": "content",
+    "focus-outline-removed": "accessibility",
+    "gsap-reduced-motion": "accessibility",
+    "gsap-layout-property": "performance",
+}
+
+# Every rule reports under one of the review dimensions in
+# references/design-dimensions.md.
+DIMENSIONS = (
+    "Color",
+    "Typography",
+    "Layout & grid",
+    "Spacing & whitespace",
+    "Visual hierarchy",
+    "Imagery & icons",
+    "Shape & effects",
+    "UI components",
+    "Interaction & states",
+    "Motion",
+    "Responsiveness",
+    "Accessibility",
+    "Information architecture",
+    "UX writing",
+)
+DIMENSION = {
+    "monotonous-card-kit": "Visual hierarchy",
+    "decorative-index-marker": "Visual hierarchy",
+    "decorative-eyebrow-overload": "Visual hierarchy",
+    "oversized-hero-displacement": "Typography",
+    "excessive-pill-capsules": "Shape & effects",
+    "generic-gradient-wash": "Color",
+    "accent-surface-domination": "Color",
+    "accent-button-text-contrast": "Accessibility",
+    "accent-fill-white-text": "Accessibility",
+    "unicode-icon-glyph": "Imagery & icons",
+    "template-arrow-glyph": "Imagery & icons",
+    "copied-platform-chrome": "Information architecture",
+    "dead-navigation-link": "Information architecture",
+    "repeated-generic-cta": "UX writing",
+    "template-arrow-cta": "UX writing",
+    "middle-dot-metadata": "UX writing",
+    "em-dash-copy": "UX writing",
+    "buzzword-copy": "UX writing",
+    "unverified-claim": "UX writing",
+    "focus-ring-width": "Accessibility",
+    "focus-outline-removed": "Accessibility",
+    "sticky-z-index-token": "Layout & grid",
+    "streaming-layout-animation": "Motion",
+    "motion-duration-budget": "Motion",
+    "motion-easing-token": "Motion",
+    "reduced-motion-support": "Motion",
+    "gsap-reduced-motion": "Motion",
+    "gsap-layout-property": "Motion",
+    "spatial-uncapped-pixel-ratio": "Responsiveness",
 }
 
 RECOMMENDATIONS = {
@@ -68,13 +134,21 @@ RECOMMENDATIONS = {
     "unicode-icon-glyph": "Replace the glyph with a 1.5px monoline SVG and an accessible name.",
     "decorative-index-marker": "Remove the marker or make the sequence meaningful and ordered.",
     "focus-ring-width": "Use a visible 2px focus ring with sufficient contrast.",
-    "accent-button-text-contrast": "Avoid dark ink text on mid-tone accent/terracotta buttons. Use crisp white (#FFFFFF) text or switch primary actions to the canonical high-contrast button (.bc-btn-contrast).",
+    "accent-button-text-contrast": "Use the ink button (.bc-btn-contrast) for primary actions, or white text on --bc-accent-strong.",
+    "accent-fill-white-text": "Replace the fill with var(--bc-accent-strong) and its hover with var(--bc-accent-active).",
     "sticky-z-index-token": "Use the semantic sticky-navigation layer token (30).",
     "streaming-layout-animation": "Animate opacity/transform only while streamed content is changing.",
     "motion-duration-budget": "Use a BC duration token; reserve longer timing for a documented state.",
     "motion-easing-token": "Use a BC easing token or the approved deceleration curve.",
     "reduced-motion-support": "Add a prefers-reduced-motion: reduce fallback in the same source unit.",
     "spatial-uncapped-pixel-ratio": "Cap WebGL pixel ratio with Math.min(window.devicePixelRatio, 2) to protect mobile GPU thermal budget.",
+    "em-dash-copy": "Rewrite the sentence with a period, comma, colon, or parentheses.",
+    "buzzword-copy": "State what the product does for this reader in concrete terms.",
+    "unverified-claim": "Cite the certificate or measurement, or remove the claim.",
+    "dead-navigation-link": "Link to a real destination or render the item as plain text.",
+    "focus-outline-removed": "Add a :focus-visible rule with a 2px accent outline or equivalent ring.",
+    "gsap-reduced-motion": "Use gsap.matchMedia() with a (prefers-reduced-motion: reduce) branch that sets final states without tweening.",
+    "gsap-layout-property": "Replace width/height/top/left/margin/padding tweens with x, y, scale, clipPath, or opacity.",
 }
 
 EVIDENCE_MARKERS = {
@@ -93,12 +167,20 @@ EVIDENCE_MARKERS = {
     "decorative-index-marker": ("01", "02", "03"),
     "focus-ring-width": ("focus-visible", "outline"),
     "accent-button-text-contrast": ("text-on-accent", "1f1e1b", "181816", "d97757", "e28466"),
+    "accent-fill-white-text": ("var(--bc-accent)", "var(--bc-accent-hover)", "d97757", "e28466", "c15f3e"),
     "sticky-z-index-token": ("sticky", "z-index"),
     "streaming-layout-animation": ("transition", "animation", "stream"),
     "motion-duration-budget": ("transition", "animation"),
     "motion-easing-token": ("transition", "animation", "ease"),
     "reduced-motion-support": ("transition", "animation", "keyframes"),
     "spatial-uncapped-pixel-ratio": ("setpixelratio",),
+    "em-dash-copy": ("\u2014",),
+    "buzzword-copy": ("seamless", "unlock", "elevate", "empower", "unleash", "supercharge", "revolution", "cutting-edge", "cutting edge", "next-generation", "next generation", "ai-powered", "ai powered", "effortless", "game-changer"),
+    "unverified-claim": ("soc 2", "soc2", "iso 27001", "hipaa", "gdpr", "pci", "uptime", "x faster"),
+    "dead-navigation-link": ('href="#"', "href='#'"),
+    "focus-outline-removed": ("outline: none", "outline:none", "outline: 0", "outline:0"),
+    "gsap-reduced-motion": ("gsap.",),
+    "gsap-layout-property": ("gsap.to", "gsap.from"),
 }
 
 
@@ -117,6 +199,13 @@ def audit_target(target):
 
 
 def _line_for_rule(content, rule_id, message):
+    if rule_id == "accent-fill-white-text":
+        legacy = _legacy()
+        block = legacy.ACCENT_FILL_WHITE_TEXT_RE.search(content)
+        if block:
+            fill = re.search(legacy.ACCENT_FILL, block.group(0), re.IGNORECASE)
+            offset = block.start() + (fill.start() if fill else 0)
+            return content.count("\n", 0, offset) + 1
     markers = EVIDENCE_MARKERS.get(rule_id, ())
     lines = content.splitlines()
     for number, line in enumerate(lines, 1):
@@ -151,6 +240,7 @@ def build_audit_findings(target):
                 "rule_id": rule_id,
                 "severity": SEVERITY.get(rule_id, "warning"),
                 "category": CATEGORY.get(rule_id, "identity"),
+                "dimension": DIMENSION.get(rule_id, "Visual hierarchy"),
                 "path": str(source_path),
                 "line": line,
                 "evidence": evidence,
@@ -160,3 +250,13 @@ def build_audit_findings(target):
             }
         )
     return findings
+
+
+def summarize_by_dimension(findings):
+    """Count findings per review dimension, in scorecard order."""
+    counts = {}
+    for dimension in DIMENSIONS:
+        total = sum(1 for finding in findings if finding.get("dimension") == dimension)
+        if total:
+            counts[dimension] = total
+    return counts

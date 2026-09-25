@@ -25,7 +25,7 @@ class BCDesignWorkflowTests(unittest.TestCase):
             self.assertIn(mode, self.workflow.lower())
 
     def test_workflow_requires_quality_gates_and_deliverables(self):
-        for gate in ("Present the direction", "Plan multi-step work", "Implement in small slices", "Verify before handoff"):
+        for gate in ("State the direction and proceed", "Plan multi-step work", "Implement in small slices", "Verify before handoff"):
             self.assertIn(gate, self.workflow)
         for deliverable in ("baseline", "design contract", "implementation plan", "verification report"):
             self.assertIn(deliverable, self.workflow.lower())
@@ -35,6 +35,13 @@ class BCDesignWorkflowTests(unittest.TestCase):
         self.assertIn("approval", self.workflow.lower())
         self.assertIn("evidence", self.workflow.lower())
         self.assertIn("no unconditional pass", self.workflow.lower())
+
+    def test_explicit_requests_act_directly_with_narrow_approval_gates(self):
+        self.assertIn("Act on explicit requests", self.skill)
+        self.assertIn("is approval to change the visuals", self.workflow)
+        for gate in ("add a package", "change behavior or content", "delete files", "paid component"):
+            with self.subTest(gate=gate):
+                self.assertIn(gate, self.skill)
 
     def test_skill_links_relevant_references_progressively(self):
         self.assertIn("references/bc-design-workflow.md", self.skill)

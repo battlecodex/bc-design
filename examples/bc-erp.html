@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meridian ERP — Enterprise Resource Planning Suite — BC Design</title>
+  <title>Meridian ERP | Enterprise Resource Planning Suite | BC Design</title>
 
   <!-- Google Fonts: Newsreader (Editorial Serif), Inter (UI Sans), JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -240,7 +240,7 @@
 
     .btn-action-primary {
       padding: 7px 14px;
-      background: var(--bc-accent);
+      background: var(--bc-accent-strong);
       color: var(--bc-text-on-accent);
       border: none;
       border-radius: var(--bc-radius-md);
@@ -254,7 +254,7 @@
     }
 
     .btn-action-primary:hover {
-      background: var(--bc-accent-hover);
+      background: var(--bc-accent-active);
     }
 
     /* Main Container */
@@ -529,8 +529,10 @@
     .erp-detail-drawer {
       position: fixed;
       top: 0;
-      right: -600px;
-      width: 580px;
+      right: 0;
+      width: min(580px, 100vw);
+      transform: translateX(100%);
+      visibility: hidden;
       height: 100vh;
       background: var(--bc-surface);
       border-left: 1px solid var(--bc-border-strong);
@@ -538,11 +540,12 @@
       z-index: 100;
       display: flex;
       flex-direction: column;
-      transition: right var(--bc-duration-normal) var(--bc-ease);
+      transition: transform var(--bc-duration-normal) var(--bc-ease), visibility var(--bc-duration-normal) var(--bc-ease);
     }
 
     .erp-detail-drawer.open {
-      right: 0;
+      transform: translateX(0);
+      visibility: visible;
     }
 
     .drawer-top-banner {
@@ -688,6 +691,51 @@
 
     .erp-toast.show {
       display: flex;
+    }
+
+    /* Phone and small tablet: stack the chrome, scroll wide tables inside their frame. */
+    @media (max-width: 760px) {
+      .erp-top-header {
+        padding: 0 16px;
+        gap: 12px;
+      }
+
+      .header-zone-brand {
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .header-search-bar {
+        display: none;
+      }
+
+      .header-divider-line,
+      .brand-title-text {
+        display: none;
+      }
+
+      .entity-switcher-wrap select {
+        max-width: 132px;
+      }
+
+      .erp-module-subnav {
+        flex-wrap: wrap;
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .module-tabs-list {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+
+      .module-toolbar-actions {
+        flex-wrap: wrap;
+      }
+
+      .data-table-scroll-wrap {
+        max-width: calc(100vw - 32px);
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {

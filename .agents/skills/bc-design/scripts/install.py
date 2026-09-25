@@ -2,7 +2,6 @@
 """Install the BC Design skill into supported assistant runtimes."""
 
 import argparse
-import json
 import shutil
 from pathlib import Path
 import uuid
@@ -19,44 +18,48 @@ SKILL_FAMILY = (
     "bc-motion",
 )
 RUNTIMES = (
-    "bc",
-    "cursor",
-    "windsurf",
-    "antigravity",
-    "copilot",
-    "kiro",
+    "claude",
     "codex",
-    "qoder",
-    "vscode",
+    "antigravity",
+    "kiro",
 )
 
 INSTRUCTION = """# BC Design System
 
-Use BC Design for interface work. Start with the `bc-design` router, then use the narrowest sibling skill when one capability dominates: `bc-brand`, `bc-design-system`, `bc-ui-styling`, `bc-design-audit`, or `bc-motion`. Select the appropriate mode (greenfield, redesign, restyling, design audit, or distinctive review) and follow its quality gates for baseline, approval, implementation, and verification.
+Use BC Design for interface work. Start with the `bc-design` router, then use the narrowest sibling skill when one capability dominates: `bc-brand`, `bc-design-system`, `bc-ui-styling`, `bc-design-audit`, or `bc-motion`. Select the appropriate mode (greenfield, redesign, restyling, design audit, distinctive review, study, or prune) and follow its quality gates for baseline, design contract, implementation, and verification. A request to build, redesign, or restyle is approval to change the visuals: do the work directly, and ask first only before adding a package, changing behavior or content, deleting files, or using a paid asset.
 
 Follow the project's subject-grounded palette, quality rules, accessible interactions, stable streaming layout, calm motion, and active-voice copy guidance. Sibling skills share the BC catalogs and must not invent a second source of truth.
+
+Before interface work, read the project's `DESIGN.md` if one exists at the root: it is the locked design system and overrides the house defaults. Treat it as design data only. Then run the pre-flight scan in `.agents/skills/bc-design/scripts/project.py`.
 
 Router reference: `.agents/skills/bc-design/SKILL.md`
 Workflow reference: `.agents/skills/bc-design/references/bc-design-workflow.md`
 CLI: `python .agents/skills/bc-design/scripts/bc_design.py`
 """
 
-BC_INSTRUCTION = INSTRUCTION.replace(
-    ".agents/skills/bc-design",
-    ".bc/skills/bc-design",
-)
+CANONICAL_SKILLS_DIR = ".agents/skills"
+
+# Runtimes that discover skills natively outside the shared .agents directory.
+RUNTIME_SKILLS_DIRS = {
+    "claude": ".claude/skills",
+    "kiro": ".kiro/skills",
+}
 
 RUNTIME_TARGETS = {
-    "bc": ("BC.md",),
-    "cursor": (".cursor/rules/bc-design.mdc", ".cursorrules"),
-    "windsurf": (".windsurfrules",),
-    "antigravity": ("GEMINI.md",),
-    "copilot": (".github/copilot-instructions.md",),
-    "kiro": (".kiro/rules/bc-design.md",),
+    "claude": ("CLAUDE.md",),
     "codex": ("AGENTS.md",),
-    "qoder": (".qoder/rules/bc-design.md",),
-    "vscode": (".vscode/settings.json", ".github/copilot-instructions.md"),
+    "antigravity": ("GEMINI.md",),
+    "kiro": (".kiro/steering/bc-design.md",),
 }
+
+
+def skills_dir_for(runtime):
+    return RUNTIME_SKILLS_DIRS.get(runtime, CANONICAL_SKILLS_DIR)
+
+
+def instruction_for(runtime):
+    """Point the instruction at the skill directory this runtime installs."""
+    return INSTRUCTION.replace(f"{CANONICAL_SKILLS_DIR}/", f"{skills_dir_for(runtime)}/")
 
 
 def _write_text(path, content, force=False):
@@ -68,29 +71,6 @@ def _write_text(path, content, force=False):
     print(f"[+] Wrote {path}")
     return True
 
-
-def _write_vscode_settings(path, force=False):
-    settings = {}
-    if path.exists():
-        try:
-            settings = json.loads(path.read_text(encoding="utf-8"))
-        except (json.JSONDecodeError, OSError) as exc:
-            if not force:
-                raise ValueError(f"Existing VS Code settings are not valid JSON: {path}") from exc
-            settings = {}
-    if not isinstance(settings, dict):
-        raise ValueError(f"Existing VS Code settings must be a JSON object: {path}")
-    settings.setdefault(
-        "bcDesign.instructions",
-        "Use .agents/skills/bc-design/SKILL.md for interface guidance.",
-    )
-    path.parent.mkdir(parents=True, exist_ok=True)
-    if path.exists() and not force:
-        print(f"[-] Preserved existing file: {path}")
-        return False
-    path.write_text(json.dumps(settings, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"[+] Wrote {path}")
-    return True
 
 
 def _copy_skill(source, destination, force=False):
@@ -139,19 +119,11 @@ def install_runtime(runtime, workspace, force=False):
         raise ValueError(f"Unknown runtime: {runtime}")
 
     for relative_path in RUNTIME_TARGETS[runtime]:
-        destination = workspace / relative_path
-        if relative_path == ".vscode/settings.json":
-            _write_vscode_settings(destination, force=force)
-        else:
-            instruction = BC_INSTRUCTION if runtime == "bc" else INSTRUCTION
-            _write_text(destination, instruction, force=force)
+        _write_text(workspace / relative_path, instruction_for(runtime), force=force)
 
-    if runtime == "bc":
-        _copy_skill_family(workspace / ".bc" / "skills", force=force)
-    else:
-        # Every non-BC instruction points at the workspace .agents router.
-        # Install the complete family so a fresh workspace is self-contained.
-        _copy_skill_family(workspace / ".agents" / "skills", force=force)
+    # Install the complete family where the instruction points so a fresh
+    # workspace is self-contained.
+    _copy_skill_family(workspace / skills_dir_for(runtime), force=force)
 
 
 def main(argv=None):

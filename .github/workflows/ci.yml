@@ -34,4 +34,6 @@ jobs:
         run: python -m unittest discover -s tests
 
       - name: 3. Run BC Design Quality & Accessibility Audit
-        run: python .agents/skills/bc-design/scripts/bc_design.py --audit examples/
+        run: |
+          python .agents/skills/bc-design/scripts/bc_design.py --audit examples/
+          python .agents/skills/bc-design/scripts/bc_design.py --audit .agents/skills/bc-design/assets/

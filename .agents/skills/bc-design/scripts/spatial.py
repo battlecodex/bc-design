@@ -573,12 +573,13 @@ export const RibbonField: React.FC<RibbonFieldProps> = ({{
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BC Spatial — Ribbon Field ({pal['name']})</title>
+  <title>BC Spatial | Ribbon Field ({pal['name']})</title>
   <style>
     :root {{
       --bc-bg: {pal['bg']};
       --bc-text: {pal['text']};
       --bc-accent: {pal['accent']};
+      --bc-accent-strong: {pal['accent_deep']};
       --bc-ease: cubic-bezier(0.16, 1, 0.3, 1);
     }}
     *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
@@ -597,7 +598,7 @@ export const RibbonField: React.FC<RibbonFieldProps> = ({{
     .hud-deck {{ font-size: 15px; color: {pal['text_dim']}; line-height: 1.6; margin-bottom: 24px; }}
     .hud-cta {{
       display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; border-radius: 100px;
-      background: var(--bc-accent); color: #ffffff !important; font-size: 12px; font-weight: 500;
+      background: var(--bc-accent-strong); color: #ffffff !important; font-size: 12px; font-weight: 500;
       letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;
       box-shadow: 0 4px 20px rgba(217, 119, 87, 0.35); transition: transform 200ms var(--bc-ease);
     }}
@@ -862,12 +863,13 @@ export const PredictiveArc: React.FC<PredictiveArcProps> = ({{
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BC Spatial — Predictive Arc ({pal['name']})</title>
+  <title>BC Spatial | Predictive Arc ({pal['name']})</title>
   <style>
     :root {{
       --bc-bg: {pal['bg']};
       --bc-text: {pal['text']};
       --bc-accent: {pal['accent']};
+      --bc-accent-strong: {pal['accent_deep']};
       --bc-ease: cubic-bezier(0.16, 1, 0.3, 1);
     }}
     *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
@@ -886,7 +888,7 @@ export const PredictiveArc: React.FC<PredictiveArcProps> = ({{
     .hud-deck {{ font-size: 15px; color: {pal['text_dim']}; line-height: 1.6; margin-bottom: 24px; }}
     .hud-cta {{
       display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; border-radius: 100px;
-      background: var(--bc-accent); color: #ffffff !important; font-size: 12px; font-weight: 500;
+      background: var(--bc-accent-strong); color: #ffffff !important; font-size: 12px; font-weight: 500;
       letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;
       box-shadow: 0 4px 20px rgba(217, 119, 87, 0.35); transition: transform 200ms var(--bc-ease);
     }}
@@ -1018,6 +1020,8 @@ def generate_erp_spatial(palette_key="terracotta", theme="dark", format_type="ht
       --bc-accent-hover: #E08B6E;
       --bc-accent-deep: #B35637;
       --bc-accent-glow: rgba(217, 119, 87, 0.22);
+      --bc-accent-strong: #B35637;
+      --bc-accent-active: #AA4F32;
     }}
     html[data-theme="light"] {{
       --bc-bg: #FAF9F5;
@@ -1032,6 +1036,8 @@ def generate_erp_spatial(palette_key="terracotta", theme="dark", format_type="ht
       --bc-accent-hover: #AD5030;
       --bc-accent-deep: #8F3E22;
       --bc-accent-glow: rgba(193, 95, 61, 0.15);
+      --bc-accent-strong: #B35637;
+      --bc-accent-active: #AA4F32;
     }}
     * {{ box-sizing: border-box; margin: 0; padding: 0; }}
     body {{
@@ -1141,13 +1147,13 @@ def generate_erp_spatial(palette_key="terracotta", theme="dark", format_type="ht
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: #ffffff !important;
-      background: var(--bc-accent);
+      background: var(--bc-accent-strong);
       border: 1px solid var(--bc-accent-deep);
       text-decoration: none;
       transition: background 200ms var(--bc-ease), transform 200ms var(--bc-ease);
     }}
     .btn-contrast-action:hover {{
-      background: var(--bc-accent-hover);
+      background: var(--bc-accent-active);
       transform: translateY(-1px);
     }}
     .division-cards-grid {{

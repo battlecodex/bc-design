@@ -1,4 +1,0 @@
-interface:
-  display_name: "BC Design Audit"
-  short_description: "Audit UI quality, accessibility, responsive fit, and identity"
-  default_prompt: "Use $bc-design-audit to perform a read-only, evidence-backed interface review."

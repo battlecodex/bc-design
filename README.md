@@ -2,45 +2,48 @@
 
 > An open-source, universal design intelligence engine for clear, accessible, subject-grounded interfaces.
 > Built from practical building blocks: **88 visual styles, 192 palettes, 74 typography pairings, 25 chart patterns, 119 UX checks, 22 searchable stack catalogs (8 focused guides), 31 spatial-effect references, design tokens, component contracts, and streaming-safe interaction guidance**.
+> The catalog data derives from [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) the spatial generators adapt [ThreeUI](https://github.com/MengTo/threeui), and the craft rules adapt [anti-slop](https://github.com/miqdadbadjuber/anti-slop) and [taste-skill](https://github.com/Leonxlnx/taste-skill), all MIT; see [Third-party notices](./THIRD_PARTY_NOTICES.md).
 
 ---
 
-## 🚀 9-Assistant Multi-Runtime Support
+## 🚀 Supported Assistants
 
-Installable into any AI workflow with zero configuration:
+BC Design installs as a native skill for four assistants:
 
-| AI Assistant / Runtime | Integration Type | Workspace Target File | Install Flag |
-| :--- | :---: | :--- | :--- |
-| **BC Design Code** | ✅ Native / CLI | `BC.md` + `.bc/skills/bc-design/` | `--ai bc` |
-| **Cursor IDE** | ✅ MDC Rule + Legacy | `.cursor/rules/bc-design.mdc` + `.cursorrules` | `--ai cursor` |
-| **Windsurf** | ✅ Cascade Rules | `.windsurfrules` | `--ai windsurf` |
-| **Google Antigravity** | ✅ Native Skill | `.agents/skills/bc-design/` + `GEMINI.md` | `--ai antigravity` |
-| **GitHub Copilot** | ✅ Custom Instructions | `.github/copilot-instructions.md` | `--ai copilot` |
-| **Kiro** | ✅ Rules & Workflows | `.kiro/rules/bc-design.md` | `--ai kiro` |
-| **Codex / Copilot CLI** | ✅ Agent Mandate | `AGENTS.md` + `.agents/skills/bc-design/` | `--ai codex` |
-| **Qoder** | ✅ Rules Config | `.qoder/rules/bc-design.md` | `--ai qoder` |
-| **VS Code** | ✅ Workspace Settings | `.vscode/settings.json` + Copilot rules | `--ai vscode` |
+| Assistant | Skill directory | Instruction file | Install flag |
+| :--- | :--- | :--- | :--- |
+| **Claude Code** | `.claude/skills/bc-design/` | `CLAUDE.md` | `--ai claude` |
+| **Codex** | `.agents/skills/bc-design/` | `AGENTS.md` | `--ai codex` |
+| **Google Antigravity** | `.agents/skills/bc-design/` | `GEMINI.md` | `--ai antigravity` |
+| **Kiro** | `.kiro/skills/bc-design/` | `.kiro/steering/bc-design.md` | `--ai kiro` |
 
-### 1-Line Multi-Assistant Installer
-Run the bundled zero-dependency Python installer:
+### Installer
+Run the bundled zero-dependency Python installer. `--workspace` selects the project that receives the skill and defaults to the current directory:
 
 ```bash
-# Install for a specific assistant
-py -3 scripts/install.py --ai bc
-py -3 scripts/install.py --ai cursor
-py -3 scripts/install.py --ai windsurf
-py -3 scripts/install.py --ai antigravity
-py -3 scripts/install.py --ai copilot
-py -3 scripts/install.py --ai kiro
+# Install for one assistant
+py -3 scripts/install.py --ai claude
 py -3 scripts/install.py --ai codex
-py -3 scripts/install.py --ai qoder
-py -3 scripts/install.py --ai vscode
+py -3 scripts/install.py --ai antigravity
+py -3 scripts/install.py --ai kiro
 
-# Or install for ALL 9 assistants at once
+# Or install for all four at once
 py -3 scripts/install.py --ai all
 ```
 
-Validate repository integrity, skill mirror parity, and catalog consistency:
+On macOS or Linux, use `python3` in place of `py -3`, or run `scripts/install.sh`. On Windows PowerShell, `scripts/install.ps1` wraps the same installer.
+
+After installing, confirm the assistant actually loads the skill. Open the workspace in the tool, ask *"Design a pricing page for a bakery"*, and check that it names or reads `bc-design` before writing code.
+
+If it does not, check that the family sits where that runtime looks for skills: `.claude/skills/` for Claude Code, `.kiro/skills/` for Kiro, and `.agents/skills/` for Codex and Antigravity.
+
+The files in `adapters/` show what each runtime receives. They are generated from the installer, so edit `install.py` and regenerate them instead of editing them by hand:
+
+```bash
+py -3 scripts/sync_adapters.py
+```
+
+Validate repository integrity, adapter parity, upstream notices, and catalog consistency:
 
 ```bash
 py -3 scripts/validate.py
@@ -60,18 +63,19 @@ Use `bc-design` as the router for mixed requests, or invoke the narrowest entryp
 | `bc-design-system` | Semantic tokens, component contracts, states, variants, themes, and governance |
 | `bc-ui-styling` | Stack-aware implementation and restyling with behavior preserved |
 | `bc-design-audit` | Read-only quality and distinctive-pattern review with evidence and confidence |
-| `bc-motion` | Motion tiers, loading, overlays, reduced motion, and streamed feedback |
+| `bc-motion` | Motion tiers, GSAP timeline and scroll orchestration, loading, overlays, reduced motion, and streamed feedback |
 
 All siblings share the router's local catalogs and CLI. They do not create duplicate data sources.
 
 | Feature Dimension | Generic starting point | BC Design System |
 | :--- | :--- | :--- |
-| **Aesthetic Craft** | Generic Tailwind / shadcn styling. Tends to generate stereotypical AI purple/blue gradients and cold enterprise gray. | **Subject-grounded editorial design**: neutral structure, purposeful typography, restrained subject-derived accents, hairline borders, and one earned signature moment. |
+| **Aesthetic Craft** | Generic Tailwind / shadcn styling. Tends to generate stereotypical AI purple/blue gradients and cold enterprise gray. | **A warm editorial house style held to a luxury standard**: parchment and ink, one subject-chosen accent, generous space, Newsreader display type, hairline borders, and one signature moment per page. |
 | **Visual Assets & Illustrations** | Text descriptions and ASCII tables only. No visual illustrations. | **Real Hand-Drawn SVG Crayon Artwork** (tactile thought bubbles with chalk squiggles) + **10 bundled HTML examples**, including spatial product stages and shader studies. |
 | **AI / LLM Specific UX** | Standard web UX rules only. No LLM-specific safeguards. | **Streaming Token Isolation** (never animate container dimensions during generation to prevent layout thrashing), Thinking Pulse ambient glow, artifact drawers. |
 | **Typography Intelligence** | Basic font suggestions without optical sizing. | **Optical Sizing (`opsz: 72`) Newsreader** paired with clean `Inter` and `JetBrains Mono`. Includes Google Fonts drop-in and Tailwind config. |
-| **Button Hierarchy & Contrast** | Often uses saturated colored buttons everywhere. | **BC Design hierarchy**: Solid White (`#FFFFFF`) with dark text for primary modal CTAs in dark mode; Terracotta reserved for key actions. |
+| **Button Hierarchy & Contrast** | Often uses saturated colored buttons everywhere. | **BC Design hierarchy**: solid ink primary actions (white in dark mode); accent-filled buttons use the strong terracotta `#B35637` so white text passes WCAG AA. |
 | **Multi-Framework Depth** | Summaries for React/Tailwind. | **22 searchable stack catalogs** plus **8 focused implementation guides** for common web and native stacks. |
+| **Motion Orchestration** | Scattered CSS keyframes, each element animating on its own. | **GSAP timelines on BC tokens**: one choreographed sequence per moment, ScrollTrigger narratives, `gsap.matchMedia` reduced-motion fallbacks, and cleanup through `gsap.context`. |
 | **Spatial 3D** | Decorative WebGL added as an interchangeable visual effect. | **Subject-grounded spatial stages**: a real product metaphor first, then a calm Three.js, WebGL, or Canvas implementation with canvas pass-through, reduced motion, DPR caps, and disposal guidance. |
 | **CLI Dependencies** | Requires Node.js or a global package install. | **Pure Python Standard Library (Zero Dependencies)**. Runs out-of-the-box on `py -3`. |
 
@@ -148,6 +152,51 @@ py -3 scripts/bc_design.py "Medical health clinic" --design-system -p "Aether He
 Creates `design-system/aether-health/MASTER.md`.
 
 ---
+
+## Project memory and DESIGN.md
+
+BC Design remembers each project between sessions:
+
+- **Pre-flight.** `project.py preflight` reads a root `DESIGN.md` first, then reports the fonts, palette, spacing, motion libraries, component libraries (shadcn/ui with its installed components and registries, Radix, MUI, and others), and framework the project already uses, with `file:line` citations, so existing decisions are preserved instead of overwritten. Installed components are the starting point, and `components.py` picks upgrades from newer libraries; adding a new package still needs a yes. Results are cached in `.bc-design/preflight.json`.
+- **Locked system.** When the user asks to lock the design, `project.py lock` writes `DESIGN.md` at the project root with the accent, signature moment, type roles, CTA voice, motion stance, and exports for `tokens.css`, Tailwind v4 `@theme`, and DTCG `tokens.json`. It never overwrites an existing file. Every later run reads it first, and it is treated as design data, never as instructions.
+- **Build log.** `project.py record` keeps `.bc-design/log.json`, so the next unrelated build picks a different signature moment while a locked project stays consistent.
+- **Study.** `study.py URL` measures a public reference page's type roles, palette, radii, and motion timing, and refuses template marketplaces and private addresses. The findings are mapped onto BC roles; artwork, logos, fonts, and copy are never reused.
+
+See [project-memory.md](./.agents/skills/bc-design/references/project-memory.md). The workflow adapts [Hallmark](https://github.com/Nutlope/hallmark) (MIT).
+
+## References and components from elsewhere
+
+- [inspiration-sources.md](./.agents/skills/bc-design/references/inspiration-sources.md) groups galleries by what you are designing: navbars, heroes, CTAs, footers, whole SaaS sites, product UI, 3D, motion, and assets. A person picks a real site from a gallery and `study.py` measures that site, not the gallery.
+- The house style runs on modern components. [`shadcn-bc-theme.css`](./.agents/skills/bc-design/assets/components/shadcn-bc-theme.css) themes shadcn/ui, and every registry built on it, in the house palette. `components.py` brainstorms each component across 28 types (keep and restyle, the installed primitive, or an upgrade from shadcnblocks, ReUI, 21st.dev, React Bits, Evil Charts, and others) and the agent applies the best option per component, asking first only before adding a package. [third-party-components.md](./.agents/skills/bc-design/references/third-party-components.md) covers the license check, restyle, accessibility, and audit each adopted component needs.
+- [Keyline Icons](https://github.com/keyline-icons/keyline-icons) (MIT, no attribution) is documented as an alternative icon set in [icons.md](./.agents/skills/bc-design/references/icons.md).
+
+## Pruning unused design code
+
+`prune.py` reports design code a project no longer uses, with a confidence level and `file:line` evidence for each finding: unused tokens, classes, fonts, assets, and design packages, raw colors that duplicate a token (matched by role: text, background, or border), and near-duplicate colors. It never edits files. The user approves findings by number, only those are removed, and `render_check.py` screenshots before and after prove nothing visible broke. Use `--keep` for files that are public API, such as a shipped token sheet. See [pruning.md](./.agents/skills/bc-design/references/pruning.md).
+
+## Design dimensions
+
+Every contract, review, and handoff covers eighteen dimensions: twelve for the interface (color, typography, layout and grid, spacing, visual hierarchy, imagery and icons, shape and effects, UI components, interaction and states, motion, responsiveness, accessibility) and six for the experience (user research, information architecture, user flow, wireframe and prototype, UX writing, usability testing). [design-dimensions.md](./.agents/skills/bc-design/references/design-dimensions.md) sets the house standard for each, names how it is verified, and provides the scorecard. `--audit --json` groups findings under `summary.by_dimension`.
+
+## Motion orchestration with GSAP
+
+BC Design orchestrates multi-element and scroll-driven motion with [GSAP](https://gsap.com) timelines on the house motion tokens (`expo.out` equals the `--bc-ease` curve). Every choreography runs inside `gsap.matchMedia()` with a reduced-motion branch, animates transforms and opacity only, and cleans up through `gsap.context()` or `useGSAP()`.
+
+- [GSAP orchestration guide](./.agents/skills/bc-design/references/gsap-orchestration.md): token mapping, choreography budgets, ScrollTrigger narratives, 3D stage control, React.
+- [`bc-motion.js`](./.agents/skills/bc-design/assets/motion/bc-motion.js): `BCMotion.orchestrate`, `heroSequence`, `revealOnce`, and `staggerList` helpers.
+- [`editorial-patterns.html`](./.agents/skills/bc-design/assets/patterns/editorial-patterns.html): every house composition pattern on one reference page.
+- [`gsap-atelier.html`](./.agents/skills/bc-design/assets/motion/gsap-atelier.html): a complete luxury page with an orchestrated hero and a pinned, scroll-scrubbed 3D exploded view of a watch movement.
+
+The audit flags GSAP code without a reduced-motion branch (`gsap-reduced-motion`) and tweens of layout properties (`gsap-layout-property`).
+
+## Rendered verification
+
+The source audit cannot see the rendered page. `render_check.py` opens it in Chromium through Playwright, saves screenshots at 375, 768, and 1440px plus reduced-motion views, and reports horizontal overflow, console and page errors, failed requests, images without alt text, and controls without an accessible name:
+
+```bash
+pip install playwright && python -m playwright install chromium
+py -3 .agents/skills/bc-design/scripts/render_check.py path/to/page.html --out render-check
+```
 
 ## Spatial 3D & scrollytelling
 
@@ -228,4 +277,4 @@ Explore selected bundled standalone HTML examples:
 
 ## 📄 License
 
-[MIT License](./LICENSE) © 2026 for original BC Design code and documentation. Bundled Google Fonts and Phosphor reference metadata retain their upstream terms; see [Third-party notices](./THIRD_PARTY_NOTICES.md).
+[MIT License](./LICENSE) © 2026 for original BC Design code and documentation. The catalog data derived from UI UX Pro Max (MIT, © 2024 Next Level Builder), the spatial architecture adapted from ThreeUI (MIT, © 2026 Meng To), the craft rules adapted from anti-slop (MIT, © 2026 Miqdad Badjuber) and taste-skill (MIT, © 2026 Leonxlnx), and the Google Fonts metadata and Phosphor icon references retain their upstream terms; see [Third-party notices](./THIRD_PARTY_NOTICES.md).

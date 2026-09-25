@@ -16,9 +16,10 @@ Use this skill to inspect before changing. Choose one explicit mode so a usabili
 
 1. Establish scope, stack, routes, source files, screenshots, and unverified surfaces.
 2. Run `bc_design.py --audit TARGET`; use `--json` when findings need machine processing.
-3. Inspect the rendered states at required breakpoints and with keyboard/reduced-motion settings when available.
-4. Report each finding with severity, exact evidence location, affected user, impact, smallest recommendation, and confidence.
-5. Do not modify the target during an audit. If remediation is requested, route it back to `bc-design` as redesign or restyling.
+3. Inspect the rendered states. Run `python ../bc-design/scripts/render_check.py PAGE` for mobile, tablet, desktop, and reduced-motion screenshots plus overflow, console-error, alt-text, and accessible-name checks, then review the screenshots yourself.
+4. Review all eighteen dimensions in `../bc-design/references/design-dimensions.md`: twelve UI (color, typography, layout and grid, spacing, visual hierarchy, imagery and icons, shape and effects, components, interaction and states, motion, responsiveness, accessibility) and six UX (user research, information architecture, user flow, wireframe and prototype, UX writing, usability testing). The JSON audit groups findings under `summary.by_dimension`.
+5. Report each finding with its dimension, severity, exact evidence location, affected user, impact, smallest recommendation, and confidence, then close with the filled scorecard. Mark a dimension `not verified` when you could not observe it.
+6. Do not modify the target during an audit. If remediation is requested, route it back to `bc-design` as redesign or restyling.
 
 ## Non-negotiables
 
@@ -33,3 +34,4 @@ Use this skill to inspect before changing. Choose one explicit mode so a usabili
 - Audit workflow: `../bc-design/references/bc-design-workflow.md`
 - UX checks: `../bc-design/references/ux-guidelines.md`
 - Distinctive checks: `../bc-design/references/bc-design-guidelines.md`
+- Review dimensions and scorecard: `../bc-design/references/design-dimensions.md`

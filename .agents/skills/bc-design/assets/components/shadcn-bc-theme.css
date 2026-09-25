@@ -1,0 +1,109 @@
+/*
+ * BC Design house style for shadcn/ui.
+ *
+ * Paste these variables over the ones shadcn writes into your global CSS
+ * (app/globals.css or src/index.css). Every shadcn component, and every
+ * block from a registry built on it (shadcnblocks, ReUI, Evil Charts, and
+ * others), then renders in the house style: parchment canvas, ink primary
+ * actions, hairline borders, a terracotta focus ring, and the muted
+ * illustration palette for charts.
+ *
+ * Measured text pairs (WCAG AA needs 4.5:1):
+ *   foreground on background            17.50:1
+ *   muted-foreground on muted            5.67:1
+ *   primary-foreground on primary       17.50:1
+ *   destructive (#B42318) on background  6.24:1, white on destructive 6.57:1
+ *   dark: muted-foreground on card       7.79:1, destructive on background 6.38:1
+ */
+
+:root {
+  --radius: 0.5rem; /* 8px buttons and inputs; shadcn derives 12px cards and 4px small controls from it */
+
+  --background: #FAF9F5;
+  --foreground: #141413;
+  --card: #FFFFFF;
+  --card-foreground: #141413;
+  --popover: #FFFFFF;
+  --popover-foreground: #141413;
+
+  /* Ink carries primary actions; the accent marks focus and selection. */
+  --primary: #141413;
+  --primary-foreground: #FAF9F5;
+  --secondary: #F0EEE6;
+  --secondary-foreground: #141413;
+  --muted: #F0EEE6;
+  --muted-foreground: #5E5D59;
+  --accent: #F0EEE6;
+  --accent-foreground: #141413;
+  --destructive: #B42318;
+
+  --border: #E8E6DC;
+  --input: #D1CFC5;
+  --ring: #B35637;
+
+  /* Chart series from the illustration palette. */
+  --chart-1: #D97757;
+  --chart-2: #6A9BCC;
+  --chart-3: #788C5D;
+  --chart-4: #CBCADB;
+  --chart-5: #EBCBB4;
+
+  --sidebar: #F0EEE6;
+  --sidebar-foreground: #141413;
+  --sidebar-primary: #141413;
+  --sidebar-primary-foreground: #FAF9F5;
+  --sidebar-accent: #E8E6DC;
+  --sidebar-accent-foreground: #141413;
+  --sidebar-border: #E8E6DC;
+  --sidebar-ring: #B35637;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-serif: "Newsreader", Georgia, serif;
+}
+
+.dark {
+  --background: #181816;
+  --foreground: #FAF9F5;
+  --card: #211F1C;
+  --card-foreground: #FAF9F5;
+  --popover: #211F1C;
+  --popover-foreground: #FAF9F5;
+
+  --primary: #FAF9F5;
+  --primary-foreground: #141413;
+  --secondary: #2A2825;
+  --secondary-foreground: #FAF9F5;
+  --muted: #2A2825;
+  --muted-foreground: #B8B2A6;
+  --accent: #2A2825;
+  --accent-foreground: #FAF9F5;
+  --destructive: #F97066;
+
+  --border: rgba(250, 249, 245, 0.1);
+  --input: rgba(250, 249, 245, 0.18);
+  --ring: #D97757;
+
+  --chart-1: #E28466;
+  --chart-2: #8AB4DB;
+  --chart-3: #9DB080;
+  --chart-4: #CBCADB;
+  --chart-5: #EBCBB4;
+
+  --sidebar: #141413;
+  --sidebar-foreground: #FAF9F5;
+  --sidebar-primary: #FAF9F5;
+  --sidebar-primary-foreground: #141413;
+  --sidebar-accent: #2A2825;
+  --sidebar-accent-foreground: #FAF9F5;
+  --sidebar-border: rgba(250, 249, 245, 0.1);
+  --sidebar-ring: #D97757;
+}
+
+/* Headings take the house serif; shadcn components keep the sans. */
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}

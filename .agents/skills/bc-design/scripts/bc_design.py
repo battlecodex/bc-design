@@ -14,7 +14,7 @@ Capabilities:
 4. --persist: Saves design system to design-system/<project-slug>/MASTER.md.
 5. Design Dials: --variance (1-10), --motion (1-10), --density (1-10).
 6. Structured audits: --audit TARGET --json for CI-friendly findings.
-7. Multi-Runtime: Installable across BC Design Code, Cursor, Windsurf, Antigravity, Copilot, Kiro, Codex, Qoder, VS Code.
+7. Multi-Runtime: Installable as a native skill through the `claude`, `codex`, `antigravity`, and `kiro` runtimes.
 """
 
 import sys
@@ -390,7 +390,7 @@ def _motion_violations(content, source_file):
         violations.append(
             (
                 "motion-duration-budget",
-                "Keep ordinary motion at 150–250ms (up to 400ms for drawers/modals); use the shimmer token for 1800ms thinking states.",
+                "Keep ordinary motion at 150–250ms (up to 400ms for drawers/modals); use var(--bc-duration-reveal) for once-only reveals and the shimmer token for 1800ms thinking states.",
                 source_file,
             )
         )
@@ -426,6 +426,113 @@ def iter_source_files(target):
         for source_file in sorted(target.rglob("*")):
             if source_file.is_file() and source_file.suffix.lower() in AUDIT_EXTENSIONS:
                 yield source_file
+
+
+MARKUP_EXTENSIONS = {".html", ".jsx", ".tsx", ".vue", ".svelte"}
+HIDDEN_MARKUP_RE = re.compile(r"<script\b.*?</script>|<style\b.*?</style>|<!--.*?-->", re.IGNORECASE | re.DOTALL)
+BUZZWORD_RE = re.compile(
+    r"\b(?:ai[- ]powered|next[- ]generation|revolutionary|revolutioni[sz]e[sd]?|seamless(?:ly)?|"
+    r"cutting[- ]edge|unlock|elevate|empower|unleash|supercharge|game[- ]changer|effortless(?:ly)?)\b",
+    re.IGNORECASE,
+)
+UNVERIFIED_CLAIM_RE = re.compile(
+    r"\b(?:soc ?2|iso ?27001|hipaa[- ]compliant|gdpr[- ]compliant|pci[- ]dss)\b|"
+    r"\b\d+(?:\.\d+)?% uptime\b|\b\d+x faster\b",
+    re.IGNORECASE,
+)
+GSAP_CALL_RE = re.compile(r"\bgsap\.(?:to|from|fromTo|timeline|set)\s*\(")
+GSAP_LAYOUT_TWEEN_RE = re.compile(
+    r"\bgsap\.(?:to|from|fromTo)\s*\([^;]*?\{[^{}]*?\b(?:width|height|top|left|right|bottom|margin\w*|padding\w*)\s*:",
+    re.DOTALL,
+)
+
+
+def visible_text(content, source_file):
+    """Return the human-readable copy of a markup file, or an empty string."""
+    if Path(source_file).suffix.lower() not in MARKUP_EXTENSIONS:
+        return ""
+    markup = HIDDEN_MARKUP_RE.sub(" ", content)
+    return "\n".join(segment for segment in re.findall(r">([^<>]+)<", markup) if segment.strip())
+
+
+def _craft_violations(content, source_file):
+    """Copy, honesty, and focus findings shared with the house luxury standard."""
+    violations = []
+    copy = visible_text(content, source_file)
+    # A dash between words is an aside; a leading dash used as a list marker is not copy.
+    if re.search(r"\w[ \t]*\u2014[ \t]*\w", copy):
+        violations.append((
+            "em-dash-copy",
+            "Rewrite interface copy without em dashes; use a period, comma, colon, or parentheses.",
+            source_file,
+        ))
+    if BUZZWORD_RE.search(copy):
+        violations.append((
+            "buzzword-copy",
+            "Replace marketing buzzwords with a specific statement of what the product does.",
+            source_file,
+        ))
+    if UNVERIFIED_CLAIM_RE.search(copy):
+        violations.append((
+            "unverified-claim",
+            "Remove compliance, uptime, or speed claims unless the product can show evidence for them.",
+            source_file,
+        ))
+    if re.search(r"<a\b[^>]*\bhref\s*=\s*[\"']#[\"']", content, re.IGNORECASE):
+        violations.append((
+            "dead-navigation-link",
+            "Point every link at a real page or section, or render the item as plain text until it exists.",
+            source_file,
+        ))
+    removes_outline = re.search(r"\boutline\s*:\s*(?:none|0)\b", content, re.IGNORECASE)
+    replaces_focus = re.search(r":focus-visible[^{}]*\{[^{}]*\b(?:outline|box-shadow)\s*:", content, re.IGNORECASE)
+    if removes_outline and not replaces_focus:
+        violations.append((
+            "focus-outline-removed",
+            "Replace a removed outline with a visible :focus-visible indicator in the same source.",
+            source_file,
+        ))
+    return violations
+
+
+ACCENT_FILL = r"background(?:-color)?\s*:\s*(?:#(?:d97757|e28466|c15f3e)\b|var\(\s*--(?:bc-)?accent(?:-hover)?\s*\))"
+WHITE_TEXT = r"(?<![-\w])color\s*:\s*(?:#fff(?:fff)?\b|white\b|var\(\s*--(?:bc-)?text-on-accent\s*\))"
+ACCENT_FILL_WHITE_TEXT_RE = re.compile(
+    r"\{[^{}]*?(?:" + ACCENT_FILL + r"[^{}]*?" + WHITE_TEXT + r"|" + WHITE_TEXT + r"[^{}]*?" + ACCENT_FILL + r")[^{}]*\}"
+    r"|style\s*=\s*[\"'][^\"']*?(?:" + ACCENT_FILL + r"[^\"']*?" + WHITE_TEXT + r"|" + WHITE_TEXT + r"[^\"']*?" + ACCENT_FILL + r")",
+    re.IGNORECASE,
+)
+
+
+def _accent_fill_violations(content, source_file):
+    """White text on the mid-tone accent measures 3.12:1 and fails WCAG AA."""
+    if ACCENT_FILL_WHITE_TEXT_RE.search(content):
+        return [(
+            "accent-fill-white-text",
+            "White text on the mid-tone accent (#D97757) measures 3.12:1; fill with --bc-accent-strong (#B35637) instead.",
+            source_file,
+        )]
+    return []
+
+
+def _gsap_violations(content, source_file):
+    """Reduced-motion and layout findings for GSAP-driven motion."""
+    if not GSAP_CALL_RE.search(content):
+        return []
+    violations = []
+    if not re.search(r"prefers-reduced-motion|reduceMotion|gsap\.matchMedia", content):
+        violations.append((
+            "gsap-reduced-motion",
+            "Wrap GSAP choreography in gsap.matchMedia with a prefers-reduced-motion branch.",
+            source_file,
+        ))
+    if GSAP_LAYOUT_TWEEN_RE.search(content):
+        violations.append((
+            "gsap-layout-property",
+            "Tween transforms and opacity with GSAP; animating layout properties causes reflow and jank.",
+            source_file,
+        ))
+    return violations
 
 
 def find_audit_violations(content, source_file):
@@ -519,7 +626,7 @@ def find_audit_violations(content, source_file):
     if re.search(r"--(?:bc-)?text-on-accent\s*:\s*#(?:1[fF]1[eE]1[bB]|181816|000000|000|111)\b", content, re.IGNORECASE):
         violations.append((
             "accent-button-text-contrast",
-            "Avoid dark ink text on mid-tone accent/terracotta tokens. Use crisp white (#FFFFFF) text or switch primary actions to the canonical high-contrast button (.bc-btn-contrast).",
+            "Do not put button text on the mid-tone accent; use the ink button (.bc-btn-contrast) or white text on --bc-accent-strong.",
             source_file,
         ))
     elif re.search(
@@ -533,7 +640,7 @@ def find_audit_violations(content, source_file):
     ):
         violations.append((
             "accent-button-text-contrast",
-            "Avoid dark ink text on mid-tone accent/terracotta buttons. Use crisp white (#FFFFFF) text or switch primary actions to the canonical high-contrast button (.bc-btn-contrast).",
+            "Do not put button text on the mid-tone accent; use the ink button (.bc-btn-contrast) or white text on --bc-accent-strong.",
             source_file,
         ))
     elif re.search(
@@ -547,7 +654,7 @@ def find_audit_violations(content, source_file):
     ):
         violations.append((
             "accent-button-text-contrast",
-            "Avoid dark ink text on mid-tone accent/terracotta buttons. Use crisp white (#FFFFFF) text or switch primary actions to the canonical high-contrast button (.bc-btn-contrast).",
+            "Do not put button text on the mid-tone accent; use the ink button (.bc-btn-contrast) or white text on --bc-accent-strong.",
             source_file,
         ))
 
@@ -604,6 +711,9 @@ def find_audit_violations(content, source_file):
             )
         )
     violations.extend(_motion_violations(content, source_file))
+    violations.extend(_craft_violations(content, source_file))
+    violations.extend(_gsap_violations(content, source_file))
+    violations.extend(_accent_fill_violations(content, source_file))
     return violations
 
 
@@ -715,7 +825,7 @@ def main():
             # Import lazily so the legacy single-file entrypoint remains usable
             # when copied into runtimes that only include this script.
             try:
-                from audit import build_audit_findings
+                from audit import build_audit_findings, summarize_by_dimension
                 findings = build_audit_findings(args.design_audit)
             except Exception as exc:
                 print(json.dumps({"status": "error", "target": args.design_audit, "findings": [], "summary": {"total": 0}, "error": str(exc)}, ensure_ascii=False))
@@ -730,9 +840,10 @@ def main():
                     "warnings": sum(1 for finding in findings if finding["severity"] == "warning"),
                     "by_category": {
                         category: sum(1 for finding in findings if finding.get("category") == category)
-                        for category in ("identity", "hierarchy", "decoration", "copy", "motion", "accessibility")
+                        for category in ("identity", "hierarchy", "decoration", "copy", "content", "motion", "accessibility", "performance")
                         if any(finding.get("category") == category for finding in findings)
                     },
+                    "by_dimension": summarize_by_dimension(findings),
                 },
             }
             print(json.dumps(payload, ensure_ascii=False, indent=2))
@@ -752,7 +863,8 @@ def main():
         for finding in findings:
             evidence = f" Evidence: {finding['evidence']}" if finding.get("evidence") else ""
             message = finding["message"].rstrip(".")
-            print(f"  [{finding['rule_id']}] {finding['path']}:{finding['line']}: {message}.{evidence}")
+            dimension = f" ({finding['dimension']})" if finding.get("dimension") else ""
+            print(f"  [{finding['rule_id']}]{dimension} {finding['path']}:{finding['line']}: {message}.{evidence}")
         return 1
 
     # 3. Contrast Checker
