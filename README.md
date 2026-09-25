@@ -164,6 +164,10 @@ BC Design remembers each project between sessions:
 
 See [project-memory.md](./.agents/skills/bc-design/references/project-memory.md). The workflow adapts [Hallmark](https://github.com/Nutlope/hallmark) (MIT).
 
+## Pruning unused design code
+
+`prune.py` reports design code a project no longer uses, with a confidence level and `file:line` evidence for each finding: unused tokens, classes, fonts, assets, and design packages, raw colors that duplicate a token (matched by role: text, background, or border), and near-duplicate colors. It never edits files. The user approves findings by number, only those are removed, and `render_check.py` screenshots before and after prove nothing visible broke. Use `--keep` for files that are public API, such as a shipped token sheet. See [pruning.md](./.agents/skills/bc-design/references/pruning.md).
+
 ## Design dimensions
 
 Every contract, review, and handoff covers eighteen dimensions: twelve for the interface (color, typography, layout and grid, spacing, visual hierarchy, imagery and icons, shape and effects, UI components, interaction and states, motion, responsiveness, accessibility) and six for the experience (user research, information architecture, user flow, wireframe and prototype, UX writing, usability testing). [design-dimensions.md](./.agents/skills/bc-design/references/design-dimensions.md) sets the house standard for each, names how it is verified, and provides the scorecard. `--audit --json` groups findings under `summary.by_dimension`.

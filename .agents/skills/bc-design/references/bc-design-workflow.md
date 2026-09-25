@@ -11,6 +11,7 @@ Use this reference after selecting a mode in `SKILL.md`. The workflow keeps visu
 | Restyling | Structure and behavior stay stable while visual language changes | Token/component restyle with frozen invariants |
 | Design audit | The user asks whether an interface is usable, accessible, consistent, responsive, or performant | Prioritized findings with evidence and remediation guidance |
 | Distinctive review | The user asks whether a design feels generic or disconnected from its subject | Subject-grounded pattern review with a clear verdict |
+| Prune | The user wants unused design code removed: tokens, classes, fonts, assets, packages, or duplicate colors | Numbered `prune.py` report, approved removals only, before and after `render_check` evidence, following [pruning.md](./pruning.md) |
 | Study | The user shares a URL or screenshot of a design they admire and wants its direction | Diagnosis of structure and tokens mapped onto BC roles, following [project-memory.md](./project-memory.md) § Study |
 
 Do not silently change modes. If a redesign reveals a new product surface, reclassify that surface as greenfield. If a restyle needs interaction or layout changes, record the scope expansion and obtain approval.
