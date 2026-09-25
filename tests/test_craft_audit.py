@@ -80,6 +80,7 @@ class CraftAuditTests(unittest.TestCase):
     def test_flags_unverified_claims(self):
         self.assertIn("unverified-claim", self.rules("<span>SOC 2 Type II certified</span>"))
         self.assertIn("unverified-claim", self.rules("<p>10x faster builds with 99.99% uptime</p>"))
+        self.assertIn("unverified-claim", self.rules("<span>HIPAA Ready</span>"))
         self.assertNotIn("unverified-claim", self.rules("<p>Builds finish in about four minutes.</p>"))
 
     def test_flags_dead_navigation_links(self):

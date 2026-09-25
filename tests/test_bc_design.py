@@ -85,6 +85,12 @@ class BCDesignTests(unittest.TestCase):
         self.assertIn("CTA Dark:   #FFFFFF", card)
         self.assertIn("text #1F1E1B", card)
 
+    def test_machine_learning_products_are_not_grounded_as_education(self):
+        card, _ = MODULE.generate_design_system("AI chatbot platform")
+        self.assertNotIn("Education & Learning", card)
+        card, _ = MODULE.generate_design_system("Language learning app")
+        self.assertIn("Education & Learning", card)
+
     def test_design_generator_uses_bc_restraint_principle_label(self):
         card, _ = MODULE.generate_design_system("general interface")
         self.assertIn("BC RESTRAINT PRINCIPLE", card)

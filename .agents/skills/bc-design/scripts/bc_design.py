@@ -74,7 +74,9 @@ def generate_design_system(query, project_name=None, variance=None, motion=None,
     catalog_palette = product_match.get("Color Palette Focus", "") if product_match else ""
 
     # 1. Subject Matter Grounding
-    if catalog_product and any(k in f"{catalog_product} {product_match.get('Keywords', '')}".lower() for k in ["education", "educational", "learning", "school", "student", "kindergarten", "preschool"]):
+    # "machine-learning" is not an education signal, so drop it before matching whole words.
+    product_words = set(re.findall(r"\w+", re.sub(r"machine[- ]learning", " ", f"{catalog_product} {product_match.get('Keywords', '')}".lower())))
+    if catalog_product and product_words & {"education", "educational", "learning", "school", "student", "kindergarten", "preschool"}:
         industry = "Education & Learning"
         primary_color = "#1F1E1B (Neutral Ink)"
         secondary_color = "#D97757 (Restrained Terracotta Accent)"
@@ -181,7 +183,7 @@ def generate_design_system(query, project_name=None, variance=None, motion=None,
     elif motion and motion <= 3:
         motion_desc = "Subtle: 150ms micro-interactions only, zero non-functional motion, reduced-motion strictly honored"
     else:
-        motion_desc = "Standard BC Design: 150ms buttons, 250ms cards, 1800ms thinking pulse, cubic-bezier(0.16, 1, 0.3, 1)"
+        motion_desc = "Standard BC Design: 150ms buttons, 250ms cards, 600ms once-only reveals, 1800ms thinking pulse, cubic-bezier(0.16, 1, 0.3, 1)"
 
     typography_lines = [
         f"|     Headline: {heading_font}".ljust(89) + "|",
@@ -436,7 +438,7 @@ BUZZWORD_RE = re.compile(
     re.IGNORECASE,
 )
 UNVERIFIED_CLAIM_RE = re.compile(
-    r"\b(?:soc ?2|iso ?27001|hipaa[- ]compliant|gdpr[- ]compliant|pci[- ]dss)\b|"
+    r"\b(?:soc ?2|iso ?27001|(?:hipaa|gdpr)[- ](?:compliant|ready|certified)|pci[- ]dss)\b|"
     r"\b\d+(?:\.\d+)?% uptime\b|\b\d+x faster\b",
     re.IGNORECASE,
 )

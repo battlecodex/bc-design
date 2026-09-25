@@ -33,6 +33,12 @@ class CatalogAlignmentTests(unittest.TestCase):
         self.assertEqual("conditional", classify_entry("style", {"Style Category": "Claymorphism", "Keywords": "3d bubbly spring"}).status)
         self.assertEqual("excluded", classify_entry("style", {"Style Category": "Neon Glassmorphism", "Keywords": "neon gradient low contrast"}).status)
 
+    def test_chart_search_reads_secondary_options(self):
+        from core import search_domain
+
+        result = search_domain("chart", "area chart")
+        self.assertTrue(result["results"])
+
     def test_explicit_request_unlocks_conditional_but_not_excluded_quality(self):
         from alignment import classify_entry, explicit_direction_requested
 
