@@ -61,7 +61,7 @@ After each finished page, run `project.py record` with a one-line brief, the sig
 
 Use the **study** mode when the user shares a URL or a screenshot of a design they admire and wants its direction.
 
-1. **Check the source.** `study.py` refuses template marketplaces, design showcases, and private or local addresses. For anything ambiguous, ask once: "Is this your own work, a public reference for your own brand, or someone else's site?"
+1. **Check the source.** `study.py` refuses template marketplaces, design showcases, inspiration galleries (study the original site they link to instead), and private or local addresses. [inspiration-sources.md](./inspiration-sources.md) lists where to find references. For anything ambiguous, ask once: "Is this your own work, a public reference for your own brand, or someone else's site?"
 2. **Measure.** For a URL, run `python .agents/skills/bc-design/scripts/study.py URL --out study`. It reports the canvas, type roles with sizes and weights, the most used colors, radii, motion timing, section count, and motion libraries, and saves desktop and mobile screenshots. For a screenshot, describe the same fields from the image and mark the values as estimates.
 3. **Diagnose.** Return a short report: structure, type pairing, palette anchor, radii, motion stance, and the patterns worth keeping. Also name the anti-patterns not to carry over.
 4. **Map, do not clone.** Translate the findings onto BC roles and open equivalents. Proprietary fonts become licensed alternatives; artwork, logos, and copy are never reused.

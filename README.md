@@ -164,6 +164,12 @@ BC Design remembers each project between sessions:
 
 See [project-memory.md](./.agents/skills/bc-design/references/project-memory.md). The workflow adapts [Hallmark](https://github.com/Nutlope/hallmark) (MIT).
 
+## References and components from elsewhere
+
+- [inspiration-sources.md](./.agents/skills/bc-design/references/inspiration-sources.md) groups galleries by what you are designing: navbars, heroes, CTAs, footers, whole SaaS sites, product UI, 3D, motion, and assets. A person picks a real site from a gallery and `study.py` measures that site, not the gallery.
+- [third-party-components.md](./.agents/skills/bc-design/references/third-party-components.md) covers shadcn-based blocks, 21st.dev, React Bits, and similar libraries: check the license, restyle to BC tokens, add accessibility, and audit before shipping.
+- [Keyline Icons](https://github.com/keyline-icons/keyline-icons) (MIT, no attribution) is documented as an alternative icon set in [icons.md](./.agents/skills/bc-design/references/icons.md).
+
 ## Pruning unused design code
 
 `prune.py` reports design code a project no longer uses, with a confidence level and `file:line` evidence for each finding: unused tokens, classes, fonts, assets, and design packages, raw colors that duplicate a token (matched by role: text, background, or border), and near-duplicate colors. It never edits files. The user approves findings by number, only those are removed, and `render_check.py` screenshots before and after prove nothing visible broke. Use `--keep` for files that are public API, such as a shipped token sheet. See [pruning.md](./.agents/skills/bc-design/references/pruning.md).

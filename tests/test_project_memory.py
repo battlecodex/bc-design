@@ -170,6 +170,11 @@ class StudyTests(unittest.TestCase):
         self.assertIsNone(study.refusal_reason("https://example.com/"))
         self.assertIsNone(study.refusal_reason("https://www.framer.com/features"))
 
+    def test_points_galleries_to_the_original_site(self):
+        for url in ("https://godly.design/", "https://www.navbar.gallery/x", "https://styles.refero.design/"):
+            with self.subTest(url=url):
+                self.assertIn("study that site's own URL", study.refusal_reason(url))
+
     def test_detects_hostnames_that_resolve_to_private_addresses(self):
         self.assertTrue(study.resolves_to_private("localhost"))
         self.assertFalse(study.resolves_to_private("name-that-does-not-resolve.invalid"))

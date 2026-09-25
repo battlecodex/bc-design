@@ -38,6 +38,14 @@ REFUSED_HOSTS = (
     "gumroad.com",
 )
 REFUSED_PATHS = (("framer.com", "/templates"), ("webflow.com", "/templates"))
+# Inspiration galleries: studying one measures the gallery, not the sites it shows.
+GALLERY_HOSTS = (
+    "godly.design", "navbar.gallery", "supahero.io", "cta.gallery", "footer.design", "404s.design",
+    "unsection.com", "bentogrids.com", "saaspo.com", "saasframe.io", "landing.love", "landdding.com",
+    "onepagelove.com", "refero.design", "curated.design", "recent.design", "webinspoo.com",
+    "rebrand.gallery", "mesh3d.gallery", "60fps.design", "designspells.com", "land-book.com",
+    "lapa.ninja", "awwwards.com", "mobbin.com", "siteinspire.com",
+)
 
 PAGE_PROBE = """
 () => {
@@ -102,6 +110,8 @@ def refusal_reason(url):
             return "Private network addresses are not studied."
     except ValueError:
         pass
+    if any(host == gallery or host.endswith("." + gallery) for gallery in GALLERY_HOSTS):
+        return "This is an inspiration gallery; open the site you like from it and study that site's own URL."
     if any(host == refused or host.endswith("." + refused) for refused in REFUSED_HOSTS):
         return "Template marketplaces and design showcases are not studied; their designs belong to their authors."
     for refused_host, refused_path in REFUSED_PATHS:

@@ -31,4 +31,6 @@ Use this skill for implementation work after the direction and invariants are cl
 - Shared foundation: `../bc-design/SKILL.md`
 - Stack notes: `../bc-design/stacks/`
 - Component guidance: `../bc-design/references/components.md`
+- Third-party component libraries: `../bc-design/references/third-party-components.md`
+- Icons, including Keyline Icons: `../bc-design/references/icons.md`
 - Motion guidance: `../bc-motion/SKILL.md`

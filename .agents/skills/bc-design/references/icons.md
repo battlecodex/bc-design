@@ -20,6 +20,15 @@ For Vue:
 npm install lucide-vue-next
 ```
 
+### Alternative: Keyline Icons
+
+[Keyline Icons](https://github.com/keyline-icons/keyline-icons) is an MIT-licensed set of about 1,000 icons on a 24×24 grid, each in four styles (`stroke`, `two-tone`, `duotone`, `fill`) with rounded or sharp corners. It needs no attribution. Use it when a project needs more glyphs than Lucide covers or a matching filled or duotone state (for example a selected tab).
+
+- **House fit:** use the `stroke` style with rounded corners for interface icons. Its keylines are 2px, so set `stroke-width="1.5"` on the SVG (or the equivalent prop, if the component exposes one) to meet the rule below, and check the result at 16 and 20px.
+- **Filled and duotone styles** are for state (selected, active) or illustration tiles, never mixed with stroke icons in the same toolbar.
+- **Install without a dependency:** `npx @keyline-icons/cli add bell` copies the SVG into the project. Or install `@keyline-icons/react` and import `{ Check } from "@keyline-icons/react"`; Iconify users can reference `keyline-icons:bell`.
+- **One family per interface.** Do not mix Keyline and Lucide glyphs in the same view; their proportions differ.
+
 ---
 
 ## 2. Icon Styling Rules (Hairline Geometry)
