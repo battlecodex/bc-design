@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import ipaddress
 import json
+import socket
 from pathlib import Path
 import sys
 from urllib.parse import urlparse
@@ -109,6 +110,22 @@ def refusal_reason(url):
     return None
 
 
+def resolves_to_private(host):
+    """True when a hostname resolves to a private, loopback, or link-local address."""
+    try:
+        infos = socket.getaddrinfo(host, None)
+    except (socket.gaierror, UnicodeError, OSError):
+        return False
+    for info in infos:
+        try:
+            address = ipaddress.ip_address(info[4][0].split("%")[0])
+        except ValueError:
+            continue
+        if address.is_private or address.is_loopback or address.is_link_local or address.is_reserved:
+            return True
+    return False
+
+
 def _rgb_to_hex(value):
     parts = value.replace("rgba(", "").replace("rgb(", "").replace(")", "").split(",")
     try:
@@ -168,6 +185,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     reason = refusal_reason(args.url)
+    if not reason and resolves_to_private(urlparse(args.url).hostname):
+        reason = "The address resolves to a private network."
     if reason:
         print(f"Refused: {reason}", file=sys.stderr)
         return 2
@@ -191,6 +210,11 @@ def main(argv=None):
             if response is None or not response.ok:
                 status = response.status if response else "no response"
                 print(f"Error: the page did not load ({status}). Attach a screenshot instead.", file=sys.stderr)
+                return 2
+            # A redirect can land somewhere the original URL check never saw.
+            landed = refusal_reason(page.url)
+            if landed:
+                print(f"Refused after redirect to {page.url}: {landed}", file=sys.stderr)
                 return 2
             page.wait_for_timeout(2000)
             probe = page.evaluate(PAGE_PROBE)

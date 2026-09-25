@@ -49,6 +49,24 @@ class PreflightTests(unittest.TestCase):
         self.assertTrue(any("src/app.css:1" in item for item in findings["palette"]))
         self.assertTrue(any("spacing" in item for item in findings["spacing"]))
 
+    def test_keeps_the_scan_cache_out_of_version_control(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            root = Path(tempdir)
+            project.preflight(root)
+            ignore = (root / ".bc-design" / ".gitignore").read_text(encoding="utf-8")
+        self.assertEqual(ignore.strip(), "preflight.json")
+
+    def test_skips_dependency_folders(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            root = Path(tempdir)
+            vendored = root / "node_modules" / "kit"
+            vendored.mkdir(parents=True)
+            (vendored / "tokens.json").write_text("{}", encoding="utf-8")
+            (vendored / "theme.css").write_text(":root { --x: #000000; }", encoding="utf-8")
+            findings, _ = project.preflight(root)
+        self.assertEqual(findings["tokens_files"], [])
+        self.assertEqual(findings["palette"], [])
+
     def test_reuses_the_cache_until_package_json_changes(self):
         with tempfile.TemporaryDirectory() as tempdir:
             root = Path(tempdir)
@@ -151,6 +169,10 @@ class StudyTests(unittest.TestCase):
                 self.assertIsNotNone(study.refusal_reason(url))
         self.assertIsNone(study.refusal_reason("https://example.com/"))
         self.assertIsNone(study.refusal_reason("https://www.framer.com/features"))
+
+    def test_detects_hostnames_that_resolve_to_private_addresses(self):
+        self.assertTrue(study.resolves_to_private("localhost"))
+        self.assertFalse(study.resolves_to_private("name-that-does-not-resolve.invalid"))
 
     def test_diagnosis_converts_measurements(self):
         probe = {

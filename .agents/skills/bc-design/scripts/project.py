@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 from datetime import date
 import json
+import os
 from pathlib import Path
 import re
 import sys
@@ -70,14 +71,20 @@ def find_design_file(root):
     return None
 
 
+def _walk_files(root):
+    """Yield project files in a stable order without entering dependency or build folders."""
+    for directory, subdirectories, files in os.walk(root):
+        subdirectories[:] = sorted(name for name in subdirectories if name not in SKIP_DIRS)
+        for name in sorted(files):
+            yield Path(directory) / name
+
+
 def _iter_text_files(root):
     count = 0
-    for path in sorted(Path(root).rglob("*")):
+    for path in _walk_files(root):
         if count >= MAX_SCAN_FILES:
             return
-        if any(part in SKIP_DIRS for part in path.relative_to(root).parts):
-            continue
-        if path.is_file() and (path.suffix.lower() in TEXT_SUFFIXES or path.name.startswith("tailwind.config")):
+        if path.suffix.lower() in TEXT_SUFFIXES or path.name.startswith("tailwind.config"):
             count += 1
             yield path
 
@@ -158,10 +165,10 @@ def scan_project(root):
             if line:
                 findings["spacing"].append(f"Tailwind spacing scale ({_cite(root, path, line)})")
 
-    for name in ("tokens.json", "design-tokens.json", "design-tokens.yaml"):
-        for path in root.rglob(name):
-            if not any(part in SKIP_DIRS for part in path.relative_to(root).parts):
-                findings["tokens_files"].append(Path(path).relative_to(root).as_posix())
+    token_names = {"tokens.json", "design-tokens.json", "design-tokens.yaml"}
+    for path in _walk_files(root):
+        if path.name in token_names:
+            findings["tokens_files"].append(path.relative_to(root).as_posix())
     return findings
 
 
@@ -186,6 +193,10 @@ def preflight(root, refresh=False):
             pass
     findings = scan_project(root)
     cache.parent.mkdir(parents=True, exist_ok=True)
+    # The scan is machine-local; the build log is worth committing.
+    ignore = cache.parent / ".gitignore"
+    if not ignore.exists():
+        ignore.write_text(f"{PREFLIGHT_FILE}\n", encoding="utf-8")
     cache.write_text(
         json.dumps({"scanned": date.today().isoformat(), "signature": signature, "findings": findings}, indent=2) + "\n",
         encoding="utf-8",
