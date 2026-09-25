@@ -13,7 +13,7 @@ A directory of **conversion-optimized landing page patterns** built to honor the
 | **3** | **Video-First Academy Hub** | Tutorials, EdTech, Product Education | macOS chrome frame with play trigger | "Start tutorial" card overlay |
 | **4** | **Role / Persona Explorer Grid**| Multi-persona SaaS, Enterprise | 10-card bento grid with monoline icons| Role filter chip + direct workflow jump|
 | **5** | **Interactive Sandbox & Tweaks**| Developer tools, Model playgrounds | Inset parameter drawer / popover slider | "Run inference" / "Deploy prompt" |
-| **6** | **Enterprise Trust & Governance**| B2B SaaS, FinTech, Compliance | High-density audit list & SOC2 badges | "Request security whitepaper" |
+| **6** | **Enterprise Trust & Governance**| B2B SaaS, FinTech, Compliance | High-density audit list & verified attestations | "Request security whitepaper" |
 | **7** | **Conversion Pricing Matrix** | SaaS subscriptions, API credit plans | 4-tier cards with recommended pill tag | Dual hierarchy: Solid White vs Hairline |
 | **8** | **Editorial Story / Manifesto**| Research institutes, Brand launches | Large Newsreader serif editorial column | Inline citation links & newsletter opt-in|
 | **9** | **Auth-First Clean Card** | Member portals, Private Betas | Centered 420px card on parchment canvas| "Continue with email" |
@@ -96,7 +96,7 @@ A directory of **conversion-optimized landing page patterns** built to honor the
 
 * **Layout Flow**:
   1. Header: *"Built for enterprise security, privacy, and compliance."*
-  2. Certification Badge Strip: SOC2 Type II, HIPAA Compliant, GDPR, ISO 27001 in monochrome hairline emblems.
+  2. Attestation Strip: only the certifications the company actually holds (for example a SOC 2 Type II report or ISO 27001 certificate), each linked to its report or trust page, in monochrome hairline emblems. Leave the strip out when there is nothing to verify; never use placeholder badges.
   3. Data Retention Guarantee: Explicit callout box: *"Your data is never used to train our models."* with a quiet checkmark.
   4. Audit Log Preview: Simulated table showing timestamp, actor, event, and IP address.
 * **CTA Strategy**: Primary button *"Schedule security review"*, Secondary link *"Download compliance packet (PDF)"*.

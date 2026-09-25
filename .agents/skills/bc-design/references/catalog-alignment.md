@@ -16,3 +16,5 @@ The status is metadata for ranking, not a quality score. A `core` entry still ne
 Automatic output should favor editorial hierarchy, Newsreader + Inter or an evidence-backed alternative, neutral-first canvases, restrained accents, hairline borders, moderate radii, purposeful illustration, and state-driven motion. Reject generic combinations such as a saturated gradient plus repeated card chrome when no subject evidence supports them.
 
 Conditional visual systems—such as claymorphism, glassmorphism, maximalist color, neon, or large bento compositions—must carry a user request or an approved brand rationale. Preserve the user's request, but keep the quality gates intact.
+
+Palettes whose primary is a saturated indigo or violet (hue 235 to 300 degrees, such as `#6366F1` or `#7C3AED`) are conditional for the same reason: they are the default AI palette. Deep, dark indigos used as ink stay available. Ask for purple explicitly, or record it in the brand contract, to get them.

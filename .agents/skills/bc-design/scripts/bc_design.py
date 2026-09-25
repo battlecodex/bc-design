@@ -436,7 +436,7 @@ BUZZWORD_RE = re.compile(
     re.IGNORECASE,
 )
 UNVERIFIED_CLAIM_RE = re.compile(
-    r"\b(?:soc ?2|iso ?27001|hipaa[- ]compliant|gdpr[- ]compliant|pci[- ]dss)\b|"
+    r"\b(?:soc ?2|iso ?27001|(?:hipaa|gdpr)[- ](?:compliant|ready|certified)|pci[- ]dss)\b|"
     r"\b\d+(?:\.\d+)?% uptime\b|\b\d+x faster\b",
     re.IGNORECASE,
 )

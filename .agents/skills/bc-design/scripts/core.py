@@ -17,7 +17,7 @@ DATA_DIR = SKILL_ROOT / "data"
 CSV_CONFIG = {
     "style": {"file": "styles.csv", "search_cols": ["Style ID", "Style Category", "Aliases", "Keywords", "Best For", "Type"], "output_cols": ["Style Category", "Keywords", "Primary Colors", "Effects & Animation", "Best For", "Light Mode ✓", "Dark Mode ✓", "Implementation Checklist"]},
     "color": {"file": "colors.csv", "search_cols": ["Product Type", "Notes"], "output_cols": ["Product Type", "Primary", "Secondary", "Accent", "Background", "Foreground", "Card", "Border", "Notes"]},
-    "chart": {"file": "charts.csv", "search_cols": ["Data Type", "Keywords", "Best Chart Type", "When to Use"], "output_cols": ["Data Type", "Best Chart Type", "When to Use", "When NOT to Use", "Color Guidance", "Accessibility Grade", "Library Recommendation"]},
+    "chart": {"file": "charts.csv", "search_cols": ["Data Type", "Keywords", "Best Chart Type", "Secondary Options", "When to Use"], "output_cols": ["Data Type", "Best Chart Type", "When to Use", "When NOT to Use", "Color Guidance", "Accessibility Grade", "Library Recommendation"]},
     "landing": {"file": "landing.csv", "search_cols": ["Pattern ID", "Pattern Name", "Keywords", "Conversion Optimization"], "output_cols": ["Pattern Name", "Keywords", "Section Order", "Primary CTA Placement", "Color Strategy", "Conversion Optimization"]},
     "product": {"file": "products.csv", "search_cols": ["Product Type", "Keywords", "Primary Style Recommendation"], "output_cols": ["Product Type", "Keywords", "Primary Style Recommendation", "Secondary Styles", "Landing Page Pattern", "Color Palette Focus"]},
     "ux": {"file": "ux-guidelines.csv", "search_cols": ["Category", "Issue", "Description"], "output_cols": ["Category", "Issue", "Description", "Do", "Don't", "Severity"]},
