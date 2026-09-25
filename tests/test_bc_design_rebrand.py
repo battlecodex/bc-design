@@ -106,36 +106,6 @@ class BCDesignRebrandTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 0)
         self.assertIn("BC DESIGN GUIDELINES", completed.stdout)
 
-    def test_bc_runtime_instruction_matches_installed_skill_path(self):
-        installer = SKILL_ROOT / "scripts" / "install.py"
-        with self.subTest(runtime="bc"):
-            import tempfile
-
-            with tempfile.TemporaryDirectory() as tempdir:
-                completed = subprocess.run(
-                    [sys.executable, str(installer), "--ai", "bc", "--workspace", tempdir],
-                    cwd=ROOT,
-                    capture_output=True,
-                    text=True,
-                )
-                self.assertEqual(completed.returncode, 0)
-                instruction = (Path(tempdir) / "BC.md").read_text(encoding="utf-8")
-                self.assertIn(".bc/skills/bc-design/SKILL.md", instruction)
-
-    def test_bc_runtime_copy_matches_canonical_font_tokens(self):
-        canonical = SKILL_ROOT / "references" / "tokens.css"
-        installed = ROOT / ".bc" / "skills" / "bc-design" / "references" / "tokens.css"
-        self.assertTrue(installed.exists())
-        self.assertEqual(canonical.read_bytes(), installed.read_bytes())
-
-    def test_bc_runtime_family_matches_canonical_instruction_files(self):
-        for skill_name in SKILL_FAMILY:
-            canonical = FAMILY_ROOT / skill_name / "SKILL.md"
-            installed = ROOT / ".bc" / "skills" / skill_name / "SKILL.md"
-            with self.subTest(skill=skill_name):
-                self.assertTrue(installed.exists())
-                self.assertEqual(canonical.read_bytes(), installed.read_bytes())
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,4 +1,0 @@
-interface:
-  display_name: "BC Brand"
-  short_description: "Define evidence-based interface brand systems"
-  default_prompt: "Use $bc-brand to turn the supplied brand evidence into a semantic interface contract."

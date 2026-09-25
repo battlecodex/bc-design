@@ -14,7 +14,7 @@ Capabilities:
 4. --persist: Saves design system to design-system/<project-slug>/MASTER.md.
 5. Design Dials: --variance (1-10), --motion (1-10), --density (1-10).
 6. Structured audits: --audit TARGET --json for CI-friendly findings.
-7. Multi-Runtime: Installable across BC Design Code, Cursor, Windsurf, Antigravity, Copilot, Kiro, Codex, Qoder, VS Code.
+7. Multi-Runtime: Installable as a native skill through the `claude`, `codex`, `antigravity`, and `kiro` runtimes.
 """
 
 import sys

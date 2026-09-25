@@ -18,16 +18,10 @@ SKILL_FAMILY = (
     "bc-motion",
 )
 RUNTIMES = (
-    "bc",
     "claude",
-    "cursor",
-    "windsurf",
-    "antigravity",
-    "copilot",
-    "kiro",
     "codex",
-    "qoder",
-    "vscode",
+    "antigravity",
+    "kiro",
 )
 
 INSTRUCTION = """# BC Design System
@@ -45,24 +39,15 @@ CANONICAL_SKILLS_DIR = ".agents/skills"
 
 # Runtimes that discover skills natively outside the shared .agents directory.
 RUNTIME_SKILLS_DIRS = {
-    "bc": ".bc/skills",
     "claude": ".claude/skills",
     "kiro": ".kiro/skills",
 }
 
 RUNTIME_TARGETS = {
-    "bc": ("BC.md",),
     "claude": ("CLAUDE.md",),
-    "cursor": (".cursor/rules/bc-design.mdc", ".cursorrules"),
-    "windsurf": (".windsurfrules",),
-    "antigravity": ("GEMINI.md",),
-    "copilot": (".github/copilot-instructions.md",),
-    "kiro": (".kiro/steering/bc-design.md",),
     "codex": ("AGENTS.md",),
-    "qoder": (".qoder/rules/bc-design.md",),
-    # Copilot in VS Code reads the repository instruction file; there is no
-    # workspace setting that loads skills, so vscode is an alias of copilot.
-    "vscode": (".github/copilot-instructions.md",),
+    "antigravity": ("GEMINI.md",),
+    "kiro": (".kiro/steering/bc-design.md",),
 }
 
 

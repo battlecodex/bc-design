@@ -6,7 +6,7 @@ This script writes that output to two places so neither can drift:
 
 - ``adapters/<runtime>/``: a preview of a fresh install for each runtime.
 - the repository root: this repository's own instruction files, which point at
-  the canonical ``.agents/skills`` family (``BC.md`` points at ``.bc/skills``).
+  the canonical ``.agents/skills`` family.
 
 Run with ``--check`` to report drift without writing, as the validator does.
 """
@@ -34,9 +34,8 @@ def expected_adapter_files() -> dict[Path, str]:
 def expected_root_files() -> dict[Path, str]:
     files = {}
     for runtime in install.RUNTIMES:
-        instruction = install.instruction_for(runtime) if runtime == "bc" else install.INSTRUCTION
         for relative_path in install.RUNTIME_TARGETS[runtime]:
-            files[ROOT / relative_path] = instruction
+            files[ROOT / relative_path] = install.INSTRUCTION
     return files
 
 

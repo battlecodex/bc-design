@@ -6,42 +6,32 @@
 
 ---
 
-## 🚀 10-Assistant Multi-Runtime Support
+## 🚀 Supported Assistants
 
-Installable into any AI workflow with zero configuration:
+BC Design installs as a native skill for four assistants:
 
-| AI Assistant / Runtime | Integration Type | Workspace Target File | Install Flag |
-| :--- | :---: | :--- | :--- |
-| **BC Design Code** | ✅ Native / CLI | `BC.md` + `.bc/skills/bc-design/` | `--ai bc` |
-| **Claude Code** | ✅ Native Skill | `.claude/skills/bc-design/` + `CLAUDE.md` | `--ai claude` |
-| **Cursor IDE** | ✅ MDC Rule + Legacy | `.cursor/rules/bc-design.mdc` + `.cursorrules` | `--ai cursor` |
-| **Windsurf** | ✅ Cascade Rules | `.windsurfrules` | `--ai windsurf` |
-| **Google Antigravity** | ✅ Native Skill | `.agents/skills/bc-design/` + `GEMINI.md` | `--ai antigravity` |
-| **GitHub Copilot** | ✅ Custom Instructions | `.github/copilot-instructions.md` | `--ai copilot` |
-| **Kiro** | ✅ Native Skill + Steering | `.kiro/skills/bc-design/` + `.kiro/steering/bc-design.md` | `--ai kiro` |
-| **Codex / Copilot CLI** | ✅ Agent Mandate | `AGENTS.md` + `.agents/skills/bc-design/` | `--ai codex` |
-| **Qoder** | ✅ Rules Config | `.qoder/rules/bc-design.md` | `--ai qoder` |
-| **VS Code** | ✅ Alias of Copilot | `.github/copilot-instructions.md` | `--ai vscode` |
+| Assistant | Skill directory | Instruction file | Install flag |
+| :--- | :--- | :--- | :--- |
+| **Claude Code** | `.claude/skills/bc-design/` | `CLAUDE.md` | `--ai claude` |
+| **Codex** | `.agents/skills/bc-design/` | `AGENTS.md` | `--ai codex` |
+| **Google Antigravity** | `.agents/skills/bc-design/` | `GEMINI.md` | `--ai antigravity` |
+| **Kiro** | `.kiro/skills/bc-design/` | `.kiro/steering/bc-design.md` | `--ai kiro` |
 
-### 1-Line Multi-Assistant Installer
-Run the bundled zero-dependency Python installer:
+### Installer
+Run the bundled zero-dependency Python installer. `--workspace` selects the project that receives the skill and defaults to the current directory:
 
 ```bash
-# Install for a specific assistant
-py -3 scripts/install.py --ai bc
+# Install for one assistant
 py -3 scripts/install.py --ai claude
-py -3 scripts/install.py --ai cursor
-py -3 scripts/install.py --ai windsurf
-py -3 scripts/install.py --ai antigravity
-py -3 scripts/install.py --ai copilot
-py -3 scripts/install.py --ai kiro
 py -3 scripts/install.py --ai codex
-py -3 scripts/install.py --ai qoder
-py -3 scripts/install.py --ai vscode
+py -3 scripts/install.py --ai antigravity
+py -3 scripts/install.py --ai kiro
 
-# Or install for ALL 10 assistants at once
+# Or install for all four at once
 py -3 scripts/install.py --ai all
 ```
+
+On macOS or Linux, use `python3` in place of `py -3`, or run `scripts/install.sh`. On Windows PowerShell, `scripts/install.ps1` wraps the same installer.
 
 After installing, confirm the assistant actually loads the skill. Open the workspace in the tool, ask *"Design a pricing page for a bakery"*, and check that it names or reads `bc-design` before writing code.
 
@@ -53,7 +43,7 @@ The files in `adapters/` show what each runtime receives. They are generated fro
 py -3 scripts/sync_adapters.py
 ```
 
-Validate repository integrity, skill mirror parity, adapter parity, and catalog consistency:
+Validate repository integrity, adapter parity, upstream notices, and catalog consistency:
 
 ```bash
 py -3 scripts/validate.py

@@ -337,58 +337,34 @@ class BCDesignTests(unittest.TestCase):
 
     def test_install_all_creates_every_documented_runtime_target(self):
         documented_targets = [
-            "BC.md",
-            ".bc/skills/bc-design/SKILL.md",
             "CLAUDE.md",
             ".claude/skills/bc-design/SKILL.md",
-            ".cursor/rules/bc-design.mdc",
-            ".cursorrules",
-            ".windsurfrules",
+            "AGENTS.md",
             ".agents/skills/bc-design/SKILL.md",
             "GEMINI.md",
-            ".github/copilot-instructions.md",
             ".kiro/steering/bc-design.md",
             ".kiro/skills/bc-design/SKILL.md",
-            "AGENTS.md",
-            ".qoder/rules/bc-design.md",
         ]
         with tempfile.TemporaryDirectory() as tempdir:
             completed = run_installer("--ai", "all", "--workspace", tempdir)
             self.assertEqual(completed.returncode, 0, completed.stderr)
             for relative_path in documented_targets:
                 self.assertTrue((Path(tempdir) / relative_path).exists(), relative_path)
-            self.assertFalse((Path(tempdir) / ".vscode").exists())
+            installed = sorted(path.name for path in Path(tempdir).iterdir())
+            self.assertEqual(installed, [".agents", ".claude", ".kiro", "AGENTS.md", "CLAUDE.md", "GEMINI.md"])
 
-    def test_bc_install_copies_the_complete_skill_family(self):
-        family = (
-            "bc-design",
-            "bc-brand",
-            "bc-design-system",
-            "bc-ui-styling",
-            "bc-design-audit",
-            "bc-motion",
-        )
-        with tempfile.TemporaryDirectory() as tempdir:
-            completed = run_installer("--ai", "bc", "--workspace", tempdir)
-            self.assertEqual(completed.returncode, 0, completed.stderr)
-            for skill_name in family:
-                target = Path(tempdir) / ".bc" / "skills" / skill_name / "SKILL.md"
-                self.assertTrue(target.exists(), target)
-
-    def test_non_bc_install_copies_family_referenced_by_instruction(self):
-        with tempfile.TemporaryDirectory() as tempdir:
-            completed = run_installer("--ai", "cursor", "--workspace", tempdir)
-            self.assertEqual(completed.returncode, 0, completed.stderr)
-            for skill_name in ("bc-design", "bc-brand", "bc-design-system", "bc-ui-styling", "bc-design-audit", "bc-motion"):
-                target = Path(tempdir) / ".agents" / "skills" / skill_name / "SKILL.md"
-                self.assertTrue(target.exists(), target)
+    def test_installer_rejects_unsupported_runtimes(self):
+        for runtime in ("bc", "cursor", "windsurf", "copilot", "qoder", "vscode"):
+            with self.subTest(runtime=runtime), tempfile.TemporaryDirectory() as tempdir:
+                completed = run_installer("--ai", runtime, "--workspace", tempdir)
+                self.assertNotEqual(completed.returncode, 0)
+                self.assertEqual(list(Path(tempdir).iterdir()), [])
 
     def test_installer_preserves_existing_file_without_force(self):
         with tempfile.TemporaryDirectory() as tempdir:
-            target = Path(tempdir) / ".cursor" / "rules" / "bc-design.mdc"
-            target.parent.mkdir(parents=True)
+            target = Path(tempdir) / "AGENTS.md"
             target.write_text("user content", encoding="utf-8")
-            completed = run_installer("--ai", "cursor", "--workspace", tempdir)
+            completed = run_installer("--ai", "codex", "--workspace", tempdir)
             self.assertEqual(completed.returncode, 0, completed.stderr)
             self.assertEqual(target.read_text(encoding="utf-8"), "user content")
 
