@@ -9,9 +9,5 @@
       "statusBar.background": "#181816",
       "titleBar.activeBackground": "#141412"
     }
-  },
-  "github.copilot.chat.customInstructions": {
-    "always": "Adhere strictly to the BC Design / BC Design Design System (warm parchment #FAF9F5 / espresso soot #181816, terracotta #D97757, solid white dark modal CTAs, Newsreader serif + Inter sans, cubic-bezier(0.16, 1, 0.3, 1), 1.5px monoline icons)."
-  },
-  "bcDesign.instructions": "Use .agents/skills/bc-design/SKILL.md for interface guidance."
+  }
 }

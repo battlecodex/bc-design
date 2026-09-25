@@ -67,6 +67,9 @@ class BCDesignRebrandTests(unittest.TestCase):
         for path in SKILL_ROOT.rglob("*"):
             if not path.is_file():
                 continue
+            # Upstream licenses require naming the projects BC Design builds on.
+            if path.name == "THIRD_PARTY_NOTICES.md":
+                continue
             try:
                 text = path.read_text(encoding="utf-8")
             except UnicodeDecodeError:

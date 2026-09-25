@@ -351,14 +351,13 @@ class BCDesignTests(unittest.TestCase):
             ".kiro/skills/bc-design/SKILL.md",
             "AGENTS.md",
             ".qoder/rules/bc-design.md",
-            ".vscode/settings.json",
         ]
         with tempfile.TemporaryDirectory() as tempdir:
             completed = run_installer("--ai", "all", "--workspace", tempdir)
             self.assertEqual(completed.returncode, 0, completed.stderr)
             for relative_path in documented_targets:
                 self.assertTrue((Path(tempdir) / relative_path).exists(), relative_path)
-            json.loads((Path(tempdir) / ".vscode" / "settings.json").read_text(encoding="utf-8"))
+            self.assertFalse((Path(tempdir) / ".vscode").exists())
 
     def test_bc_install_copies_the_complete_skill_family(self):
         family = (

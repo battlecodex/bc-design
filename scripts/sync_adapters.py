@@ -27,19 +27,16 @@ def expected_adapter_files() -> dict[Path, str]:
     files = {}
     for runtime in install.RUNTIMES:
         for relative_path in install.RUNTIME_TARGETS[runtime]:
-            files[ADAPTERS_DIR / runtime / relative_path] = install.render_target(runtime, relative_path)
+            files[ADAPTERS_DIR / runtime / relative_path] = install.instruction_for(runtime)
     return files
 
 
 def expected_root_files() -> dict[Path, str]:
-    # The repository keeps its own editor settings, so only instruction files
-    # are managed at the root.
     files = {}
     for runtime in install.RUNTIMES:
         instruction = install.instruction_for(runtime) if runtime == "bc" else install.INSTRUCTION
         for relative_path in install.RUNTIME_TARGETS[runtime]:
-            if relative_path != install.VSCODE_SETTINGS:
-                files[ROOT / relative_path] = instruction
+            files[ROOT / relative_path] = instruction
     return files
 
 

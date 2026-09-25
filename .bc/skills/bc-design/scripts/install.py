@@ -2,7 +2,6 @@
 """Install the BC Design skill into supported assistant runtimes."""
 
 import argparse
-import json
 import shutil
 from pathlib import Path
 import uuid
@@ -43,9 +42,6 @@ CLI: `python .agents/skills/bc-design/scripts/bc_design.py`
 """
 
 CANONICAL_SKILLS_DIR = ".agents/skills"
-VSCODE_SETTINGS = ".vscode/settings.json"
-VSCODE_INSTRUCTION_KEY = "bcDesign.instructions"
-VSCODE_INSTRUCTION = f"Use {CANONICAL_SKILLS_DIR}/bc-design/SKILL.md for interface guidance."
 
 # Runtimes that discover skills natively outside the shared .agents directory.
 RUNTIME_SKILLS_DIRS = {
@@ -64,7 +60,9 @@ RUNTIME_TARGETS = {
     "kiro": (".kiro/steering/bc-design.md",),
     "codex": ("AGENTS.md",),
     "qoder": (".qoder/rules/bc-design.md",),
-    "vscode": (VSCODE_SETTINGS, ".github/copilot-instructions.md"),
+    # Copilot in VS Code reads the repository instruction file; there is no
+    # workspace setting that loads skills, so vscode is an alias of copilot.
+    "vscode": (".github/copilot-instructions.md",),
 }
 
 
@@ -77,14 +75,6 @@ def instruction_for(runtime):
     return INSTRUCTION.replace(f"{CANONICAL_SKILLS_DIR}/", f"{skills_dir_for(runtime)}/")
 
 
-def render_target(runtime, relative_path):
-    """Return the content a fresh install writes to one runtime target."""
-    if relative_path == VSCODE_SETTINGS:
-        settings = {VSCODE_INSTRUCTION_KEY: VSCODE_INSTRUCTION}
-        return json.dumps(settings, indent=2, ensure_ascii=False) + "\n"
-    return instruction_for(runtime)
-
-
 def _write_text(path, content, force=False):
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists() and not force:
@@ -94,26 +84,6 @@ def _write_text(path, content, force=False):
     print(f"[+] Wrote {path}")
     return True
 
-
-def _write_vscode_settings(path, force=False):
-    settings = {}
-    if path.exists():
-        try:
-            settings = json.loads(path.read_text(encoding="utf-8"))
-        except (json.JSONDecodeError, OSError) as exc:
-            if not force:
-                raise ValueError(f"Existing VS Code settings are not valid JSON: {path}") from exc
-            settings = {}
-    if not isinstance(settings, dict):
-        raise ValueError(f"Existing VS Code settings must be a JSON object: {path}")
-    settings.setdefault(VSCODE_INSTRUCTION_KEY, VSCODE_INSTRUCTION)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    if path.exists() and not force:
-        print(f"[-] Preserved existing file: {path}")
-        return False
-    path.write_text(json.dumps(settings, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"[+] Wrote {path}")
-    return True
 
 
 def _copy_skill(source, destination, force=False):
@@ -162,11 +132,7 @@ def install_runtime(runtime, workspace, force=False):
         raise ValueError(f"Unknown runtime: {runtime}")
 
     for relative_path in RUNTIME_TARGETS[runtime]:
-        destination = workspace / relative_path
-        if relative_path == VSCODE_SETTINGS:
-            _write_vscode_settings(destination, force=force)
-        else:
-            _write_text(destination, instruction_for(runtime), force=force)
+        _write_text(workspace / relative_path, instruction_for(runtime), force=force)
 
     # Install the complete family where the instruction points so a fresh
     # workspace is self-contained.

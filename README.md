@@ -21,7 +21,7 @@ Installable into any AI workflow with zero configuration:
 | **Kiro** | ✅ Native Skill + Steering | `.kiro/skills/bc-design/` + `.kiro/steering/bc-design.md` | `--ai kiro` |
 | **Codex / Copilot CLI** | ✅ Agent Mandate | `AGENTS.md` + `.agents/skills/bc-design/` | `--ai codex` |
 | **Qoder** | ✅ Rules Config | `.qoder/rules/bc-design.md` | `--ai qoder` |
-| **VS Code** | ✅ Workspace Settings | `.vscode/settings.json` + Copilot rules | `--ai vscode` |
+| **VS Code** | ✅ Alias of Copilot | `.github/copilot-instructions.md` | `--ai vscode` |
 
 ### 1-Line Multi-Assistant Installer
 Run the bundled zero-dependency Python installer:
@@ -42,6 +42,10 @@ py -3 scripts/install.py --ai vscode
 # Or install for ALL 10 assistants at once
 py -3 scripts/install.py --ai all
 ```
+
+After installing, confirm the assistant actually loads the skill. Open the workspace in the tool, ask *"Design a pricing page for a bakery"*, and check that it names or reads `bc-design` before writing code.
+
+If it does not, check that the family sits where that runtime looks for skills: `.claude/skills/` for Claude Code, `.kiro/skills/` for Kiro, and `.agents/skills/` for Codex and Antigravity.
 
 The files in `adapters/` show what each runtime receives. They are generated from the installer, so edit `install.py` and regenerate them instead of editing them by hand:
 
