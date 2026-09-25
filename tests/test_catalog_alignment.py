@@ -33,16 +33,6 @@ class CatalogAlignmentTests(unittest.TestCase):
         self.assertEqual("conditional", classify_entry("style", {"Style Category": "Claymorphism", "Keywords": "3d bubbly spring"}).status)
         self.assertEqual("excluded", classify_entry("style", {"Style Category": "Neon Glassmorphism", "Keywords": "neon gradient low contrast"}).status)
 
-    def test_default_violet_palettes_need_an_explicit_request(self):
-        from alignment import classify_entry
-        from core import search_domain
-
-        self.assertEqual("conditional", classify_entry("color", {"Product Type": "Micro SaaS", "Primary": "#6366F1"}).status)
-        self.assertNotEqual("conditional", classify_entry("color", {"Product Type": "Podcast", "Primary": "#1E1B4B"}).status)
-        self.assertNotEqual("conditional", classify_entry("color", {"Product Type": "SaaS (General)", "Primary": "#2563EB"}).status)
-        primaries = [row["Primary"] for row in search_domain("color", "saas", max_results=10)["results"]]
-        self.assertNotIn("#6366F1", primaries)
-
     def test_chart_search_reads_secondary_options(self):
         from core import search_domain
 

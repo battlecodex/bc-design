@@ -252,7 +252,7 @@ Read the [Spatial 3D reference](./.agents/skills/bc-design/references/spatial-3d
 
 ### Catalog alignment
 
-BC Design keeps the broad catalog as reference knowledge while the shared alignment policy controls recommendations. The normalized catalog currently contains **1,775 classified rows**: **190 core**, **1,471 compatible**, **101 conditional**, and **13 excluded**. Automatic suggestions use only core or compatible entries; conditional directions require an explicit request or approved brand evidence, and excluded combinations remain blocked by accessibility and stability gates. See [catalog-alignment.md](./.agents/skills/bc-design/references/catalog-alignment.md).
+BC Design keeps the broad catalog as reference knowledge while the shared alignment policy controls recommendations. The normalized catalog currently contains **1,775 classified rows**: **194 core**, **1,494 compatible**, **74 conditional**, and **13 excluded**. Automatic suggestions use only core or compatible entries; conditional directions require an explicit request or approved brand evidence, and excluded combinations remain blocked by accessibility and stability gates. The catalog search returns catalog rows as they are, so a query such as `"saas" --domain color` can return upstream palettes with indigo or violet primaries. The house style comes from `--design-system` and the BC tokens, not from raw catalog rows. See [catalog-alignment.md](./.agents/skills/bc-design/references/catalog-alignment.md).
 
 | Domain | Depth | Guide Link | CLI Query |
 | :--- | :--- | :--- | :--- |

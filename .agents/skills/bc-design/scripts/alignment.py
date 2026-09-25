@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import colorsys
 from dataclasses import dataclass
 import json
 from pathlib import Path
@@ -54,23 +53,11 @@ def query_conflicts_with_quality_gate(query: str) -> bool:
     return any(_has(query_text, trait) for trait in POLICY["conflictTraits"])
 
 
-def is_generic_violet(value: str) -> bool:
-    """True for the saturated indigo-to-violet primaries that read as a default AI palette."""
-    match = re.fullmatch(r"#?([0-9a-fA-F]{6})", (value or "").strip())
-    if not match:
-        return False
-    red, green, blue = (int(match.group(1)[i:i + 2], 16) / 255 for i in (0, 2, 4))
-    hue, lightness, saturation = colorsys.rgb_to_hls(red, green, blue)
-    return 235 <= hue * 360 <= 300 and saturation > 0.45 and lightness > 0.3
-
-
 def classify_entry(domain: str, row: dict, explicit: bool = False) -> AlignmentResult:
     """Classify one catalog row without changing the source catalog."""
     text = _text(row)
     matched = tuple(trait for trait in POLICY["coreTraits"] if _has(text, trait))
     conditional = tuple(trait for trait in POLICY["conditionalTraits"] if _has(text, trait))
-    if domain in {"color", "colors.csv"} and is_generic_violet(row.get("Primary", "")):
-        conditional += ("saturated violet primary",)
     conflicts = tuple(trait for trait in POLICY["conflictTraits"] if _has(text, trait))
 
     # Saturated combinations are not made safe merely by asking for them.

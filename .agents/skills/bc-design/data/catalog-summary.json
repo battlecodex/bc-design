@@ -73,9 +73,9 @@
   "alignment": {
     "policyVersion": 1,
     "totals": {
-      "compatible": 1471,
-      "conditional": 101,
-      "core": 190,
+      "compatible": 1494,
+      "conditional": 74,
+      "core": 194,
       "excluded": 13
     },
     "files": {
@@ -86,9 +86,9 @@
         "excluded": 8
       },
       "colors.csv": {
-        "compatible": 140,
-        "conditional": 29,
-        "core": 23
+        "compatible": 163,
+        "conditional": 2,
+        "core": 27
       },
       "typography.csv": {
         "compatible": 3,
