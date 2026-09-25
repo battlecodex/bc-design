@@ -5,7 +5,7 @@ This file travels with every installed copy of the BC Design skill family. The M
 ## UI UX Pro Max
 
 - **Upstream:** https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
-- **Used here:** the catalog data in `data/` is derived from the UI UX Pro Max data set. This covers `styles.csv`, `colors.csv`, `typography.csv`, `ux-guidelines.csv`, `charts.csv`, `products.csv`, `landing.csv`, `icons.csv`, `app-interface.csv`, `react-performance.csv`, `ui-reasoning.csv`, `motion.csv`, `catalog-summary.json`, `data-provenance.json`, `google-fonts.csv`, `google-font-licenses.json`, `phosphor-icons-upstream.json`, and the stack catalogs in `data/stacks/`. BC Design adds `alignment-overrides.json`, `bc-alignment-policy.json`, `spatial-effects.csv`, and its own search, audit, and generator scripts.
+- **Used here:** the catalog data in `data/` is derived from the UI UX Pro Max data set. This covers `styles.csv`, `colors.csv`, `typography.csv`, `ux-guidelines.csv`, `charts.csv`, `products.csv`, `landing.csv`, `icons.csv`, `motion.csv`, `catalog-summary.json`, `data-provenance.json`, `google-fonts.csv`, `google-font-licenses.json`, and the stack catalogs in `data/stacks/`. BC Design adds `alignment-overrides.json`, `bc-alignment-policy.json`, `spatial-effects.csv`, and its own search, audit, and generator scripts.
 
 ```
 MIT License
@@ -157,4 +157,4 @@ The workflow's direction-commit step and the one-signature-moment principle are 
 
 ## Phosphor icon metadata
 
-`data/phosphor-icons-upstream.json` is a catalog snapshot of [Phosphor Icons](https://github.com/phosphor-icons/core). Phosphor's upstream license and attribution terms apply if you use the icons themselves; BC Design does not relicense upstream icon artwork.
+`data/icons.csv` names icons from [Phosphor Icons](https://github.com/phosphor-icons/core) and shows how to import them. Phosphor's upstream license and attribution terms apply when you use the icons themselves; BC Design does not bundle or relicense upstream icon artwork.

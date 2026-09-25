@@ -267,4 +267,4 @@ Explore selected bundled standalone HTML examples:
 
 ## 📄 License
 
-[MIT License](./LICENSE) © 2026 for original BC Design code and documentation. The catalog data derived from UI UX Pro Max (MIT, © 2024 Next Level Builder), the spatial architecture adapted from ThreeUI (MIT, © 2026 Meng To), the craft rules adapted from anti-slop (MIT, © 2026 Miqdad Badjuber) and taste-skill (MIT, © 2026 Leonxlnx), and the bundled Google Fonts and Phosphor reference metadata retain their upstream terms; see [Third-party notices](./THIRD_PARTY_NOTICES.md).
+[MIT License](./LICENSE) © 2026 for original BC Design code and documentation. The catalog data derived from UI UX Pro Max (MIT, © 2024 Next Level Builder), the spatial architecture adapted from ThreeUI (MIT, © 2026 Meng To), the craft rules adapted from anti-slop (MIT, © 2026 Miqdad Badjuber) and taste-skill (MIT, © 2026 Leonxlnx), and the Google Fonts metadata and Phosphor icon references retain their upstream terms; see [Third-party notices](./THIRD_PARTY_NOTICES.md).

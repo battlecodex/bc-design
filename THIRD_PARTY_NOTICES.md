@@ -10,7 +10,7 @@ The MIT license in [`LICENSE`](./LICENSE) applies to the original BC Design code
 | [taste-skill](https://github.com/Leonxlnx/taste-skill), Copyright (c) 2026 Leonxlnx | MIT | Single-accent lock and hierarchy guidance in the luxury standard |
 | [Hallmark](https://github.com/Nutlope/hallmark), Copyright (c) 2026 Hallmark contributors | MIT | Project-memory workflow: pre-flight scan, opt-in `DESIGN.md` lock, build log, and study mode |
 | [Google Fonts](https://github.com/google/fonts) | OFL 1.1 or Apache 2.0, per family | Font metadata in `data/google-fonts.csv` and `data/google-font-licenses.json` |
-| [Phosphor Icons](https://github.com/phosphor-icons/core) | Upstream terms | Icon catalog snapshot in `data/phosphor-icons-upstream.json` |
+| [Phosphor Icons](https://github.com/phosphor-icons/core) | Upstream terms | Icon names and import snippets referenced in `data/icons.csv` |
 
 The full notices, including each MIT permission notice, live in [`.agents/skills/bc-design/THIRD_PARTY_NOTICES.md`](./.agents/skills/bc-design/THIRD_PARTY_NOTICES.md). That file sits inside the skill directory so every installed copy carries it.
 
