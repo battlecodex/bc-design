@@ -103,7 +103,7 @@ class PreflightTests(unittest.TestCase):
         self.assertIn("extra registries: @reui", components[0])
         self.assertTrue(any(item.startswith("MUI 6.0.0") for item in components))
         self.assertTrue(any(item.startswith("Radix UI primitives: 1 package(s)") for item in components))
-        self.assertIn("reuse and restyle the installed components first", text)
+        self.assertIn("run components.py to offer upgrades", text)
         self.assertIn("component library", text)
 
     def test_an_older_cache_is_rescanned(self):

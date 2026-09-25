@@ -11,7 +11,7 @@ Use this skill for implementation work after the direction and invariants are cl
 
 1. Detect the actual stack from project files; never assume React or Tailwind.
 2. Inventory routes, components, content hierarchy, tokens, and preserved behavior. Run `python ../bc-design/scripts/project.py preflight` to see which component library the project already installs.
-3. Reuse before adding: restyle the project's own components, then build on the installed library's primitives (for example shadcn/ui). Add a component from a new library only when the user names it.
+3. Brainstorm component sources with `python ../bc-design/scripts/components.py <components>`: keep and restyle, the installed library's primitive, or an upgrade from a newer library. Offer one recommendation per component and ask whether to switch; install nothing before the user approves. On shadcn/ui, apply `../bc-design/assets/components/shadcn-bc-theme.css`.
 4. Apply shared tokens and typography before one-off selectors.
 5. Implement responsive structure at 375px, 768px, 1024px, and 1440px.
 6. Cover default, hover, active, focus-visible, disabled, loading, empty, and error states.

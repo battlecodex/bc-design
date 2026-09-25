@@ -76,7 +76,7 @@ Keep `bc-design` as the entrypoint for mixed or ambiguous requests. Sibling skil
 - Read [references/spatial-3d.md](./references/spatial-3d.md) when building 3D product visualizations, scroll-driven exploded views, or interactive spatial artifacts. [assets/motion/gsap-atelier.html](./assets/motion/gsap-atelier.html) is a complete page that pins and scrubs a 3D exploded view with GSAP.
 - Read [references/pruning.md](./references/pruning.md) before slimming a project's design code.
 - Read [references/inspiration-sources.md](./references/inspiration-sources.md) when the user needs real references for a section, a site type, motion, or assets; a person picks the reference and you study the original site, never the gallery.
-- Read [references/third-party-components.md](./references/third-party-components.md) before choosing where a component comes from. Reuse the project's own components first, then primitives from a library pre-flight found installed (for example shadcn/ui), restyled to BC tokens; take a component from a new library such as shadcnblocks, 21st.dev, React Bits, ReUI, or Evil Charts only when the user names it, and then check its license, restyle it, make it accessible, and audit it.
+- Read [references/third-party-components.md](./references/third-party-components.md) before choosing where a component comes from. The house style runs on modern components: shadcn/ui themed with [assets/components/shadcn-bc-theme.css](./assets/components/shadcn-bc-theme.css) is the default React base. Run `components.py` to brainstorm each component (keep and restyle, installed primitive, or an upgrade from shadcnblocks, ReUI, 21st.dev, React Bits, Evil Charts, and others), offer one recommendation per component, and install only what the user approves.
 - Read [references/web-artifacts.md](./references/web-artifacts.md) when the deliverable is one shareable HTML file or a bundled React prototype.
 - Read the relevant guide in `stacks/` when implementing React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, or Tailwind.
 - Use [references/tokens.css](./references/tokens.css) as the canonical semantic token layer.
@@ -140,6 +140,9 @@ python .agents/skills/bc-design/scripts/bc_design.py --audit path/to/source --js
 python .agents/skills/bc-design/scripts/project.py preflight
 python .agents/skills/bc-design/scripts/project.py lock "Project name" --accent terracotta --signature "3D exploded view"
 python .agents/skills/bc-design/scripts/project.py record "Project landing" --signature "3D exploded view"
+
+# Brainstorm component sources and offer upgrades; install nothing before approval
+python .agents/skills/bc-design/scripts/components.py hero pricing chart
 
 # Report unused design code without changing anything; remove only approved numbers
 python .agents/skills/bc-design/scripts/prune.py --keep "path/to/shipped-tokens.css"

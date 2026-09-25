@@ -2,13 +2,39 @@
 
 Copy-paste component libraries save time, and many ship exactly the effects this skill audits against: glow borders, gradient text, spotlight cards, uniform bento grids, and animated backgrounds behind body copy. Treat every third-party component as a draft that must earn its place in the house style.
 
-## Which components to use, in order
+## The house style on modern components
 
-1. **The project's own components.** If the codebase already has a button, card, or dialog, restyle and extend it. Do not create a parallel one.
-2. **Primitives from a library the project already installed.** `project.py preflight` reports them: shadcn/ui (`components.json` and the files in `components/ui`), Radix, Headless UI, MUI, Chakra, Mantine, and others. Build on those primitives and restyle them to BC tokens, for example by mapping shadcn's CSS variables onto `--bc-*` values.
-3. **A component from a new library only when the user asks for it.** When the user names a source ("use the hero block from shadcnblocks", "use an Evil Charts area chart"), follow the checklist below. Never install a new UI library, registry, or animation package on your own initiative.
+BC Design's warm editorial language is meant to run on current component libraries, not on hand-rolled markup. For React projects the default base is **shadcn/ui** (Radix primitives with Tailwind), themed with [`assets/components/shadcn-bc-theme.css`](../assets/components/shadcn-bc-theme.css). That file maps every shadcn variable onto the house palette: parchment canvas, ink primary actions, hairline borders, a terracotta focus ring, and the illustration palette for charts. Blocks from registries built on shadcn (shadcnblocks, ReUI, Evil Charts, and others) inherit the same look.
 
-A redesign keeps this order too: it restyles what exists before it adds anything.
+## Brainstorm, offer, then install on approval
+
+For every component in scope, lay out the options and let the user choose. Run:
+
+```bash
+python .agents/skills/bc-design/scripts/components.py hero pricing chart navbar
+python .agents/skills/bc-design/scripts/components.py --all
+```
+
+It tailors three options per component to what the project already has:
+
+- **A. Keep and restyle** the project's own implementation, when one exists.
+- **B. Installed base:** a primitive from the component library the project already uses (reported by pre-flight), or the shadcn/ui primitive that would be added.
+- **C. New library:** candidate blocks (shadcnblocks, ReUI, Spectrum UI, coss ui, 21st.dev) and effects (React Bits, Rare UI, Vanta UI) worth offering as an upgrade.
+
+Present it as a short table per component with one recommendation and the reason, for example:
+
+| Component | Option | Recommendation |
+| --- | --- | --- |
+| Hero | A: restyle `src/sections/Hero.tsx`; C: a shadcnblocks hero block; C: a React Bits text reveal as the signature | Restyle A and add the text reveal rebuilt on GSAP, because the layout already works |
+
+Then ask: *"Keep these as they are, or switch to the recommended components?"* Rules:
+
+- **Offer freely, install only on approval.** Suggesting a newer library or block is expected; installing a package, a registry, or pasting third-party code happens only after the user says yes to that item.
+- **Recommend, do not list everything.** One recommendation per component, with at most two alternatives.
+- **Confirm before calling it final.** Library contents change; open the candidate, confirm it exists and fits, and read its license before presenting it as the choice.
+- **A redesign starts from A and B.** Replacing working components is an option to offer, not a default.
+
+After approval, every adopted component goes through the checklist below.
 
 ## Before a component ships
 
