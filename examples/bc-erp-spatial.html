@@ -31,6 +31,8 @@
       --bc-accent-hover: #E08B6E;
       --bc-accent-deep: #B35637;
       --bc-accent-glow: rgba(217, 119, 87, 0.22);
+      --bc-accent-strong: #B35637;
+      --bc-accent-active: #AA4F32;
     }
     html[data-theme="light"] {
       --bc-bg: #FAF9F5;
@@ -45,6 +47,8 @@
       --bc-accent-hover: #AD5030;
       --bc-accent-deep: #8F3E22;
       --bc-accent-glow: rgba(193, 95, 61, 0.15);
+      --bc-accent-strong: #B35637;
+      --bc-accent-active: #AA4F32;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -154,13 +158,13 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: #ffffff !important;
-      background: var(--bc-accent);
+      background: var(--bc-accent-strong);
       border: 1px solid var(--bc-accent-deep);
       text-decoration: none;
       transition: background 200ms var(--bc-ease), transform 200ms var(--bc-ease);
     }
     .btn-contrast-action:hover {
-      background: var(--bc-accent-hover);
+      background: var(--bc-accent-active);
       transform: translateY(-1px);
     }
     .division-cards-grid {

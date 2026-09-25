@@ -32,6 +32,12 @@ class CraftAuditTests(unittest.TestCase):
     def test_allows_a_dash_used_as_a_list_marker(self):
         self.assertNotIn("em-dash-copy", self.rules("<ul><li><span>\u2014</span> Marketing</li><li>\u2014 Sales</li></ul>"))
 
+    def test_flags_white_text_on_the_mid_tone_accent(self):
+        self.assertIn("accent-fill-white-text", self.rules(".btn { background: var(--bc-accent); color: #fff; }", suffix=".css"))
+        self.assertIn("accent-fill-white-text", self.rules('<a style="color: white; background: #D97757">Go</a>'))
+        self.assertNotIn("accent-fill-white-text", self.rules(".btn { background: var(--bc-accent-strong); color: #fff; }", suffix=".css"))
+        self.assertNotIn("accent-fill-white-text", self.rules(".dot { background: var(--bc-accent); }", suffix=".css"))
+
     def test_every_rule_reports_under_a_review_dimension(self):
         import importlib.util
 

@@ -495,6 +495,26 @@ def _craft_violations(content, source_file):
     return violations
 
 
+ACCENT_FILL = r"background(?:-color)?\s*:\s*(?:#(?:d97757|e28466|c15f3e)\b|var\(\s*--(?:bc-)?accent(?:-hover)?\s*\))"
+WHITE_TEXT = r"(?<![-\w])color\s*:\s*(?:#fff(?:fff)?\b|white\b|var\(\s*--(?:bc-)?text-on-accent\s*\))"
+ACCENT_FILL_WHITE_TEXT_RE = re.compile(
+    r"\{[^{}]*?(?:" + ACCENT_FILL + r"[^{}]*?" + WHITE_TEXT + r"|" + WHITE_TEXT + r"[^{}]*?" + ACCENT_FILL + r")[^{}]*\}"
+    r"|style\s*=\s*[\"'][^\"']*?(?:" + ACCENT_FILL + r"[^\"']*?" + WHITE_TEXT + r"|" + WHITE_TEXT + r"[^\"']*?" + ACCENT_FILL + r")",
+    re.IGNORECASE,
+)
+
+
+def _accent_fill_violations(content, source_file):
+    """White text on the mid-tone accent measures 3.12:1 and fails WCAG AA."""
+    if ACCENT_FILL_WHITE_TEXT_RE.search(content):
+        return [(
+            "accent-fill-white-text",
+            "White text on the mid-tone accent (#D97757) measures 3.12:1; fill with --bc-accent-strong (#B35637) instead.",
+            source_file,
+        )]
+    return []
+
+
 def _gsap_violations(content, source_file):
     """Reduced-motion and layout findings for GSAP-driven motion."""
     if not GSAP_CALL_RE.search(content):
@@ -606,7 +626,7 @@ def find_audit_violations(content, source_file):
     if re.search(r"--(?:bc-)?text-on-accent\s*:\s*#(?:1[fF]1[eE]1[bB]|181816|000000|000|111)\b", content, re.IGNORECASE):
         violations.append((
             "accent-button-text-contrast",
-            "Avoid dark ink text on mid-tone accent/terracotta tokens. Use crisp white (#FFFFFF) text or switch primary actions to the canonical high-contrast button (.bc-btn-contrast).",
+            "Do not put button text on the mid-tone accent; use the ink button (.bc-btn-contrast) or white text on --bc-accent-strong.",
             source_file,
         ))
     elif re.search(
@@ -620,7 +640,7 @@ def find_audit_violations(content, source_file):
     ):
         violations.append((
             "accent-button-text-contrast",
-            "Avoid dark ink text on mid-tone accent/terracotta buttons. Use crisp white (#FFFFFF) text or switch primary actions to the canonical high-contrast button (.bc-btn-contrast).",
+            "Do not put button text on the mid-tone accent; use the ink button (.bc-btn-contrast) or white text on --bc-accent-strong.",
             source_file,
         ))
     elif re.search(
@@ -634,7 +654,7 @@ def find_audit_violations(content, source_file):
     ):
         violations.append((
             "accent-button-text-contrast",
-            "Avoid dark ink text on mid-tone accent/terracotta buttons. Use crisp white (#FFFFFF) text or switch primary actions to the canonical high-contrast button (.bc-btn-contrast).",
+            "Do not put button text on the mid-tone accent; use the ink button (.bc-btn-contrast) or white text on --bc-accent-strong.",
             source_file,
         ))
 
@@ -693,6 +713,7 @@ def find_audit_violations(content, source_file):
     violations.extend(_motion_violations(content, source_file))
     violations.extend(_craft_violations(content, source_file))
     violations.extend(_gsap_violations(content, source_file))
+    violations.extend(_accent_fill_violations(content, source_file))
     return violations
 
 

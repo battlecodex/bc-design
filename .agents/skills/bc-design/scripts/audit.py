@@ -21,6 +21,7 @@ SEVERITY = {
     "repeated-generic-cta": "warning",
     "focus-ring-width": "error",
     "accent-button-text-contrast": "error",
+    "accent-fill-white-text": "error",
     "sticky-z-index-token": "warning",
     "streaming-layout-animation": "error",
     "motion-duration-budget": "warning",
@@ -56,6 +57,7 @@ CATEGORY = {
     "reduced-motion-support": "accessibility",
     "focus-ring-width": "accessibility",
     "accent-button-text-contrast": "accessibility",
+    "accent-fill-white-text": "accessibility",
     "sticky-z-index-token": "accessibility",
     "spatial-uncapped-pixel-ratio": "performance",
     "em-dash-copy": "copy",
@@ -94,6 +96,7 @@ DIMENSION = {
     "generic-gradient-wash": "Color",
     "accent-surface-domination": "Color",
     "accent-button-text-contrast": "Accessibility",
+    "accent-fill-white-text": "Accessibility",
     "unicode-icon-glyph": "Imagery & icons",
     "template-arrow-glyph": "Imagery & icons",
     "copied-platform-chrome": "Information architecture",
@@ -131,7 +134,8 @@ RECOMMENDATIONS = {
     "unicode-icon-glyph": "Replace the glyph with a 1.5px monoline SVG and an accessible name.",
     "decorative-index-marker": "Remove the marker or make the sequence meaningful and ordered.",
     "focus-ring-width": "Use a visible 2px focus ring with sufficient contrast.",
-    "accent-button-text-contrast": "Avoid dark ink text on mid-tone accent/terracotta buttons. Use crisp white (#FFFFFF) text or switch primary actions to the canonical high-contrast button (.bc-btn-contrast).",
+    "accent-button-text-contrast": "Use the ink button (.bc-btn-contrast) for primary actions, or white text on --bc-accent-strong.",
+    "accent-fill-white-text": "Replace the fill with var(--bc-accent-strong) and its hover with var(--bc-accent-active).",
     "sticky-z-index-token": "Use the semantic sticky-navigation layer token (30).",
     "streaming-layout-animation": "Animate opacity/transform only while streamed content is changing.",
     "motion-duration-budget": "Use a BC duration token; reserve longer timing for a documented state.",
@@ -163,6 +167,7 @@ EVIDENCE_MARKERS = {
     "decorative-index-marker": ("01", "02", "03"),
     "focus-ring-width": ("focus-visible", "outline"),
     "accent-button-text-contrast": ("text-on-accent", "1f1e1b", "181816", "d97757", "e28466"),
+    "accent-fill-white-text": ("var(--bc-accent)", "var(--bc-accent-hover)", "d97757", "e28466", "c15f3e"),
     "sticky-z-index-token": ("sticky", "z-index"),
     "streaming-layout-animation": ("transition", "animation", "stream"),
     "motion-duration-budget": ("transition", "animation"),
@@ -194,6 +199,13 @@ def audit_target(target):
 
 
 def _line_for_rule(content, rule_id, message):
+    if rule_id == "accent-fill-white-text":
+        legacy = _legacy()
+        block = legacy.ACCENT_FILL_WHITE_TEXT_RE.search(content)
+        if block:
+            fill = re.search(legacy.ACCENT_FILL, block.group(0), re.IGNORECASE)
+            offset = block.start() + (fill.start() if fill else 0)
+            return content.count("\n", 0, offset) + 1
     markers = EVIDENCE_MARKERS.get(rule_id, ())
     lines = content.splitlines()
     for number, line in enumerate(lines, 1):
