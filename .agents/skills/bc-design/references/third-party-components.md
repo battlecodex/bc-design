@@ -2,6 +2,14 @@
 
 Copy-paste component libraries save time, and many ship exactly the effects this skill audits against: glow borders, gradient text, spotlight cards, uniform bento grids, and animated backgrounds behind body copy. Treat every third-party component as a draft that must earn its place in the house style.
 
+## Which components to use, in order
+
+1. **The project's own components.** If the codebase already has a button, card, or dialog, restyle and extend it. Do not create a parallel one.
+2. **Primitives from a library the project already installed.** `project.py preflight` reports them: shadcn/ui (`components.json` and the files in `components/ui`), Radix, Headless UI, MUI, Chakra, Mantine, and others. Build on those primitives and restyle them to BC tokens, for example by mapping shadcn's CSS variables onto `--bc-*` values.
+3. **A component from a new library only when the user asks for it.** When the user names a source ("use the hero block from shadcnblocks", "use an Evil Charts area chart"), follow the checklist below. Never install a new UI library, registry, or animation package on your own initiative.
+
+A redesign keeps this order too: it restyles what exists before it adds anything.
+
 ## Before a component ships
 
 1. **Check the license of that component.** Libraries mix free and paid items, and some free items carry their own terms. Record the source URL and license in the component file header or the project's notices. Never paste a paid (Pro) component the user has not licensed.

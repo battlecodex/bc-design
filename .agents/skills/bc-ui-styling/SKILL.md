@@ -10,12 +10,13 @@ Use this skill for implementation work after the direction and invariants are cl
 ## Workflow
 
 1. Detect the actual stack from project files; never assume React or Tailwind.
-2. Inventory routes, components, content hierarchy, tokens, and preserved behavior.
-3. Apply shared tokens and typography before one-off selectors.
-4. Implement responsive structure at 375px, 768px, 1024px, and 1440px.
-5. Cover default, hover, active, focus-visible, disabled, loading, empty, and error states.
-6. Verify keyboard order, touch targets, contrast, wrapping, reduced motion, and streamed content stability.
-7. Run the BC source audit and report rendered states that were not observed.
+2. Inventory routes, components, content hierarchy, tokens, and preserved behavior. Run `python ../bc-design/scripts/project.py preflight` to see which component library the project already installs.
+3. Reuse before adding: restyle the project's own components, then build on the installed library's primitives (for example shadcn/ui). Add a component from a new library only when the user names it.
+4. Apply shared tokens and typography before one-off selectors.
+5. Implement responsive structure at 375px, 768px, 1024px, and 1440px.
+6. Cover default, hover, active, focus-visible, disabled, loading, empty, and error states.
+7. Verify keyboard order, touch targets, contrast, wrapping, reduced motion, and streamed content stability.
+8. Run the BC source audit and report rendered states that were not observed.
 
 ## Non-negotiables
 
@@ -31,6 +32,6 @@ Use this skill for implementation work after the direction and invariants are cl
 - Shared foundation: `../bc-design/SKILL.md`
 - Stack notes: `../bc-design/stacks/`
 - Component guidance: `../bc-design/references/components.md`
-- Third-party component libraries: `../bc-design/references/third-party-components.md`
+- Third-party component libraries and the reuse order: `../bc-design/references/third-party-components.md`
 - Icons, including Keyline Icons: `../bc-design/references/icons.md`
 - Motion guidance: `../bc-motion/SKILL.md`

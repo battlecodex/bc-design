@@ -84,6 +84,39 @@ class PreflightTests(unittest.TestCase):
         self.assertIsNone(cached)
         self.assertIn("15.2.0", findings["framework"])
 
+    def test_reports_installed_component_libraries_and_the_reuse_rule(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            root = Path(tempdir)
+            (root / "package.json").write_text(
+                json.dumps({"dependencies": {"@radix-ui/react-dialog": "1.1.0", "@mui/material": "6.0.0"}}), encoding="utf-8"
+            )
+            (root / "components.json").write_text(json.dumps({"style": "new-york", "registries": {"@reui": "https://reui.io/r/{name}.json"}}), encoding="utf-8")
+            ui = root / "src" / "components" / "ui"
+            ui.mkdir(parents=True)
+            for name in ("button", "dialog"):
+                (ui / f"{name}.tsx").write_text("export {}", encoding="utf-8")
+            findings, _ = project.preflight(root)
+            text = project.format_preflight(findings)
+        components = findings["components"]
+        self.assertTrue(components[0].startswith("shadcn/ui (new-york style) (components.json:1)"))
+        self.assertIn("installed components: button, dialog", components[0])
+        self.assertIn("extra registries: @reui", components[0])
+        self.assertTrue(any(item.startswith("MUI 6.0.0") for item in components))
+        self.assertTrue(any(item.startswith("Radix UI primitives: 1 package(s)") for item in components))
+        self.assertIn("reuse and restyle the installed components first", text)
+        self.assertIn("component library", text)
+
+    def test_an_older_cache_is_rescanned(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            root = Path(tempdir)
+            project.preflight(root)
+            cache = root / ".bc-design" / "preflight.json"
+            stored = json.loads(cache.read_text(encoding="utf-8"))
+            stored.pop("version")
+            cache.write_text(json.dumps(stored), encoding="utf-8")
+            _, cached = project.preflight(root)
+        self.assertIsNone(cached)
+
     def test_design_file_is_announced_first(self):
         with tempfile.TemporaryDirectory() as tempdir:
             root = Path(tempdir)

@@ -46,6 +46,27 @@ FRAMEWORKS = (
     ("react", "React"),
 )
 MOTION_LIBRARIES = ("gsap", "@gsap/react", "framer-motion", "motion", "lenis", "@studio-freight/lenis", "lottie-react", "@react-spring/web", "@formkit/auto-animate", "three", "@react-three/fiber")
+# Component libraries a project may already build on. Registries such as
+# shadcnblocks, ReUI, Evil Charts, and 21st.dev install through shadcn, so
+# they show up as components.json plus files in the components folder.
+COMPONENT_LIBRARIES = (
+    ("@mui/material", "MUI"),
+    ("@chakra-ui/react", "Chakra UI"),
+    ("@mantine/core", "Mantine"),
+    ("antd", "Ant Design"),
+    ("@heroui/react", "HeroUI"),
+    ("@nextui-org/react", "NextUI"),
+    ("@headlessui/react", "Headless UI"),
+    ("react-aria-components", "React Aria"),
+    ("bits-ui", "Bits UI"),
+    ("radix-vue", "Radix Vue"),
+    ("reka-ui", "Reka UI"),
+    ("daisyui", "daisyUI"),
+    ("flowbite", "Flowbite"),
+    ("bootstrap", "Bootstrap"),
+)
+COMPONENT_PREFIXES = (("@radix-ui/", "Radix UI primitives"), ("@ark-ui/", "Ark UI"), ("@base-ui-components/", "Base UI"))
+CACHE_VERSION = 2
 FONT_PACKAGES = re.compile(r"^(?:@fontsource(?:-variable)?/.+|geist|next/font)$")
 
 # House accent families. The first value is the UI accent, the second the
@@ -109,6 +130,7 @@ def scan_project(root):
         "motion": [],
         "spacing": [],
         "tokens_files": [],
+        "components": [],
     }
     design_file = find_design_file(root)
     if design_file:
@@ -131,6 +153,15 @@ def scan_project(root):
             if name in deps:
                 line = _first_line(text, r'"' + re.escape(name) + r'"\s*:')
                 findings["motion"].append(f"{name} {deps[name]} ({_cite(root, package, line)})")
+        for name, label in COMPONENT_LIBRARIES:
+            if name in deps:
+                line = _first_line(text, r'"' + re.escape(name) + r'"\s*:')
+                findings["components"].append(f"{label} {deps[name]} ({_cite(root, package, line)})")
+        for prefix, label in COMPONENT_PREFIXES:
+            names = sorted(name for name in deps if name.startswith(prefix))
+            if names:
+                line = _first_line(text, r'"' + re.escape(names[0]) + r'"\s*:')
+                findings["components"].append(f"{label}: {len(names)} package(s) ({_cite(root, package, line)})")
         for name, version in deps.items():
             if FONT_PACKAGES.match(name):
                 line = _first_line(text, r'"' + re.escape(name) + r'"\s*:')
@@ -165,6 +196,27 @@ def scan_project(root):
             if line:
                 findings["spacing"].append(f"Tailwind spacing scale ({_cite(root, path, line)})")
 
+    shadcn = root / "components.json"
+    if shadcn.is_file():
+        try:
+            config = json.loads(shadcn.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            config = {}
+        style = config.get("style")
+        registries = sorted(config.get("registries", {})) if isinstance(config.get("registries"), dict) else []
+        ui_files = sorted(
+            path.stem
+            for path in _walk_files(root)
+            if path.parent.name == "ui" and path.parent.parent.name == "components" and path.suffix in (".tsx", ".jsx", ".vue", ".svelte")
+        )
+        detail = f"shadcn/ui{f' ({style} style)' if style else ''} (components.json:1)"
+        if ui_files:
+            shown = ", ".join(ui_files[:12]) + (f", and {len(ui_files) - 12} more" if len(ui_files) > 12 else "")
+            detail += f"; installed components: {shown}"
+        if registries:
+            detail += f"; extra registries: {', '.join(registries)}"
+        findings["components"].insert(0, detail)
+
     token_names = {"tokens.json", "design-tokens.json", "design-tokens.yaml"}
     for path in _walk_files(root):
         if path.name in token_names:
@@ -174,7 +226,7 @@ def scan_project(root):
 
 def _signature(root):
     """Modification times that invalidate the cache when they change."""
-    watched = [Path(root) / name for name in ("package.json", *DESIGN_FILES)]
+    watched = [Path(root) / name for name in ("package.json", "components.json", *DESIGN_FILES)]
     watched += list(Path(root).glob("tailwind.config.*"))
     return {path.name: path.stat().st_mtime for path in watched if path.is_file()}
 
@@ -187,7 +239,7 @@ def preflight(root, refresh=False):
     if cache.is_file() and not refresh:
         try:
             stored = json.loads(cache.read_text(encoding="utf-8"))
-            if stored.get("signature") == signature:
+            if stored.get("signature") == signature and stored.get("version") == CACHE_VERSION:
                 return stored["findings"], stored.get("scanned")
         except (json.JSONDecodeError, KeyError):
             pass
@@ -198,7 +250,7 @@ def preflight(root, refresh=False):
     if not ignore.exists():
         ignore.write_text(f"{PREFLIGHT_FILE}\n", encoding="utf-8")
     cache.write_text(
-        json.dumps({"scanned": date.today().isoformat(), "signature": signature, "findings": findings}, indent=2) + "\n",
+        json.dumps({"version": CACHE_VERSION, "scanned": date.today().isoformat(), "signature": signature, "findings": findings}, indent=2) + "\n",
         encoding="utf-8",
     )
     return findings, None
@@ -220,6 +272,7 @@ def format_preflight(findings, cached_on=None):
         ("Tokens files", findings["tokens_files"]),
         ("Spacing", findings["spacing"]),
         ("Motion", findings["motion"]),
+        ("Components", findings.get("components", [])),
     ]
     found_any = any(values for _, values in rows)
     if not found_any and not findings["design_file"]:
@@ -231,6 +284,11 @@ def format_preflight(findings, cached_on=None):
     preserve = [label.lower() for label, values in rows if values and label in ("Fonts", "Palette", "Tokens files", "Spacing")]
     stance = "motion-on" if findings["motion"] else "motion-cut (add GSAP only if the design contract calls for choreography)"
     lines.append(f"  Motion stance: {stance}")
+    if findings.get("components"):
+        preserve.append("component library")
+        lines.append(
+            "  Component rule: reuse and restyle the installed components first; add components from another library only when the user asks for it."
+        )
     if preserve:
         lines.append(f"BC Design will preserve: {', '.join(preserve)}. Say so to override any of them.")
     return "\n".join(lines)
