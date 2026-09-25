@@ -153,6 +153,10 @@ Creates `design-system/aether-health/MASTER.md`.
 
 ---
 
+## Design dimensions
+
+Every contract, review, and handoff covers eighteen dimensions: twelve for the interface (color, typography, layout and grid, spacing, visual hierarchy, imagery and icons, shape and effects, UI components, interaction and states, motion, responsiveness, accessibility) and six for the experience (user research, information architecture, user flow, wireframe and prototype, UX writing, usability testing). [design-dimensions.md](./.agents/skills/bc-design/references/design-dimensions.md) sets the house standard for each, names how it is verified, and provides the scorecard. `--audit --json` groups findings under `summary.by_dimension`.
+
 ## Motion orchestration with GSAP
 
 BC Design orchestrates multi-element and scroll-driven motion with [GSAP](https://gsap.com) timelines on the house motion tokens (`expo.out` equals the `--bc-ease` curve). Every choreography runs inside `gsap.matchMedia()` with a reduced-motion branch, animates transforms and opacity only, and cleans up through `gsap.context()` or `useGSAP()`.

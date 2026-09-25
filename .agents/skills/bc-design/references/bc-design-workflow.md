@@ -77,7 +77,7 @@ Minimum output: frozen invariants, semantic token map, approved restyle contract
 ## Design audit
 
 1. Define the target and stack. Inspect source, rendered states, screenshots, and tokens; record what was not observable.
-2. Evaluate accessibility, touch and interaction, performance/CLS, responsive layout, typography/contrast, animation, forms/feedback, navigation, and data displays.
+2. Evaluate every dimension in [design-dimensions.md](./design-dimensions.md): the twelve UI dimensions and the six UX dimensions, plus performance/CLS and data displays where they apply.
 3. Run `bc_design.py --audit TARGET` for enforceable source heuristics, including template chrome, Unicode icon glyphs, decorative index markers, focus-ring width, sticky-layer tokens, motion duration/easing budgets, reduced-motion support, and streaming-layout isolation. A CLI pass is one signal, not proof of rendered correctness.
 4. Report each finding with severity (P0–P3), evidence location, affected user, impact, recommended fix, and confidence. Do not silently waive a finding; only an explicit user request recorded in the contract can justify a deviation.
 5. Do not modify the target during an audit. If fixes are requested, switch to redesign or restyling and repeat the universal sequence.
@@ -105,6 +105,8 @@ Invariants / approved changes:
 Hierarchy and responsive behavior:
 Semantic tokens and typography:
 Interaction, accessibility, motion, and streaming constraints:
+UI dimensions (color, typography, layout, spacing, hierarchy, imagery, shape, components, states, motion, responsiveness, accessibility):
+UX dimensions (users and assumptions, information architecture, main flow, prototype plan, UX writing, usability tasks):
 Rejected patterns and why:
 Approval status:
 ```
@@ -124,6 +126,7 @@ Confidence: high / medium / low
 ```text
 Commands/checks run:
 Observed results:
+Design-dimensions scorecard (see design-dimensions.md):
 Design-contract checks:
 Unverified surfaces or limitations:
 Remaining user decision:

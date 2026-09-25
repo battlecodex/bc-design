@@ -29,6 +29,32 @@ class CraftAuditTests(unittest.TestCase):
         self.assertNotIn("em-dash-copy", self.rules("<script>// setup — legacy</script><h1>Quiet tools</h1>"))
         self.assertNotIn("em-dash-copy", self.rules("/* heading — note */ h1 { color: #1F1E1B; }", suffix=".css"))
 
+    def test_allows_a_dash_used_as_a_list_marker(self):
+        self.assertNotIn("em-dash-copy", self.rules("<ul><li><span>\u2014</span> Marketing</li><li>\u2014 Sales</li></ul>"))
+
+    def test_every_rule_reports_under_a_review_dimension(self):
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("bc_audit", CLI.with_name("audit.py"))
+        audit = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(audit)
+        self.assertEqual((set(audit.SEVERITY) | set(audit.CATEGORY)) - set(audit.DIMENSION), set())
+        self.assertTrue(set(audit.DIMENSION.values()) <= set(audit.DIMENSIONS))
+        dimensions_doc = (CLI.parents[1] / "references" / "design-dimensions.md").read_text(encoding="utf-8")
+        for dimension in audit.DIMENSIONS:
+            self.assertIn(f"**{dimension}**", dimensions_doc)
+
+    def test_json_summary_groups_findings_by_dimension(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            target = Path(tempdir) / "page.html"
+            target.write_text('<p>Unlock seamless flow.</p><a href="#">Docs</a>', encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, str(CLI), "--audit", str(target), "--json"],
+                cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
+            )
+        summary = json.loads(result.stdout)["summary"]
+        self.assertEqual(summary["by_dimension"], {"Information architecture": 1, "UX writing": 1})
+
     def test_flags_marketing_buzzwords(self):
         self.assertIn("buzzword-copy", self.rules("<p>Unlock seamless collaboration.</p>"))
         self.assertNotIn("buzzword-copy", self.rules("<p>Share a draft and collect comments in one place.</p>"))

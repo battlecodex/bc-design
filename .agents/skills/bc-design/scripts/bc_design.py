@@ -459,7 +459,8 @@ def _craft_violations(content, source_file):
     """Copy, honesty, and focus findings shared with the house luxury standard."""
     violations = []
     copy = visible_text(content, source_file)
-    if "\u2014" in copy:
+    # A dash between words is an aside; a leading dash used as a list marker is not copy.
+    if re.search(r"\w[ \t]*\u2014[ \t]*\w", copy):
         violations.append((
             "em-dash-copy",
             "Rewrite interface copy without em dashes; use a period, comma, colon, or parentheses.",
@@ -803,7 +804,7 @@ def main():
             # Import lazily so the legacy single-file entrypoint remains usable
             # when copied into runtimes that only include this script.
             try:
-                from audit import build_audit_findings
+                from audit import build_audit_findings, summarize_by_dimension
                 findings = build_audit_findings(args.design_audit)
             except Exception as exc:
                 print(json.dumps({"status": "error", "target": args.design_audit, "findings": [], "summary": {"total": 0}, "error": str(exc)}, ensure_ascii=False))
@@ -821,6 +822,7 @@ def main():
                         for category in ("identity", "hierarchy", "decoration", "copy", "content", "motion", "accessibility", "performance")
                         if any(finding.get("category") == category for finding in findings)
                     },
+                    "by_dimension": summarize_by_dimension(findings),
                 },
             }
             print(json.dumps(payload, ensure_ascii=False, indent=2))
@@ -840,7 +842,8 @@ def main():
         for finding in findings:
             evidence = f" Evidence: {finding['evidence']}" if finding.get("evidence") else ""
             message = finding["message"].rstrip(".")
-            print(f"  [{finding['rule_id']}] {finding['path']}:{finding['line']}: {message}.{evidence}")
+            dimension = f" ({finding['dimension']})" if finding.get("dimension") else ""
+            print(f"  [{finding['rule_id']}]{dimension} {finding['path']}:{finding['line']}: {message}.{evidence}")
         return 1
 
     # 3. Contrast Checker

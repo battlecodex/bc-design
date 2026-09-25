@@ -12,7 +12,7 @@ BC Design is a practical design-intelligence family for building clear, accessib
 BC Design is an opinionated house style: a warm, literary, editorial language with the calm of a well-made book. It is the default look for every surface unless the project has its own brand evidence. Within the house style, derive the accent, imagery, and signature moment from the product subject so two products never look identical. Read [references/visual-language.md](./references/visual-language.md) for the luxury standard that every page must meet.
 
 - **Composition:** use clear editorial hierarchy, open space, hairline borders, restrained radii, and a mix of open groups, lists, and anchored panels. Avoid turning every section into a rounded card.
-- **Color:** the house canvas is warm parchment (`#FAF9F5` light, `#181816` dark) with high-contrast ink. Choose one accent from the house family by subject: terracotta (`#D97757`) by default, amber-brass for finance and craft, sage for health and nature. Lock that one accent for the whole page. Replace the house palette only when the project has its own brand colors. An accent never becomes a large default surface.
+- **Color:** the house canvas is warm parchment (`#FAF9F5` light, `#181816` dark) and ink does most of the work: primary buttons, headings, and the footer. Choose one UI accent from the house family by subject: terracotta (`#D97757`) by default, amber-brass for finance and craft, sage for health and nature, and lock it for the page. Illustration tiles may use the muted `--bc-illus-*` palette, never for text or controls. Replace the house palette only when the project has its own brand colors.
 - **Typography:** default to Newsreader for editorial hierarchy and Inter for UI clarity. Change the pairing when brand evidence or the product context calls for it; reserve monospace for code and tabular values.
 - **Contrast:** use tested foreground/background pairs grounded in the canonical high-contrast standard: primary actions default to solid ink `.bc-btn-contrast` (`#1F1E1B` with `#FFFFFF` text in light mode, `#FFFFFF` with `#1F1E1B` text in dark mode); an accent-filled button uses the strong accent (`--bc-accent-strong`, `#B35637`) with white text. White on the signature `#D97757` measures only 3.12:1, so keep `#D97757` for non-text marks, large display type, and 3D light.
 - **Motion:** use `cubic-bezier(0.16, 1, 0.3, 1)` (GSAP `expo.out`) with a 150–250ms budget for ordinary interactions. Orchestrate multi-element sequences and scroll choreography with GSAP timelines; read [references/gsap-orchestration.md](./references/gsap-orchestration.md). Honor reduced motion.
@@ -63,7 +63,8 @@ Keep `bc-design` as the entrypoint for mixed or ambiguous requests. Sibling skil
 ## Progressive references
 
 - Read [references/bc-design-guidelines.md](./references/bc-design-guidelines.md) for subject grounding, hierarchy, copy, and distinctiveness checks.
-- Read [references/visual-language.md](./references/visual-language.md) for the house style, the luxury standard, and signature options before choosing typography, palette, shape, illustration, or layout.
+- Read [references/visual-language.md](./references/visual-language.md) for the house style, the luxury standard, composition patterns, and signature options before choosing typography, palette, shape, illustration, or layout.
+- Read [references/design-dimensions.md](./references/design-dimensions.md) for the twelve UI and six UX dimensions that every contract, review, and handoff must cover, with the scorecard template.
 - Read [references/gsap-orchestration.md](./references/gsap-orchestration.md) when motion sequences several elements, follows scroll, or drives a 3D scene; reuse [assets/motion/bc-motion.js](./assets/motion/bc-motion.js).
 - Read [references/catalog-alignment.md](./references/catalog-alignment.md) when a catalog search or generated direction needs compatibility classification; automatic output is limited to `core` and `compatible` entries.
 - Read [references/ux-guidelines.md](./references/ux-guidelines.md) for accessibility, forms, motion, loading, and layout checks.
@@ -133,4 +134,4 @@ python .agents/skills/bc-design/scripts/render_check.py path/to/page.html --out 
 
 ## Delivery standard
 
-Before handoff, run the source audit and `render_check.py`, look at the screenshots, then report the inspected artifacts, commands run, observed results, design-contract checks, unverified surfaces, and any remaining user decision. A clean CLI result is one signal, not proof that a rendered interface is accessible or correct.
+Before handoff, run the source audit and `render_check.py`, look at the screenshots, fill in the design-dimensions scorecard, then report the inspected artifacts, commands run, observed results, design-contract checks, unverified surfaces, and any remaining user decision. A clean CLI result is one signal, not proof that a rendered interface is accessible or correct.

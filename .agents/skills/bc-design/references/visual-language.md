@@ -5,10 +5,12 @@ BC Design is a house style: warm, literary, and editorial, with the quiet confid
 ## House style
 
 - **Canvas and ink.** Warm parchment (`#FAF9F5`) in light mode and espresso (`#181816`) in dark mode, with high-contrast ink (`#1F1E1B` / `#FAF9F5`). Hairline borders at 8–9% ink opacity separate content instead of boxes.
-- **One accent, chosen by subject.** Terracotta (`#D97757`) is the default. Use amber-brass for finance, instruments, and craft, and sage for health, wellbeing, and nature. Lock the chosen accent for the whole page; a second accent is a finding. Text-bearing fills and accent text use the strong accent (`#B35637`).
-- **Type.** Newsreader for display and reading, with optical sizing on large headings; Inter for controls, labels, and data; a monospace face only for code and tabular figures.
-- **Shape.** Small-to-moderate radii, crisp controls, and simple modal geometry. Pills are for tags, filters, and compact statuses.
-- **Imagery.** Real product imagery, tactile diagrams, or sparse organic illustration that explains the subject. Decorative graphics must earn their space.
+- **Ink does the work.** Primary buttons, the footer, and headings are solid ink (`#141413` to `#1F1E1B`). Secondary text steps down through warm grays (`#5E5D59` at 6.26:1, then the tertiary token `#73716A` at 4.64:1 for metadata and placeholders), and borders through `#D1CFC5` and `#E8E6DC`.
+- **One UI accent, chosen by subject.** Terracotta (`#D97757`) is the default. Use amber-brass for finance, instruments, and craft, and sage for health, wellbeing, and nature. The UI accent marks links, focus, selection, and the occasional highlight; lock it for the whole page. Text-bearing fills use the strong accent (`#B35637`).
+- **A separate illustration palette.** Flat, muted tiles in clay, sky, heather, olive, sage, and apricot (`--bc-illus-*`) sit behind illustrations and category cards, often with fine white organic line patterns. These tones never carry text, buttons, or status.
+- **Type.** A serif display in a light weight (Newsreader 300–400) with optical sizing: about 72px for the hero, 48–52px for section heads, 30px for sub-heads. A quiet sans (Inter) for UI at 15px, body at 17px, and lead paragraphs at about 22px in secondary ink. Monospace only for code and tabular figures.
+- **Shape.** Radius 4px for small controls, 8px for buttons and inputs, 12px for cards and tiles, 16px for large panels. Hairline borders, and a soft shadow only on floating layers. Pills are for tags, filters, and compact statuses.
+- **Imagery.** Hand-drawn monoline illustration (black ink line work of hands and objects) on a flat illustration tile, or real product screens framed inside a tile. Commission or draw original illustration; never reuse another brand's artwork. Decorative graphics must earn their space.
 
 ## Luxury standard
 
@@ -23,6 +25,18 @@ Luxury here means restraint, precision, and material quality. It never means mor
 7. **Honest content.** Real product facts, real imagery or a clearly marked placeholder, and specific copy. Invented statistics, testimonials, and compliance badges destroy trust instantly.
 8. **Every state is finished.** Loading, empty, error, hover, focus, and reduced-motion states get the same care as the hero.
 
+## Composition patterns
+
+These patterns carry the house style. Use one or two per page, not all of them.
+
+- **Centered editorial section.** A small monoline icon, a serif headline in two short lines, and one sentence of secondary ink, centered above the content.
+- **Hairline feature list.** Rows separated by hairlines: a small icon and a serif title on the left, a two-line description on the right. It replaces a grid of identical cards.
+- **Stacked tiles.** Two or three illustration tiles offset behind a product screen, so the screen reads as the top sheet of a small stack.
+- **Sentence selector.** A serif sentence with underlined choices ("I'm in *Marketing* and I need to make the *Campaign readout*.") drives the content below it. The choices are real controls with visible focus, and a plain list of options sits beside it for scanning.
+- **Floating proof card.** A small white card with a customer mark and one sourced number, placed off-grid beside a section. The number must be real and attributable.
+- **Quiet announcement.** A dismissible card in a corner with a small illustration tile, one serif line, and one ink button.
+- **Ink footer.** A dark footer in the ink color with grouped link columns in light gray, closing the parchment page.
+
 ## Signature options
 
 | Signature | Use when | Reference |
@@ -31,6 +45,7 @@ Luxury here means restraint, precision, and material quality. It never means mor
 | Orchestrated hero sequence | The story unfolds in steps: a reveal, a before/after, a process | [gsap-orchestration.md](./gsap-orchestration.md) |
 | Scroll-driven narrative | A long page explains a system or a journey | [gsap-orchestration.md](./gsap-orchestration.md), `--spatial spatial-scrollytelling` |
 | Editorial photography | The product is physical, crafted, or place-based | [landing-patterns.md](./landing-patterns.md) |
+| Illustrated tile system | The product spans many tasks, roles, or categories | Composition patterns above, `--bc-illus-*` tokens |
 
 ## Decision order
 
@@ -51,7 +66,7 @@ The catalogs stay broad so BC Design can cover many products, stacks, and visual
 
 ## Failure signals
 
-- A second accent color appears, or the accent fills the largest surface.
+- A second UI accent appears, illustration tones carry text or buttons, or the accent fills the largest surface.
 - Every content group becomes an identical rounded card.
 - Oversized marketing typography displaces useful product content.
 - Serif type appears in dense controls or data tables.

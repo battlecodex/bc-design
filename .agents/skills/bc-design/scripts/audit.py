@@ -67,6 +67,55 @@ CATEGORY = {
     "gsap-layout-property": "performance",
 }
 
+# Every rule reports under one of the review dimensions in
+# references/design-dimensions.md.
+DIMENSIONS = (
+    "Color",
+    "Typography",
+    "Layout & grid",
+    "Spacing & whitespace",
+    "Visual hierarchy",
+    "Imagery & icons",
+    "Shape & effects",
+    "UI components",
+    "Interaction & states",
+    "Motion",
+    "Responsiveness",
+    "Accessibility",
+    "Information architecture",
+    "UX writing",
+)
+DIMENSION = {
+    "monotonous-card-kit": "Visual hierarchy",
+    "decorative-index-marker": "Visual hierarchy",
+    "decorative-eyebrow-overload": "Visual hierarchy",
+    "oversized-hero-displacement": "Typography",
+    "excessive-pill-capsules": "Shape & effects",
+    "generic-gradient-wash": "Color",
+    "accent-surface-domination": "Color",
+    "accent-button-text-contrast": "Accessibility",
+    "unicode-icon-glyph": "Imagery & icons",
+    "template-arrow-glyph": "Imagery & icons",
+    "copied-platform-chrome": "Information architecture",
+    "dead-navigation-link": "Information architecture",
+    "repeated-generic-cta": "UX writing",
+    "template-arrow-cta": "UX writing",
+    "middle-dot-metadata": "UX writing",
+    "em-dash-copy": "UX writing",
+    "buzzword-copy": "UX writing",
+    "unverified-claim": "UX writing",
+    "focus-ring-width": "Accessibility",
+    "focus-outline-removed": "Accessibility",
+    "sticky-z-index-token": "Layout & grid",
+    "streaming-layout-animation": "Motion",
+    "motion-duration-budget": "Motion",
+    "motion-easing-token": "Motion",
+    "reduced-motion-support": "Motion",
+    "gsap-reduced-motion": "Motion",
+    "gsap-layout-property": "Motion",
+    "spatial-uncapped-pixel-ratio": "Responsiveness",
+}
+
 RECOMMENDATIONS = {
     "excessive-pill-capsules": "Use full pills only for tags, filters, and compact statuses; vary controls and surfaces.",
     "generic-gradient-wash": "Replace the saturated gradient with subject-grounded color or an earned signature visual.",
@@ -179,6 +228,7 @@ def build_audit_findings(target):
                 "rule_id": rule_id,
                 "severity": SEVERITY.get(rule_id, "warning"),
                 "category": CATEGORY.get(rule_id, "identity"),
+                "dimension": DIMENSION.get(rule_id, "Visual hierarchy"),
                 "path": str(source_path),
                 "line": line,
                 "evidence": evidence,
@@ -188,3 +238,13 @@ def build_audit_findings(target):
             }
         )
     return findings
+
+
+def summarize_by_dimension(findings):
+    """Count findings per review dimension, in scorecard order."""
+    counts = {}
+    for dimension in DIMENSIONS:
+        total = sum(1 for finding in findings if finding.get("dimension") == dimension)
+        if total:
+            counts[dimension] = total
+    return counts
