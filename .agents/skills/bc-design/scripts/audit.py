@@ -27,6 +27,13 @@ SEVERITY = {
     "motion-easing-token": "warning",
     "reduced-motion-support": "error",
     "spatial-uncapped-pixel-ratio": "warning",
+    "em-dash-copy": "warning",
+    "buzzword-copy": "warning",
+    "unverified-claim": "error",
+    "dead-navigation-link": "warning",
+    "focus-outline-removed": "error",
+    "gsap-reduced-motion": "error",
+    "gsap-layout-property": "warning",
 }
 
 CATEGORY = {
@@ -51,6 +58,13 @@ CATEGORY = {
     "accent-button-text-contrast": "accessibility",
     "sticky-z-index-token": "accessibility",
     "spatial-uncapped-pixel-ratio": "performance",
+    "em-dash-copy": "copy",
+    "buzzword-copy": "copy",
+    "unverified-claim": "content",
+    "dead-navigation-link": "content",
+    "focus-outline-removed": "accessibility",
+    "gsap-reduced-motion": "accessibility",
+    "gsap-layout-property": "performance",
 }
 
 RECOMMENDATIONS = {
@@ -75,6 +89,13 @@ RECOMMENDATIONS = {
     "motion-easing-token": "Use a BC easing token or the approved deceleration curve.",
     "reduced-motion-support": "Add a prefers-reduced-motion: reduce fallback in the same source unit.",
     "spatial-uncapped-pixel-ratio": "Cap WebGL pixel ratio with Math.min(window.devicePixelRatio, 2) to protect mobile GPU thermal budget.",
+    "em-dash-copy": "Rewrite the sentence with a period, comma, colon, or parentheses.",
+    "buzzword-copy": "State what the product does for this reader in concrete terms.",
+    "unverified-claim": "Cite the certificate or measurement, or remove the claim.",
+    "dead-navigation-link": "Link to a real destination or render the item as plain text.",
+    "focus-outline-removed": "Add a :focus-visible rule with a 2px accent outline or equivalent ring.",
+    "gsap-reduced-motion": "Use gsap.matchMedia() with a (prefers-reduced-motion: reduce) branch that sets final states without tweening.",
+    "gsap-layout-property": "Replace width/height/top/left/margin/padding tweens with x, y, scale, clipPath, or opacity.",
 }
 
 EVIDENCE_MARKERS = {
@@ -99,6 +120,13 @@ EVIDENCE_MARKERS = {
     "motion-easing-token": ("transition", "animation", "ease"),
     "reduced-motion-support": ("transition", "animation", "keyframes"),
     "spatial-uncapped-pixel-ratio": ("setpixelratio",),
+    "em-dash-copy": ("\u2014",),
+    "buzzword-copy": ("seamless", "unlock", "elevate", "empower", "unleash", "supercharge", "revolution", "cutting-edge", "cutting edge", "next-generation", "next generation", "ai-powered", "ai powered", "effortless", "game-changer"),
+    "unverified-claim": ("soc 2", "soc2", "iso 27001", "hipaa", "gdpr", "pci", "uptime", "x faster"),
+    "dead-navigation-link": ('href="#"', "href='#'"),
+    "focus-outline-removed": ("outline: none", "outline:none", "outline: 0", "outline:0"),
+    "gsap-reduced-motion": ("gsap.",),
+    "gsap-layout-property": ("gsap.to", "gsap.from"),
 }
 
 

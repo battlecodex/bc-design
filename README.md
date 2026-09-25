@@ -2,7 +2,7 @@
 
 > An open-source, universal design intelligence engine for clear, accessible, subject-grounded interfaces.
 > Built from practical building blocks: **88 visual styles, 192 palettes, 74 typography pairings, 25 chart patterns, 119 UX checks, 22 searchable stack catalogs (8 focused guides), 31 spatial-effect references, design tokens, component contracts, and streaming-safe interaction guidance**.
-> The catalog data derives from [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) and the spatial generators adapt [ThreeUI](https://github.com/MengTo/threeui), both MIT; see [Third-party notices](./THIRD_PARTY_NOTICES.md).
+> The catalog data derives from [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) the spatial generators adapt [ThreeUI](https://github.com/MengTo/threeui), and the craft rules adapt [anti-slop](https://github.com/miqdadbadjuber/anti-slop) and [taste-skill](https://github.com/Leonxlnx/taste-skill), all MIT; see [Third-party notices](./THIRD_PARTY_NOTICES.md).
 
 ---
 
@@ -63,18 +63,19 @@ Use `bc-design` as the router for mixed requests, or invoke the narrowest entryp
 | `bc-design-system` | Semantic tokens, component contracts, states, variants, themes, and governance |
 | `bc-ui-styling` | Stack-aware implementation and restyling with behavior preserved |
 | `bc-design-audit` | Read-only quality and distinctive-pattern review with evidence and confidence |
-| `bc-motion` | Motion tiers, loading, overlays, reduced motion, and streamed feedback |
+| `bc-motion` | Motion tiers, GSAP timeline and scroll orchestration, loading, overlays, reduced motion, and streamed feedback |
 
 All siblings share the router's local catalogs and CLI. They do not create duplicate data sources.
 
 | Feature Dimension | Generic starting point | BC Design System |
 | :--- | :--- | :--- |
-| **Aesthetic Craft** | Generic Tailwind / shadcn styling. Tends to generate stereotypical AI purple/blue gradients and cold enterprise gray. | **Subject-grounded editorial design**: neutral structure, purposeful typography, restrained subject-derived accents, hairline borders, and one earned signature moment. |
+| **Aesthetic Craft** | Generic Tailwind / shadcn styling. Tends to generate stereotypical AI purple/blue gradients and cold enterprise gray. | **A warm editorial house style held to a luxury standard**: parchment and ink, one subject-chosen accent, generous space, Newsreader display type, hairline borders, and one signature moment per page. |
 | **Visual Assets & Illustrations** | Text descriptions and ASCII tables only. No visual illustrations. | **Real Hand-Drawn SVG Crayon Artwork** (tactile thought bubbles with chalk squiggles) + **10 bundled HTML examples**, including spatial product stages and shader studies. |
 | **AI / LLM Specific UX** | Standard web UX rules only. No LLM-specific safeguards. | **Streaming Token Isolation** (never animate container dimensions during generation to prevent layout thrashing), Thinking Pulse ambient glow, artifact drawers. |
 | **Typography Intelligence** | Basic font suggestions without optical sizing. | **Optical Sizing (`opsz: 72`) Newsreader** paired with clean `Inter` and `JetBrains Mono`. Includes Google Fonts drop-in and Tailwind config. |
-| **Button Hierarchy & Contrast** | Often uses saturated colored buttons everywhere. | **BC Design hierarchy**: Solid White (`#FFFFFF`) with dark text for primary modal CTAs in dark mode; Terracotta reserved for key actions. |
+| **Button Hierarchy & Contrast** | Often uses saturated colored buttons everywhere. | **BC Design hierarchy**: solid ink primary actions (white in dark mode); accent-filled buttons use the strong terracotta `#B35637` so white text passes WCAG AA. |
 | **Multi-Framework Depth** | Summaries for React/Tailwind. | **22 searchable stack catalogs** plus **8 focused implementation guides** for common web and native stacks. |
+| **Motion Orchestration** | Scattered CSS keyframes, each element animating on its own. | **GSAP timelines on BC tokens**: one choreographed sequence per moment, ScrollTrigger narratives, `gsap.matchMedia` reduced-motion fallbacks, and cleanup through `gsap.context`. |
 | **Spatial 3D** | Decorative WebGL added as an interchangeable visual effect. | **Subject-grounded spatial stages**: a real product metaphor first, then a calm Three.js, WebGL, or Canvas implementation with canvas pass-through, reduced motion, DPR caps, and disposal guidance. |
 | **CLI Dependencies** | Requires Node.js or a global package install. | **Pure Python Standard Library (Zero Dependencies)**. Runs out-of-the-box on `py -3`. |
 
@@ -151,6 +152,25 @@ py -3 scripts/bc_design.py "Medical health clinic" --design-system -p "Aether He
 Creates `design-system/aether-health/MASTER.md`.
 
 ---
+
+## Motion orchestration with GSAP
+
+BC Design orchestrates multi-element and scroll-driven motion with [GSAP](https://gsap.com) timelines on the house motion tokens (`expo.out` equals the `--bc-ease` curve). Every choreography runs inside `gsap.matchMedia()` with a reduced-motion branch, animates transforms and opacity only, and cleans up through `gsap.context()` or `useGSAP()`.
+
+- [GSAP orchestration guide](./.agents/skills/bc-design/references/gsap-orchestration.md): token mapping, choreography budgets, ScrollTrigger narratives, 3D stage control, React.
+- [`bc-motion.js`](./.agents/skills/bc-design/assets/motion/bc-motion.js): `BCMotion.orchestrate`, `heroSequence`, `revealOnce`, and `staggerList` helpers.
+- [`gsap-atelier.html`](./.agents/skills/bc-design/assets/motion/gsap-atelier.html): a complete luxury page with an orchestrated hero and a pinned, scroll-scrubbed 3D exploded view of a watch movement.
+
+The audit flags GSAP code without a reduced-motion branch (`gsap-reduced-motion`) and tweens of layout properties (`gsap-layout-property`).
+
+## Rendered verification
+
+The source audit cannot see the rendered page. `render_check.py` opens it in Chromium through Playwright, saves screenshots at 375, 768, and 1440px plus reduced-motion views, and reports horizontal overflow, console and page errors, failed requests, images without alt text, and controls without an accessible name:
+
+```bash
+pip install playwright && python -m playwright install chromium
+py -3 .agents/skills/bc-design/scripts/render_check.py path/to/page.html --out render-check
+```
 
 ## Spatial 3D & scrollytelling
 
@@ -231,4 +251,4 @@ Explore selected bundled standalone HTML examples:
 
 ## 📄 License
 
-[MIT License](./LICENSE) © 2026 for original BC Design code and documentation. The catalog data derived from UI UX Pro Max (MIT, © 2024 Next Level Builder), the spatial architecture adapted from ThreeUI (MIT, © 2026 Meng To), and the bundled Google Fonts and Phosphor reference metadata retain their upstream terms; see [Third-party notices](./THIRD_PARTY_NOTICES.md).
+[MIT License](./LICENSE) © 2026 for original BC Design code and documentation. The catalog data derived from UI UX Pro Max (MIT, © 2024 Next Level Builder), the spatial architecture adapted from ThreeUI (MIT, © 2026 Meng To), the craft rules adapted from anti-slop (MIT, © 2026 Miqdad Badjuber) and taste-skill (MIT, © 2026 Leonxlnx), and the bundled Google Fonts and Phosphor reference metadata retain their upstream terms; see [Third-party notices](./THIRD_PARTY_NOTICES.md).

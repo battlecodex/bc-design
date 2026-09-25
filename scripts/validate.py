@@ -148,7 +148,12 @@ def validate_third_party_notices() -> list[str]:
     if not notices.is_file():
         return [f"Third-party notices missing from skill directory: {notices.relative_to(ROOT)}"]
     text = notices.read_text(encoding="utf-8")
-    required = ("Copyright (c) 2024 Next Level Builder", "Copyright (c) 2026 Meng To")
+    required = (
+        "Copyright (c) 2024 Next Level Builder",
+        "Copyright (c) 2026 Meng To",
+        "Copyright (c) 2026 Miqdad Badjuber (antislop)",
+        "Copyright (c) 2026 Leonxlnx",
+    )
     return [f"Third-party notices missing '{notice}'" for notice in required if notice not in text]
 
 

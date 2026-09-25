@@ -21,14 +21,15 @@ There is no unconditional pass: a clean checklist still requires evidence from t
 
 1. **Frame the request.** Capture product, audience, context, platform, stack, existing artifacts, constraints, and success criteria. State assumptions that could affect direction.
 2. **Establish the baseline.** For new work, baseline means the brief and subject matter. For existing work, inspect files, routes, tokens, screenshots, responsive states, and known defects.
-3. **Present the direction.** Share the mode, key decisions, alternatives where meaningful, and proposed scope. Obtain approval before creative implementation or behavior changes.
-4. **Choose references progressively.** Run `bc_design.py --design-system` for a system-wide direction. Read `bc-design-guidelines.md` for subject and generic-pattern checks, `ux-guidelines.md` for usability checks, and the detected stack guide for implementation details.
-5. **Write the design contract.** Record hierarchy, type pairing, semantic tokens, responsive behavior, interaction states, motion budget, accessibility requirements, and rejected patterns.
-6. **Plan multi-step work.** When work spans multiple files, pages, states, or independently testable changes, write an implementation plan naming files, interfaces, tests, and verification commands.
-7. **Implement in small slices.** Update shared tokens and components before one-off screens. Write a failing test for behavior changes, implement the smallest change, and rerun the relevant suite. Keep streamed-text geometry stable.
-8. **Review the result.** Check the design contract, run the CLI audit when source artifacts exist, and inspect responsive, keyboard, reduced-motion, loading, error, empty, and streamed states.
-9. **Verify before handoff.** Run fresh checks and report actual results. Never claim complete, accessible, or passing without evidence.
-10. **Handoff safely.** Report changed paths, commands, observed results, limitations, and any remaining user decision.
+3. **Commit to one direction.** Before writing code, state in two or three sentences the subject, the house accent chosen for it, and the one signature moment (a spatial 3D stage, an orchestrated sequence, a scroll narrative, or editorial imagery). Name what the page will deliberately leave out. A direction that could describe any product is not a direction.
+4. **Present the direction.** Share the mode, key decisions, alternatives where meaningful, and proposed scope. Obtain approval before creative implementation or behavior changes.
+5. **Choose references progressively.** Run `bc_design.py --design-system` for a system-wide direction. Read `bc-design-guidelines.md` for subject and generic-pattern checks, `ux-guidelines.md` for usability checks, and the detected stack guide for implementation details.
+6. **Write the design contract.** Record hierarchy, type pairing, semantic tokens, responsive behavior, interaction states, motion budget, accessibility requirements, and rejected patterns.
+7. **Plan multi-step work.** When work spans multiple files, pages, states, or independently testable changes, write an implementation plan naming files, interfaces, tests, and verification commands.
+8. **Implement in small slices.** Update shared tokens and components before one-off screens. Write a failing test for behavior changes, implement the smallest change, and rerun the relevant suite. Keep streamed-text geometry stable.
+9. **Review the result.** Check the design contract, run the CLI audit when source artifacts exist, run `render_check.py` on each rendered page, and inspect the screenshots for responsive, keyboard, reduced-motion, loading, error, empty, and streamed states.
+10. **Verify before handoff.** Run fresh checks and report actual results. Never claim complete, accessible, or passing without evidence.
+11. **Handoff safely.** Report changed paths, commands, observed results, limitations, and any remaining user decision.
 
 ## Stop conditions
 

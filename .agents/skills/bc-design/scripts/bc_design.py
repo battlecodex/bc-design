@@ -428,6 +428,92 @@ def iter_source_files(target):
                 yield source_file
 
 
+MARKUP_EXTENSIONS = {".html", ".jsx", ".tsx", ".vue", ".svelte"}
+HIDDEN_MARKUP_RE = re.compile(r"<script\b.*?</script>|<style\b.*?</style>|<!--.*?-->", re.IGNORECASE | re.DOTALL)
+BUZZWORD_RE = re.compile(
+    r"\b(?:ai[- ]powered|next[- ]generation|revolutionary|revolutioni[sz]e[sd]?|seamless(?:ly)?|"
+    r"cutting[- ]edge|unlock|elevate|empower|unleash|supercharge|game[- ]changer|effortless(?:ly)?)\b",
+    re.IGNORECASE,
+)
+UNVERIFIED_CLAIM_RE = re.compile(
+    r"\b(?:soc ?2|iso ?27001|hipaa[- ]compliant|gdpr[- ]compliant|pci[- ]dss)\b|"
+    r"\b\d+(?:\.\d+)?% uptime\b|\b\d+x faster\b",
+    re.IGNORECASE,
+)
+GSAP_CALL_RE = re.compile(r"\bgsap\.(?:to|from|fromTo|timeline|set)\s*\(")
+GSAP_LAYOUT_TWEEN_RE = re.compile(
+    r"\bgsap\.(?:to|from|fromTo)\s*\([^;]*?\{[^{}]*?\b(?:width|height|top|left|right|bottom|margin\w*|padding\w*)\s*:",
+    re.DOTALL,
+)
+
+
+def visible_text(content, source_file):
+    """Return the human-readable copy of a markup file, or an empty string."""
+    if Path(source_file).suffix.lower() not in MARKUP_EXTENSIONS:
+        return ""
+    markup = HIDDEN_MARKUP_RE.sub(" ", content)
+    return "\n".join(segment for segment in re.findall(r">([^<>]+)<", markup) if segment.strip())
+
+
+def _craft_violations(content, source_file):
+    """Copy, honesty, and focus findings shared with the house luxury standard."""
+    violations = []
+    copy = visible_text(content, source_file)
+    if "\u2014" in copy:
+        violations.append((
+            "em-dash-copy",
+            "Rewrite interface copy without em dashes; use a period, comma, colon, or parentheses.",
+            source_file,
+        ))
+    if BUZZWORD_RE.search(copy):
+        violations.append((
+            "buzzword-copy",
+            "Replace marketing buzzwords with a specific statement of what the product does.",
+            source_file,
+        ))
+    if UNVERIFIED_CLAIM_RE.search(copy):
+        violations.append((
+            "unverified-claim",
+            "Remove compliance, uptime, or speed claims unless the product can show evidence for them.",
+            source_file,
+        ))
+    if re.search(r"<a\b[^>]*\bhref\s*=\s*[\"']#[\"']", content, re.IGNORECASE):
+        violations.append((
+            "dead-navigation-link",
+            "Point every link at a real page or section, or render the item as plain text until it exists.",
+            source_file,
+        ))
+    removes_outline = re.search(r"\boutline\s*:\s*(?:none|0)\b", content, re.IGNORECASE)
+    replaces_focus = re.search(r":focus-visible[^{}]*\{[^{}]*\b(?:outline|box-shadow)\s*:", content, re.IGNORECASE)
+    if removes_outline and not replaces_focus:
+        violations.append((
+            "focus-outline-removed",
+            "Replace a removed outline with a visible :focus-visible indicator in the same source.",
+            source_file,
+        ))
+    return violations
+
+
+def _gsap_violations(content, source_file):
+    """Reduced-motion and layout findings for GSAP-driven motion."""
+    if not GSAP_CALL_RE.search(content):
+        return []
+    violations = []
+    if not re.search(r"prefers-reduced-motion|reduceMotion|gsap\.matchMedia", content):
+        violations.append((
+            "gsap-reduced-motion",
+            "Wrap GSAP choreography in gsap.matchMedia with a prefers-reduced-motion branch.",
+            source_file,
+        ))
+    if GSAP_LAYOUT_TWEEN_RE.search(content):
+        violations.append((
+            "gsap-layout-property",
+            "Tween transforms and opacity with GSAP; animating layout properties causes reflow and jank.",
+            source_file,
+        ))
+    return violations
+
+
 def find_audit_violations(content, source_file):
     """Return explainable BC Design quality findings for one source file."""
     violations = []
@@ -604,6 +690,8 @@ def find_audit_violations(content, source_file):
             )
         )
     violations.extend(_motion_violations(content, source_file))
+    violations.extend(_craft_violations(content, source_file))
+    violations.extend(_gsap_violations(content, source_file))
     return violations
 
 
@@ -730,7 +818,7 @@ def main():
                     "warnings": sum(1 for finding in findings if finding["severity"] == "warning"),
                     "by_category": {
                         category: sum(1 for finding in findings if finding.get("category") == category)
-                        for category in ("identity", "hierarchy", "decoration", "copy", "motion", "accessibility")
+                        for category in ("identity", "hierarchy", "decoration", "copy", "content", "motion", "accessibility", "performance")
                         if any(finding.get("category") == category for finding in findings)
                     },
                 },

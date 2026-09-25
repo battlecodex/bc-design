@@ -60,6 +60,68 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
+## anti-slop
+
+- **Upstream:** https://github.com/miqdadbadjuber/anti-slop
+- **Used here:** the craft audit rules `em-dash-copy`, `buzzword-copy`, `unverified-claim`, `dead-navigation-link`, and `focus-outline-removed` in `scripts/bc_design.py` adapt its copywriting, honesty, navigation, and keyboard-focus rules.
+
+```
+MIT License
+
+Copyright (c) 2026 Miqdad Badjuber (antislop)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+## taste-skill
+
+- **Upstream:** https://github.com/Leonxlnx/taste-skill
+- **Used here:** the luxury standard in `references/visual-language.md` adapts its single-accent lock and its guidance on building hierarchy through weight and color instead of oversized headlines.
+
+```
+MIT License
+
+Copyright (c) 2026 Leonxlnx
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+## Acknowledgements
+
+The workflow's direction-commit step and the one-signature-moment principle are written for BC Design and informed by the `frontend-design` skill in [anthropics/skills](https://github.com/anthropics/skills) (Apache License 2.0). No text from that skill is included. GSAP, which the motion guidance recommends, is loaded by the consuming project under its own [standard license](https://gsap.com/standard-license); BC Design does not bundle it.
+
 ## Google Fonts metadata
 
 `data/google-fonts.csv` and `data/google-font-licenses.json` describe families from [google/fonts](https://github.com/google/fonts). The per-family license recorded in `google-font-licenses.json` is the source of truth for any font use; families may be licensed under the SIL Open Font License (OFL) or Apache License 2.0. Follow the applicable family license when distributing font files or generated assets.

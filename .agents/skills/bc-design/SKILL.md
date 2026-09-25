@@ -9,13 +9,13 @@ BC Design is a practical design-intelligence family for building clear, accessib
 
 ## Design foundation
 
-BC Design has a recognizable editorial language, not a mandatory theme. Start from the product subject and existing brand evidence, then express it through these defaults:
+BC Design is an opinionated house style: a warm, literary, editorial language with the calm of a well-made book. It is the default look for every surface unless the project has its own brand evidence. Within the house style, derive the accent, imagery, and signature moment from the product subject so two products never look identical. Read [references/visual-language.md](./references/visual-language.md) for the luxury standard that every page must meet.
 
 - **Composition:** use clear editorial hierarchy, open space, hairline borders, restrained radii, and a mix of open groups, lists, and anchored panels. Avoid turning every section into a rounded card.
-- **Color:** begin with warm or true neutral canvases and high-contrast ink. Draw one or two restrained accents from the subject. Parchment, terracotta, sage, and black are options—not automatic requirements—and an accent must not become a large default surface without evidence.
+- **Color:** the house canvas is warm parchment (`#FAF9F5` light, `#181816` dark) with high-contrast ink. Choose one accent from the house family by subject: terracotta (`#D97757`) by default, amber-brass for finance and craft, sage for health and nature. Lock that one accent for the whole page. Replace the house palette only when the project has its own brand colors. An accent never becomes a large default surface.
 - **Typography:** default to Newsreader for editorial hierarchy and Inter for UI clarity. Change the pairing when brand evidence or the product context calls for it; reserve monospace for code and tabular values.
-- **Contrast:** use tested foreground/background pairs grounded in the canonical high-contrast standard: primary actions default to solid ink `.bc-btn-contrast` (`#1F1E1B` with `#FFFFFF` text in light mode, `#FFFFFF` with `#1F1E1B` text in dark mode); accent/terracotta buttons use crisp white `#FFFFFF` text, never muddy dark ink.
-- **Motion:** use `cubic-bezier(0.16, 1, 0.3, 1)` with a 150–250ms budget for ordinary interactions. Honor reduced motion.
+- **Contrast:** use tested foreground/background pairs grounded in the canonical high-contrast standard: primary actions default to solid ink `.bc-btn-contrast` (`#1F1E1B` with `#FFFFFF` text in light mode, `#FFFFFF` with `#1F1E1B` text in dark mode); an accent-filled button uses the strong accent (`--bc-accent-strong`, `#B35637`) with white text. White on the signature `#D97757` measures only 3.12:1, so keep `#D97757` for non-text marks, large display type, and 3D light.
+- **Motion:** use `cubic-bezier(0.16, 1, 0.3, 1)` (GSAP `expo.out`) with a 150–250ms budget for ordinary interactions. Orchestrate multi-element sequences and scroll choreography with GSAP timelines; read [references/gsap-orchestration.md](./references/gsap-orchestration.md). Honor reduced motion.
 - **Streaming:** never animate container width, height, margin, or padding while AI text streams.
 - **Icons:** use 1.5px monoline icons, preferably Lucide, with visible focus states.
 
@@ -23,7 +23,7 @@ BC Design has a recognizable editorial language, not a mandatory theme. Start fr
 
 These are non-optional defaults for every BC Design implementation. Treat a deviation as a finding unless the user explicitly requests it and the design contract records the reason:
 
-- Primary action buttons follow the canonical high-contrast standard (`.bc-btn-contrast` or crisp `#FFFFFF` text on accent); never pair dark ink text on mid-tone accent/terracotta buttons.
+- Primary action buttons follow the canonical high-contrast standard (`.bc-btn-contrast`, or white text on `--bc-accent-strong`); never put button text on the mid-tone `#D97757`, in white or in dark ink.
 - Write metadata as labels or separate lines; do not use middle-dot separators (`A · B`).
 - Use meaningful action labels; do not append Unicode arrows to links or buttons.
 - Use purposeful 1.5px monoline SVG icons instead of Unicode glyphs for interface symbols.
@@ -63,10 +63,12 @@ Keep `bc-design` as the entrypoint for mixed or ambiguous requests. Sibling skil
 ## Progressive references
 
 - Read [references/bc-design-guidelines.md](./references/bc-design-guidelines.md) for subject grounding, hierarchy, copy, and distinctiveness checks.
-- Read [references/visual-language.md](./references/visual-language.md) when selecting typography, palette, shape, illustration, or layout direction.
+- Read [references/visual-language.md](./references/visual-language.md) for the house style, the luxury standard, and signature options before choosing typography, palette, shape, illustration, or layout.
+- Read [references/gsap-orchestration.md](./references/gsap-orchestration.md) when motion sequences several elements, follows scroll, or drives a 3D scene; reuse [assets/motion/bc-motion.js](./assets/motion/bc-motion.js).
 - Read [references/catalog-alignment.md](./references/catalog-alignment.md) when a catalog search or generated direction needs compatibility classification; automatic output is limited to `core` and `compatible` entries.
 - Read [references/ux-guidelines.md](./references/ux-guidelines.md) for accessibility, forms, motion, loading, and layout checks.
-- Read [references/spatial-3d.md](./references/spatial-3d.md) when building 3D product visualizations, scroll-driven exploded views, or interactive spatial artifacts.
+- Read [references/spatial-3d.md](./references/spatial-3d.md) when building 3D product visualizations, scroll-driven exploded views, or interactive spatial artifacts. [assets/motion/gsap-atelier.html](./assets/motion/gsap-atelier.html) is a complete page that pins and scrubs a 3D exploded view with GSAP.
+- Read [references/web-artifacts.md](./references/web-artifacts.md) when the deliverable is one shareable HTML file or a bundled React prototype.
 - Read the relevant guide in `stacks/` when implementing React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, or Tailwind.
 - Use [references/tokens.css](./references/tokens.css) as the canonical semantic token layer.
 
@@ -123,8 +125,12 @@ python .agents/skills/bc-design/scripts/bc_design.py --stack nextjs
 # Audit a source file or directory; exits 1 when findings exist
 python .agents/skills/bc-design/scripts/bc_design.py --audit path/to/source
 python .agents/skills/bc-design/scripts/bc_design.py --audit path/to/source --json
+
+# Render a page: screenshots at 375/768/1440px plus reduced motion, overflow,
+# console errors, alt text, and accessible names (needs Playwright)
+python .agents/skills/bc-design/scripts/render_check.py path/to/page.html --out render-check
 ```
 
 ## Delivery standard
 
-Before handoff, report the inspected artifacts, commands run, observed results, design-contract checks, unverified surfaces, and any remaining user decision. A clean CLI result is one signal, not proof that a rendered interface is accessible or correct.
+Before handoff, run the source audit and `render_check.py`, look at the screenshots, then report the inspected artifacts, commands run, observed results, design-contract checks, unverified surfaces, and any remaining user decision. A clean CLI result is one signal, not proof that a rendered interface is accessible or correct.

@@ -573,7 +573,7 @@ export const RibbonField: React.FC<RibbonFieldProps> = ({{
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BC Spatial — Ribbon Field ({pal['name']})</title>
+  <title>BC Spatial | Ribbon Field ({pal['name']})</title>
   <style>
     :root {{
       --bc-bg: {pal['bg']};
@@ -862,7 +862,7 @@ export const PredictiveArc: React.FC<PredictiveArcProps> = ({{
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BC Spatial — Predictive Arc ({pal['name']})</title>
+  <title>BC Spatial | Predictive Arc ({pal['name']})</title>
   <style>
     :root {{
       --bc-bg: {pal['bg']};

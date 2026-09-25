@@ -21,6 +21,7 @@
   --bc-accent-active: #AA4F32;    /* Pressed state */
   --bc-accent-subtle: #FDF3EE;    /* Soft terracotta tint for badges/highlights */
   --bc-accent-border: #F4D3C5;    /* Delicate border for active/highlighted items */
+  --bc-accent-strong: #B35637;    /* Text-bearing accent fills and accent text: 4.88:1 with white, 4.63:1 on parchment */
 
   /* Secondary Earth & Pastel Thumbnail Accents (Seen in Light Mode Learn Cards) */
   --bc-pastel-sage: #A8C2B7;      /* Sage / Eucalyptus green thumbnail */
@@ -107,9 +108,10 @@
   /* Terracotta in Dark Mode (Slightly boosted vibrancy) */
   --bc-accent: #E28466;
   --bc-accent-hover: #EA967B;
-  --bc-accent-active: #C15F3E;
+  --bc-accent-active: #AA4F32;
   --bc-accent-subtle: #34221A;
   --bc-accent-border: #4D2D20;
+  --bc-accent-strong: #B35637;
 
   /* Text & Ink */
   --bc-text-primary: #FAF9F5;     /* Warm off-white */
@@ -453,7 +455,7 @@
 
 /* 12. Artifact "Tweaks" Badge & Terracotta Popover (Screenshot 5) */
 .bc-badge-terracotta {
-  background: var(--bc-accent);
+  background: var(--bc-accent-strong);
   color: var(--bc-text-on-accent);
   font-size: 13px;
   font-weight: 500;
@@ -467,7 +469,7 @@
 }
 
 .bc-badge-terracotta:hover {
-  background: var(--bc-accent-hover);
+  background: var(--bc-accent-active);
 }
 
 .bc-popover-box {
@@ -492,8 +494,13 @@
   box-shadow: 0 0 0 2px rgba(217, 119, 87, 0.15);
 }
 
+.bc-input-terracotta:focus-visible {
+  outline: 2px solid var(--bc-accent-strong);
+  outline-offset: 2px;
+}
+
 .bc-btn-terracotta {
-  background: var(--bc-accent);
+  background: var(--bc-accent-strong);
   color: var(--bc-text-on-accent);
   border: none;
   padding: 8px 18px;
@@ -505,7 +512,7 @@
 }
 
 .bc-btn-terracotta:hover {
-  background: var(--bc-accent-hover);
+  background: var(--bc-accent-active);
 }
 
 /* Respect user motion preferences across every BC utility. */
