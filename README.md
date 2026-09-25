@@ -2,21 +2,23 @@
 
 > An open-source, universal design intelligence engine for clear, accessible, subject-grounded interfaces.
 > Built from practical building blocks: **88 visual styles, 192 palettes, 74 typography pairings, 25 chart patterns, 119 UX checks, 22 searchable stack catalogs (8 focused guides), 31 spatial-effect references, design tokens, component contracts, and streaming-safe interaction guidance**.
+> The catalog data derives from [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) and the spatial generators adapt [ThreeUI](https://github.com/MengTo/threeui), both MIT; see [Third-party notices](./THIRD_PARTY_NOTICES.md).
 
 ---
 
-## 🚀 9-Assistant Multi-Runtime Support
+## 🚀 10-Assistant Multi-Runtime Support
 
 Installable into any AI workflow with zero configuration:
 
 | AI Assistant / Runtime | Integration Type | Workspace Target File | Install Flag |
 | :--- | :---: | :--- | :--- |
 | **BC Design Code** | ✅ Native / CLI | `BC.md` + `.bc/skills/bc-design/` | `--ai bc` |
+| **Claude Code** | ✅ Native Skill | `.claude/skills/bc-design/` + `CLAUDE.md` | `--ai claude` |
 | **Cursor IDE** | ✅ MDC Rule + Legacy | `.cursor/rules/bc-design.mdc` + `.cursorrules` | `--ai cursor` |
 | **Windsurf** | ✅ Cascade Rules | `.windsurfrules` | `--ai windsurf` |
 | **Google Antigravity** | ✅ Native Skill | `.agents/skills/bc-design/` + `GEMINI.md` | `--ai antigravity` |
 | **GitHub Copilot** | ✅ Custom Instructions | `.github/copilot-instructions.md` | `--ai copilot` |
-| **Kiro** | ✅ Rules & Workflows | `.kiro/rules/bc-design.md` | `--ai kiro` |
+| **Kiro** | ✅ Native Skill + Steering | `.kiro/skills/bc-design/` + `.kiro/steering/bc-design.md` | `--ai kiro` |
 | **Codex / Copilot CLI** | ✅ Agent Mandate | `AGENTS.md` + `.agents/skills/bc-design/` | `--ai codex` |
 | **Qoder** | ✅ Rules Config | `.qoder/rules/bc-design.md` | `--ai qoder` |
 | **VS Code** | ✅ Workspace Settings | `.vscode/settings.json` + Copilot rules | `--ai vscode` |
@@ -27,6 +29,7 @@ Run the bundled zero-dependency Python installer:
 ```bash
 # Install for a specific assistant
 py -3 scripts/install.py --ai bc
+py -3 scripts/install.py --ai claude
 py -3 scripts/install.py --ai cursor
 py -3 scripts/install.py --ai windsurf
 py -3 scripts/install.py --ai antigravity
@@ -36,11 +39,17 @@ py -3 scripts/install.py --ai codex
 py -3 scripts/install.py --ai qoder
 py -3 scripts/install.py --ai vscode
 
-# Or install for ALL 9 assistants at once
+# Or install for ALL 10 assistants at once
 py -3 scripts/install.py --ai all
 ```
 
-Validate repository integrity, skill mirror parity, and catalog consistency:
+The files in `adapters/` show what each runtime receives. They are generated from the installer, so edit `install.py` and regenerate them instead of editing them by hand:
+
+```bash
+py -3 scripts/sync_adapters.py
+```
+
+Validate repository integrity, skill mirror parity, adapter parity, and catalog consistency:
 
 ```bash
 py -3 scripts/validate.py
@@ -228,4 +237,4 @@ Explore selected bundled standalone HTML examples:
 
 ## 📄 License
 
-[MIT License](./LICENSE) © 2026 for original BC Design code and documentation. Bundled Google Fonts and Phosphor reference metadata retain their upstream terms; see [Third-party notices](./THIRD_PARTY_NOTICES.md).
+[MIT License](./LICENSE) © 2026 for original BC Design code and documentation. The catalog data derived from UI UX Pro Max (MIT, © 2024 Next Level Builder), the spatial architecture adapted from ThreeUI (MIT, © 2026 Meng To), and the bundled Google Fonts and Phosphor reference metadata retain their upstream terms; see [Third-party notices](./THIRD_PARTY_NOTICES.md).

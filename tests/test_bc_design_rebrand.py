@@ -23,6 +23,12 @@ LEGACY_TERMS = (
     "anti[- ]?sl" + "op",
 )
 FORBIDDEN = re.compile("|".join(LEGACY_TERMS), re.IGNORECASE)
+# Install targets name the host tool a runtime writes to; they are not branding.
+RUNTIME_TARGET_REFERENCES = re.compile(r'[`"]claude[`"]|\.claude/skills|CLAUDE\.md')
+
+
+def without_runtime_targets(text):
+    return RUNTIME_TARGET_REFERENCES.sub("", text)
 
 
 class BCDesignRebrandTests(unittest.TestCase):
@@ -34,7 +40,7 @@ class BCDesignRebrandTests(unittest.TestCase):
                 skill = skill_file.read_text(encoding="utf-8")
                 self.assertIn(f"name: {skill_name}", skill)
                 self.assertRegex(skill, r"description:\s*Use when")
-                self.assertNotRegex(skill, FORBIDDEN)
+                self.assertNotRegex(without_runtime_targets(skill), FORBIDDEN)
 
     def test_router_names_every_specialized_skill_without_copying_catalogs(self):
         router = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -53,7 +59,7 @@ class BCDesignRebrandTests(unittest.TestCase):
         skill = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("name: bc-design", skill)
         self.assertIn("BC Design", skill)
-        self.assertNotRegex(skill, FORBIDDEN)
+        self.assertNotRegex(without_runtime_targets(skill), FORBIDDEN)
 
     def test_active_skill_contains_no_legacy_brand_or_process_terms(self):
         self.assertTrue(SKILL_ROOT.is_dir())
@@ -65,7 +71,7 @@ class BCDesignRebrandTests(unittest.TestCase):
                 text = path.read_text(encoding="utf-8")
             except UnicodeDecodeError:
                 continue
-            if FORBIDDEN.search(text) or FORBIDDEN.search(path.name):
+            if FORBIDDEN.search(without_runtime_targets(text)) or FORBIDDEN.search(path.name):
                 offenders.append(str(path.relative_to(ROOT)))
         self.assertEqual(offenders, [], f"legacy terms remain in: {offenders}")
 
@@ -84,7 +90,7 @@ class BCDesignRebrandTests(unittest.TestCase):
         self.assertTrue(installer.exists())
         self.assertIn("--brand-guidelines", cli.read_text(encoding="utf-8"))
         self.assertIn("bc-design", installer.read_text(encoding="utf-8"))
-        self.assertNotRegex(installer.read_text(encoding="utf-8"), FORBIDDEN)
+        self.assertNotRegex(without_runtime_targets(installer.read_text(encoding="utf-8")), FORBIDDEN)
 
     def test_repository_entrypoint_delegates_to_bc_cli(self):
         entrypoint = ROOT / "scripts" / "bc_design.py"

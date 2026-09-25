@@ -1,5 +1,5 @@
 # BC Design System - Universal Multi-Runtime Installer for Windows (PowerShell)
-# Supports BC Design Code, Cursor, Windsurf, Antigravity, GitHub Copilot, Kiro, Codex, Qoder, VS Code
+# Supports BC Design Code, Claude Code, Cursor, Windsurf, Antigravity, GitHub Copilot, Kiro, Codex, Qoder, VS Code
 
 param (
     [string]$Ai = "all",

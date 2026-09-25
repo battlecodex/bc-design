@@ -20,6 +20,7 @@ SKILL_FAMILY = (
 )
 RUNTIMES = (
     "bc",
+    "claude",
     "cursor",
     "windsurf",
     "antigravity",
@@ -41,22 +42,47 @@ Workflow reference: `.agents/skills/bc-design/references/bc-design-workflow.md`
 CLI: `python .agents/skills/bc-design/scripts/bc_design.py`
 """
 
-BC_INSTRUCTION = INSTRUCTION.replace(
-    ".agents/skills/bc-design",
-    ".bc/skills/bc-design",
-)
+CANONICAL_SKILLS_DIR = ".agents/skills"
+VSCODE_SETTINGS = ".vscode/settings.json"
+VSCODE_INSTRUCTION_KEY = "bcDesign.instructions"
+VSCODE_INSTRUCTION = f"Use {CANONICAL_SKILLS_DIR}/bc-design/SKILL.md for interface guidance."
+
+# Runtimes that discover skills natively outside the shared .agents directory.
+RUNTIME_SKILLS_DIRS = {
+    "bc": ".bc/skills",
+    "claude": ".claude/skills",
+    "kiro": ".kiro/skills",
+}
 
 RUNTIME_TARGETS = {
     "bc": ("BC.md",),
+    "claude": ("CLAUDE.md",),
     "cursor": (".cursor/rules/bc-design.mdc", ".cursorrules"),
     "windsurf": (".windsurfrules",),
     "antigravity": ("GEMINI.md",),
     "copilot": (".github/copilot-instructions.md",),
-    "kiro": (".kiro/rules/bc-design.md",),
+    "kiro": (".kiro/steering/bc-design.md",),
     "codex": ("AGENTS.md",),
     "qoder": (".qoder/rules/bc-design.md",),
-    "vscode": (".vscode/settings.json", ".github/copilot-instructions.md"),
+    "vscode": (VSCODE_SETTINGS, ".github/copilot-instructions.md"),
 }
+
+
+def skills_dir_for(runtime):
+    return RUNTIME_SKILLS_DIRS.get(runtime, CANONICAL_SKILLS_DIR)
+
+
+def instruction_for(runtime):
+    """Point the instruction at the skill directory this runtime installs."""
+    return INSTRUCTION.replace(f"{CANONICAL_SKILLS_DIR}/", f"{skills_dir_for(runtime)}/")
+
+
+def render_target(runtime, relative_path):
+    """Return the content a fresh install writes to one runtime target."""
+    if relative_path == VSCODE_SETTINGS:
+        settings = {VSCODE_INSTRUCTION_KEY: VSCODE_INSTRUCTION}
+        return json.dumps(settings, indent=2, ensure_ascii=False) + "\n"
+    return instruction_for(runtime)
 
 
 def _write_text(path, content, force=False):
@@ -80,10 +106,7 @@ def _write_vscode_settings(path, force=False):
             settings = {}
     if not isinstance(settings, dict):
         raise ValueError(f"Existing VS Code settings must be a JSON object: {path}")
-    settings.setdefault(
-        "bcDesign.instructions",
-        "Use .agents/skills/bc-design/SKILL.md for interface guidance.",
-    )
+    settings.setdefault(VSCODE_INSTRUCTION_KEY, VSCODE_INSTRUCTION)
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists() and not force:
         print(f"[-] Preserved existing file: {path}")
@@ -140,18 +163,14 @@ def install_runtime(runtime, workspace, force=False):
 
     for relative_path in RUNTIME_TARGETS[runtime]:
         destination = workspace / relative_path
-        if relative_path == ".vscode/settings.json":
+        if relative_path == VSCODE_SETTINGS:
             _write_vscode_settings(destination, force=force)
         else:
-            instruction = BC_INSTRUCTION if runtime == "bc" else INSTRUCTION
-            _write_text(destination, instruction, force=force)
+            _write_text(destination, instruction_for(runtime), force=force)
 
-    if runtime == "bc":
-        _copy_skill_family(workspace / ".bc" / "skills", force=force)
-    else:
-        # Every non-BC instruction points at the workspace .agents router.
-        # Install the complete family so a fresh workspace is self-contained.
-        _copy_skill_family(workspace / ".agents" / "skills", force=force)
+    # Install the complete family where the instruction points so a fresh
+    # workspace is self-contained.
+    _copy_skill_family(workspace / skills_dir_for(runtime), force=force)
 
 
 def main(argv=None):

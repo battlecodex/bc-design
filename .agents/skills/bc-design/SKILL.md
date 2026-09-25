@@ -88,7 +88,7 @@ Keep `bc-design` as the entrypoint for mixed or ambiguous requests. Sibling skil
 python .agents/skills/bc-design/scripts/install.py --ai all --workspace .
 ```
 
-The installer is non-destructive by default. Add `--force` only when generated instruction files or the bundled skill directory should be replaced. Supported runtimes are `bc`, `cursor`, `windsurf`, `antigravity`, `copilot`, `kiro`, `codex`, `qoder`, and `vscode`.
+The installer is non-destructive by default. Add `--force` only when generated instruction files or the bundled skill directory should be replaced. Supported runtimes are `bc`, `claude`, `cursor`, `windsurf`, `antigravity`, `copilot`, `kiro`, `codex`, `qoder`, and `vscode`. The `claude` and `kiro` runtimes install the family into `.claude/skills/` and `.kiro/skills/`, where those tools discover skills natively; the other runtimes share `.agents/skills/`.
 
 ## CLI
 

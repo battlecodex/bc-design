@@ -339,13 +339,16 @@ class BCDesignTests(unittest.TestCase):
         documented_targets = [
             "BC.md",
             ".bc/skills/bc-design/SKILL.md",
+            "CLAUDE.md",
+            ".claude/skills/bc-design/SKILL.md",
             ".cursor/rules/bc-design.mdc",
             ".cursorrules",
             ".windsurfrules",
             ".agents/skills/bc-design/SKILL.md",
             "GEMINI.md",
             ".github/copilot-instructions.md",
-            ".kiro/rules/bc-design.md",
+            ".kiro/steering/bc-design.md",
+            ".kiro/skills/bc-design/SKILL.md",
             "AGENTS.md",
             ".qoder/rules/bc-design.md",
             ".vscode/settings.json",
@@ -410,8 +413,34 @@ class BCDesignTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tempdir:
             completed = run_installer("--ai", "kiro", "--workspace", tempdir)
             self.assertEqual(completed.returncode, 0, completed.stderr)
-            target = Path(tempdir) / ".kiro" / "rules" / "bc-design.md"
+            target = Path(tempdir) / ".kiro" / "steering" / "bc-design.md"
             self.assertIn("bc-design-workflow.md", target.read_text(encoding="utf-8"))
+
+    def test_native_skill_runtimes_install_family_where_instruction_points(self):
+        cases = {
+            "claude": ("CLAUDE.md", ".claude/skills"),
+            "kiro": (".kiro/steering/bc-design.md", ".kiro/skills"),
+            "codex": ("AGENTS.md", ".agents/skills"),
+            "antigravity": ("GEMINI.md", ".agents/skills"),
+        }
+        for runtime, (instruction_file, skills_dir) in cases.items():
+            with self.subTest(runtime=runtime), tempfile.TemporaryDirectory() as tempdir:
+                completed = run_installer("--ai", runtime, "--workspace", tempdir)
+                self.assertEqual(completed.returncode, 0, completed.stderr)
+                instruction = (Path(tempdir) / instruction_file).read_text(encoding="utf-8")
+                self.assertIn(f"{skills_dir}/bc-design/SKILL.md", instruction)
+                for skill_name in ("bc-design", "bc-brand", "bc-design-system", "bc-ui-styling", "bc-design-audit", "bc-motion"):
+                    self.assertTrue((Path(tempdir) / skills_dir / skill_name / "SKILL.md").is_file(), skill_name)
+                self.assertTrue((Path(tempdir) / skills_dir / "bc-design" / "THIRD_PARTY_NOTICES.md").is_file())
+
+    def test_adapters_match_installer_output(self):
+        completed = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "sync_adapters.py"), "--check"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stdout)
 
     def test_documentation_uses_existing_workspace_relative_commands(self):
         text = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")

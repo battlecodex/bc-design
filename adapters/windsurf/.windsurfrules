@@ -1,34 +1,9 @@
-# Windsurf Cascade Rules: BC Design System
+# BC Design System
 
-You are an expert UI/UX developer adhering strictly to the **BC Design language**.
+Use BC Design for interface work. Start with the `bc-design` router, then use the narrowest sibling skill when one capability dominates: `bc-brand`, `bc-design-system`, `bc-ui-styling`, `bc-design-audit`, or `bc-motion`. Select the appropriate mode (greenfield, redesign, restyling, design audit, or distinctive review) and follow its quality gates for baseline, approval, implementation, and verification.
 
-## Design Guidelines
-1. **Parchment Atmosphere**:
-   - Canvas: Warm fine-book parchment `#FAF9F5` (light) / Espresso soot `#181816` (dark).
-   - Surfaces: Pure white `#FFFFFF` cards with hairline border `rgba(31, 30, 27, 0.08)`.
-   - Never use cold Tailwind slate `#0F172A` or generic purple/blue gradients.
-2. **Color & Button Hierarchy**:
-   - Primary Accent: Terracotta `#D97757` (active `#C15F3E`).
-   - Modal Primary CTA in Dark Mode: Solid Crisp White `#FFFFFF` with dark text `#1F1E1B`.
-   - Modal Secondary CTA: Dark translucent glass `rgba(255, 255, 255, 0.09)`.
-3. **Typography**:
-   - Headings: Serif (`Newsreader`, with a system fallback).
-   - Interface / Body: Neutral Sans (`Inter`, with a system fallback).
-   - Code: Monospace (`JetBrains Mono`, `Fira Code`).
-4. **Motion & Interaction**:
-   - Motion easing: `cubic-bezier(0.16, 1, 0.3, 1)`.
-   - Micro: 150ms | Cards: 250ms | Drawers: 400ms.
-   - Streaming rule: Never animate container width/height while AI tokens stream.
-5. **Icons & Artwork**:
-   - Icons: 1.5px monoline stroke (`lucide-react` with `strokeWidth={1.5}`).
-   - Organic artwork: Asymmetrical terracotta thought bubbles with white crayon squiggles.
+Follow the project's subject-grounded palette, quality rules, accessible interactions, stable streaming layout, calm motion, and active-voice copy guidance. Sibling skills share the BC catalogs and must not invent a second source of truth.
 
-## Design Intelligence Commands
-Query the design system for guidance:
-- Design System: `py -3 scripts/bc_design.py "<query>" --design-system`
-- Styles: `py -3 scripts/bc_design.py "canonical" --domain style`
-- Palettes: `py -3 scripts/bc_design.py "saas" --domain color`
-- Typography: `py -3 scripts/bc_design.py "canonical" --domain typography`
-- Charts: `py -3 scripts/bc_design.py "area" --domain chart`
-- Landing: `py -3 scripts/bc_design.py "hero prompt" --domain landing`
-- UX: `py -3 scripts/bc_design.py "animation" --domain ux`
+Router reference: `.agents/skills/bc-design/SKILL.md`
+Workflow reference: `.agents/skills/bc-design/references/bc-design-workflow.md`
+CLI: `python .agents/skills/bc-design/scripts/bc_design.py`

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # BC Design System - Universal Multi-Runtime Installer for Linux / macOS / WSL
-# Supports BC Design Code, Cursor, Windsurf, Antigravity, GitHub Copilot, Kiro, Codex, Qoder, VS Code
+# Supports BC Design Code, Claude Code, Cursor, Windsurf, Antigravity, GitHub Copilot, Kiro, Codex, Qoder, VS Code
 
 AI_TOOL="${1:-all}"
 TARGET_DIR="${2:-.}"

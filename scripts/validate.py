@@ -7,6 +7,8 @@ Validates:
 2. Complete byte-for-byte parity between .agents/skills/ and .bc/skills/.
 3. Presence and integrity of internal spatial assets and runnable generators.
 4. Non-existence of binary ZIP archives, caches, or machine-specific paths.
+5. Runtime instruction files in adapters/ and the root match install.py output.
+6. Upstream notices ship inside the installed skill directory.
 """
 
 from __future__ import annotations
@@ -22,6 +24,8 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILL_DIR = ROOT / ".agents" / "skills" / "bc-design"
 sys.path.insert(0, str(SKILL_DIR / "scripts"))
 from normalize_catalog import build_report  # noqa: E402
+sys.path.insert(0, str(ROOT / "scripts"))
+import sync_adapters  # noqa: E402
 from spatial import SPATIAL_GENERATOR_PRESETS, SPATIAL_PRESET_ALIASES  # noqa: E402
 
 EXCLUDED_SUFFIXES = {".pyc", ".pyo"}
@@ -176,6 +180,16 @@ def validate_spatial_assets() -> list[str]:
     return errors
 
 
+def validate_third_party_notices() -> list[str]:
+    """Verify the MIT notices for bundled upstream material travel with installs."""
+    notices = SKILL_DIR / "THIRD_PARTY_NOTICES.md"
+    if not notices.is_file():
+        return [f"Third-party notices missing from skill directory: {notices.relative_to(ROOT)}"]
+    text = notices.read_text(encoding="utf-8")
+    required = ("Copyright (c) 2024 Next Level Builder", "Copyright (c) 2026 Meng To")
+    return [f"Third-party notices missing '{notice}'" for notice in required if notice not in text]
+
+
 def validate_brand_and_clean_paths() -> list[str]:
     """Verify no banned legacy brand strings or local machine paths exist in public skill files."""
     errors: list[str] = []
@@ -215,6 +229,8 @@ def validate_all(fix: bool = False) -> list[str]:
     errors.extend(validate_prohibited_artifacts())
     errors.extend(validate_spatial_assets())
     errors.extend(validate_brand_and_clean_paths())
+    errors.extend(sync_adapters.check())
+    errors.extend(validate_third_party_notices())
     return errors
 
 
