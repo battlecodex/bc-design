@@ -11,6 +11,7 @@ Use this reference after selecting a mode in `SKILL.md`. The workflow keeps visu
 | Restyling | Structure and behavior stay stable while visual language changes | Token/component restyle with frozen invariants |
 | Design audit | The user asks whether an interface is usable, accessible, consistent, responsive, or performant | Prioritized findings with evidence and remediation guidance |
 | Distinctive review | The user asks whether a design feels generic or disconnected from its subject | Subject-grounded pattern review with a clear verdict |
+| Study | The user shares a URL or screenshot of a design they admire and wants its direction | Diagnosis of structure and tokens mapped onto BC roles, following [project-memory.md](./project-memory.md) § Study |
 
 Do not silently change modes. If a redesign reveals a new product surface, reclassify that surface as greenfield. If a restyle needs interaction or layout changes, record the scope expansion and obtain approval.
 
@@ -19,6 +20,7 @@ Do not silently change modes. If a redesign reveals a new product surface, recla
 Each mode uses the same quality gate: baseline, approved design contract, implementation evidence, and verification report.
 There is no unconditional pass: a clean checklist still requires evidence from the relevant rendered states.
 
+0. **Run pre-flight.** Run `project.py preflight`. Read `DESIGN.md` first when it exists, show the findings with what will be preserved, and check `project.py log` before choosing a signature moment. See [project-memory.md](./project-memory.md).
 1. **Frame the request.** Capture product, audience, context, platform, stack, existing artifacts, constraints, and success criteria. State assumptions that could affect direction.
 2. **Establish the baseline.** For new work, baseline means the brief and subject matter. For existing work, inspect files, routes, tokens, screenshots, responsive states, and known defects.
 3. **Commit to one direction.** Before writing code, state in two or three sentences the subject, the house accent chosen for it, and the one signature moment (a spatial 3D stage, an orchestrated sequence, a scroll narrative, or editorial imagery). Name what the page will deliberately leave out. A direction that could describe any product is not a direction.
@@ -29,7 +31,7 @@ There is no unconditional pass: a clean checklist still requires evidence from t
 8. **Implement in small slices.** Update shared tokens and components before one-off screens. Write a failing test for behavior changes, implement the smallest change, and rerun the relevant suite. Keep streamed-text geometry stable.
 9. **Review the result.** Check the design contract, run the CLI audit when source artifacts exist, run `render_check.py` on each rendered page, and inspect the screenshots for responsive, keyboard, reduced-motion, loading, error, empty, and streamed states.
 10. **Verify before handoff.** Run fresh checks and report actual results. Never claim complete, accessible, or passing without evidence.
-11. **Handoff safely.** Report changed paths, commands, observed results, limitations, and any remaining user decision.
+11. **Handoff safely.** Report changed paths, commands, observed results, limitations, and any remaining user decision. Record the build with `project.py record`, and when no `DESIGN.md` exists, offer in one line to lock the system; write it only if the user agrees.
 
 ## Stop conditions
 

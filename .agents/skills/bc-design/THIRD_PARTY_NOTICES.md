@@ -118,6 +118,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
+## Hallmark
+
+- **Upstream:** https://github.com/Nutlope/hallmark
+- **Used here:** the project-memory workflow in `references/project-memory.md`, `scripts/project.py`, and `scripts/study.py` adapts Hallmark's approach: a pre-flight scan that reads a root `DESIGN.md` first, an opt-in and never-overwritten `DESIGN.md` lock with token exports, a build log that rotates unrelated work, and a study mode that extracts structure and tokens from a reference without copying it. The text and code are written for BC Design.
+
+```
+MIT License
+
+Copyright (c) 2026 Hallmark contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
 ## Acknowledgements
 
 The workflow's direction-commit step and the one-signature-moment principle are written for BC Design and informed by the `frontend-design` skill in [anthropics/skills](https://github.com/anthropics/skills) (Apache License 2.0). No text from that skill is included. GSAP, which the motion guidance recommends, is loaded by the consuming project under its own [standard license](https://gsap.com/standard-license); BC Design does not bundle it.

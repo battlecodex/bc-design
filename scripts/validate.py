@@ -153,6 +153,7 @@ def validate_third_party_notices() -> list[str]:
         "Copyright (c) 2026 Meng To",
         "Copyright (c) 2026 Miqdad Badjuber (antislop)",
         "Copyright (c) 2026 Leonxlnx",
+        "Copyright (c) 2026 Hallmark contributors",
     )
     return [f"Third-party notices missing '{notice}'" for notice in required if notice not in text]
 

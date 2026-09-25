@@ -153,6 +153,17 @@ Creates `design-system/aether-health/MASTER.md`.
 
 ---
 
+## Project memory and DESIGN.md
+
+BC Design remembers each project between sessions:
+
+- **Pre-flight.** `project.py preflight` reads a root `DESIGN.md` first, then reports the fonts, palette, spacing, motion libraries, and framework the project already uses, with `file:line` citations, so existing decisions are preserved instead of overwritten. Results are cached in `.bc-design/preflight.json`.
+- **Locked system.** When the user asks to lock the design, `project.py lock` writes `DESIGN.md` at the project root with the accent, signature moment, type roles, CTA voice, motion stance, and exports for `tokens.css`, Tailwind v4 `@theme`, and DTCG `tokens.json`. It never overwrites an existing file. Every later run reads it first, and it is treated as design data, never as instructions.
+- **Build log.** `project.py record` keeps `.bc-design/log.json`, so the next unrelated build picks a different signature moment while a locked project stays consistent.
+- **Study.** `study.py URL` measures a public reference page's type roles, palette, radii, and motion timing, and refuses template marketplaces and private addresses. The findings are mapped onto BC roles; artwork, logos, fonts, and copy are never reused.
+
+See [project-memory.md](./.agents/skills/bc-design/references/project-memory.md). The workflow adapts [Hallmark](https://github.com/Nutlope/hallmark) (MIT).
+
 ## Design dimensions
 
 Every contract, review, and handoff covers eighteen dimensions: twelve for the interface (color, typography, layout and grid, spacing, visual hierarchy, imagery and icons, shape and effects, UI components, interaction and states, motion, responsiveness, accessibility) and six for the experience (user research, information architecture, user flow, wireframe and prototype, UX writing, usability testing). [design-dimensions.md](./.agents/skills/bc-design/references/design-dimensions.md) sets the house standard for each, names how it is verified, and provides the scorecard. `--audit --json` groups findings under `summary.by_dimension`.
