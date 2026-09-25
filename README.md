@@ -67,11 +67,34 @@ Use `bc-design` as the router for mixed requests, or invoke the narrowest entryp
 
 All siblings share the router's local catalogs and CLI. They do not create duplicate data sources.
 
+### Modes and when it acts
+
+The router classifies every request into one mode before choosing a visual direction:
+
+| Mode | Use when | First artifact |
+| :--- | :--- | :--- |
+| **Greenfield** | Creating a new interface or product surface | Brief and a recorded design contract |
+| **Redesign** | Improving an existing interface while preserving useful behavior | Baseline inventory and invariants |
+| **Restyling** | Changing visual language without changing behavior or information architecture | Semantic token map and frozen invariants |
+| **Design audit** | Reviewing usability, accessibility, responsive quality, or consistency | Evidence-backed findings |
+| **Distinctive review** | Checking whether a design feels generic or disconnected from its subject | Per-pattern evidence and a prioritized verdict |
+| **Study** | The user shares a URL or screenshot of a design they admire | A diagnosis mapped onto BC roles |
+| **Prune** | The user wants to slim a project's design code | A numbered report; only approved numbers are removed |
+
+A request to build, redesign, or restyle is approval to change the visuals. The agent picks the direction and the components, implements them, verifies the result, and explains its choices in the handoff, without stopping for sign-off on visual decisions. It asks first, in one short question at the end, only before it would:
+
+- add a package to `package.json` or another manifest;
+- change behavior or content, such as a flow, navigation, data, or existing copy;
+- delete files, including prune findings;
+- use a paid component or an asset whose license is unclear.
+
+Questions, reviews, and audits change nothing. When you ask for a plan or options first, the agent gives them and waits.
+
 | Feature Dimension | Generic starting point | BC Design System |
 | :--- | :--- | :--- |
 | **Aesthetic Craft** | Generic Tailwind / shadcn styling. Tends to generate stereotypical AI purple/blue gradients and cold enterprise gray. | **A warm editorial house style held to a luxury standard**: parchment and ink, one subject-chosen accent, generous space, Newsreader display type, hairline borders, and one signature moment per page. |
 | **Visual Assets & Illustrations** | Text descriptions and ASCII tables only. No visual illustrations. | **Real Hand-Drawn SVG Crayon Artwork** (tactile thought bubbles with chalk squiggles) + **10 bundled HTML examples**, including spatial product stages and shader studies. |
-| **AI / LLM Specific UX** | Standard web UX rules only. No LLM-specific safeguards. | **Streaming Token Isolation** (never animate container dimensions during generation to prevent layout thrashing), Thinking Pulse ambient glow, artifact drawers. |
+| **AI / LLM Specific UX** | Standard web UX rules only. No LLM-specific safeguards. | **Streaming Token Isolation** (never animate container dimensions during generation to prevent layout thrashing), a calm thinking pulse that respects reduced motion, artifact drawers. |
 | **Typography Intelligence** | Basic font suggestions without optical sizing. | **Optical Sizing (`opsz: 72`) Newsreader** paired with clean `Inter` and `JetBrains Mono`. Includes Google Fonts drop-in and Tailwind config. |
 | **Button Hierarchy & Contrast** | Often uses saturated colored buttons everywhere. | **BC Design hierarchy**: solid ink primary actions (white in dark mode); accent-filled buttons use the strong terracotta `#B35637` so white text passes WCAG AA. |
 | **Multi-Framework Depth** | Summaries for React/Tailwind. | **22 searchable stack catalogs** plus **8 focused implementation guides** for common web and native stacks. |
@@ -121,7 +144,7 @@ py -3 scripts/bc_design.py "Build a fintech wealth management dashboard" --desig
 |     Directives: Natural sentence case. No tracked-out ALL-CAPS eyebrows.               |
 |                                                                                        |
 |  SPACING SCALE:   Standard BC Design: 16px base, 24px card gap, 48px section padding   |
-|  MOTION DYNAMICS: Standard BC Design: 150ms buttons, 250ms cards, 1800ms thinking pulse, cubic-bezier(0.16, 1, 0.3, 1)|
+|  MOTION DYNAMICS: Standard BC Design: 150ms buttons, 250ms cards, 600ms once-only reveals, 1800ms thinking pulse, cubic-bezier(0.16, 1, 0.3, 1)|
 |                                                                                        |
 |  BC DESIGN QUALITY SAFEGUARDS:                                                         |
 |     [ ] Automatic suggestions use core/compatible catalog entries only                 |
@@ -277,4 +300,4 @@ Explore selected bundled standalone HTML examples:
 
 ## 📄 License
 
-[MIT License](./LICENSE) © 2026 for original BC Design code and documentation. The catalog data derived from UI UX Pro Max (MIT, © 2024 Next Level Builder), the spatial architecture adapted from ThreeUI (MIT, © 2026 Meng To), the craft rules adapted from anti-slop (MIT, © 2026 Miqdad Badjuber) and taste-skill (MIT, © 2026 Leonxlnx), and the Google Fonts metadata and Phosphor icon references retain their upstream terms; see [Third-party notices](./THIRD_PARTY_NOTICES.md).
+[MIT License](./LICENSE) © 2026 for original BC Design code and documentation. The catalog data derived from UI UX Pro Max (MIT, © 2024 Next Level Builder), the spatial architecture adapted from ThreeUI (MIT, © 2026 Meng To), the craft rules adapted from anti-slop (MIT, © 2026 Miqdad Badjuber) and taste-skill (MIT, © 2026 Leonxlnx), the project-memory workflow adapted from Hallmark (MIT, © 2026 Hallmark contributors), and the Google Fonts metadata and Phosphor icon references retain their upstream terms; see [Third-party notices](./THIRD_PARTY_NOTICES.md).

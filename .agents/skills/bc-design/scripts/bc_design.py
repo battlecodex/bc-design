@@ -181,7 +181,7 @@ def generate_design_system(query, project_name=None, variance=None, motion=None,
     elif motion and motion <= 3:
         motion_desc = "Subtle: 150ms micro-interactions only, zero non-functional motion, reduced-motion strictly honored"
     else:
-        motion_desc = "Standard BC Design: 150ms buttons, 250ms cards, 1800ms thinking pulse, cubic-bezier(0.16, 1, 0.3, 1)"
+        motion_desc = "Standard BC Design: 150ms buttons, 250ms cards, 600ms once-only reveals, 1800ms thinking pulse, cubic-bezier(0.16, 1, 0.3, 1)"
 
     typography_lines = [
         f"|     Headline: {heading_font}".ljust(89) + "|",
