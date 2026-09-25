@@ -24,7 +24,7 @@ LEGACY_TERMS = (
 )
 FORBIDDEN = re.compile("|".join(LEGACY_TERMS), re.IGNORECASE)
 # Install targets name the host tool a runtime writes to; they are not branding.
-RUNTIME_TARGET_REFERENCES = re.compile(r'[`"]claude[`"]|\.claude/skills|CLAUDE\.md')
+RUNTIME_TARGET_REFERENCES = re.compile(r'[`"]claude[`"]|\.claude\b|CLAUDE\.md')
 
 
 def without_runtime_targets(text):

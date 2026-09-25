@@ -67,6 +67,15 @@ class PreflightTests(unittest.TestCase):
         self.assertEqual(findings["tokens_files"], [])
         self.assertEqual(findings["palette"], [])
 
+    def test_skips_installed_skills_and_build_copies(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            root = Path(tempdir)
+            for folder in (".claude/skills/bc-design", ".next-build/static", ".next-stage"):
+                (root / folder).mkdir(parents=True)
+                (root / folder / "theme.css").write_text(":root { --x: #000000; }", encoding="utf-8")
+            findings, _ = project.preflight(root)
+        self.assertEqual(findings["palette"], [])
+
     def test_reuses_the_cache_until_package_json_changes(self):
         with tempfile.TemporaryDirectory() as tempdir:
             root = Path(tempdir)
