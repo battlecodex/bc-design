@@ -366,13 +366,45 @@ class BCDesignTests(unittest.TestCase):
                 self.assertNotEqual(completed.returncode, 0)
                 self.assertEqual(list(Path(tempdir).iterdir()), [])
 
-    def test_installer_preserves_existing_file_without_force(self):
+    def test_installer_adds_a_marked_section_to_an_existing_instruction_file(self):
         with tempfile.TemporaryDirectory() as tempdir:
             target = Path(tempdir) / "AGENTS.md"
-            target.write_text("user content", encoding="utf-8")
+            target.write_text("user content\n", encoding="utf-8")
             completed = run_installer("--ai", "codex", "--workspace", tempdir)
             self.assertEqual(completed.returncode, 0, completed.stderr)
-            self.assertEqual(target.read_text(encoding="utf-8"), "user content")
+            text = target.read_text(encoding="utf-8")
+            self.assertTrue(text.startswith("user content\n"))
+            self.assertEqual(text.count("<!-- bc-design:start -->"), 1)
+            self.assertIn(".agents/skills/bc-design/SKILL.md", text)
+            run_installer("--ai", "codex", "--workspace", tempdir)
+            self.assertEqual(target.read_text(encoding="utf-8"), text)
+            forced = run_installer("--ai", "codex", "--workspace", tempdir, "--force")
+            self.assertEqual(forced.returncode, 0, forced.stderr)
+            text = target.read_text(encoding="utf-8")
+            self.assertTrue(text.startswith("user content\n"))
+            self.assertEqual(text.count("<!-- bc-design:start -->"), 1)
+
+    def test_installed_skill_docs_point_at_the_runtime_directory(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            completed = run_installer("--ai", "all", "--workspace", tempdir)
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            for skills_dir in (".claude/skills", ".kiro/skills"):
+                skill = (Path(tempdir) / skills_dir / "bc-design" / "SKILL.md").read_text(encoding="utf-8")
+                self.assertNotIn(".agents/skills/", skill)
+                self.assertIn(f"{skills_dir}/bc-design/scripts/project.py", skill)
+
+    def test_global_install_uses_the_home_directory(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            sys.path.insert(0, str(SKILL_ROOT / "scripts"))
+            import install
+
+            install.install_runtime("claude", ".", global_install=True, home=tempdir)
+            home = Path(tempdir)
+            self.assertIn("~/.claude/skills/bc-design/SKILL.md", (home / ".claude" / "CLAUDE.md").read_text(encoding="utf-8"))
+            skill = (home / ".claude" / "skills" / "bc-design" / "SKILL.md").read_text(encoding="utf-8")
+            self.assertIn("~/.claude/skills/bc-design/scripts/project.py", skill)
+            with self.assertRaises(ValueError):
+                install.install_runtime("codex", ".", global_install=True, home=tempdir)
 
     def test_force_install_replaces_stale_files_inside_skill_directory(self):
         with tempfile.TemporaryDirectory() as tempdir:

@@ -102,6 +102,12 @@ class CraftAuditTests(unittest.TestCase):
         )
         self.assertNotIn("gsap-reduced-motion", self.rules(guarded, suffix=".js"))
 
+    def test_accepts_named_reduced_motion_helpers_and_ignore_comments(self):
+        helper = "const reduced = useReducedMotion();\ngsap.to('.card', { y: 0, duration: reduced ? 0 : 0.6 });\n"
+        self.assertNotIn("gsap-reduced-motion", self.rules(helper, suffix=".js"))
+        opted_out = "// bc-audit-ignore: gsap-reduced-motion (d() in lib/motion zeroes durations)\ngsap.to('.card', { y: 0, duration: d(0.6) });\n"
+        self.assertNotIn("gsap-reduced-motion", self.rules(opted_out, suffix=".js"))
+
     def test_flags_gsap_layout_property_tweens(self):
         source = "gsap.matchMedia();\ngsap.to('.panel', { height: 320, duration: 0.3 });"
         self.assertIn("gsap-layout-property", self.rules(source, suffix=".js"))

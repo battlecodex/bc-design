@@ -31,7 +31,14 @@ MEMORY_DIR = ".bc-design"
 PREFLIGHT_FILE = "preflight.json"
 LOG_FILE = "log.json"
 DESIGN_FILES = ("DESIGN.md", "design.md")
-SKIP_DIRS = {"node_modules", ".git", "dist", "build", ".next", ".nuxt", ".svelte-kit", "coverage", MEMORY_DIR}
+SKIP_DIRS = {
+    "node_modules", ".git", "dist", "build", "out", ".next", ".nuxt", ".svelte-kit", ".output", ".turbo",
+    ".vercel", ".cache", "coverage", MEMORY_DIR,
+    # Installed assistant skills, BC Design included, are not the project's own design.
+    ".agents", ".claude", ".kiro",
+}
+# Build output copies such as .next-build or .next-stage.
+SKIP_PREFIXES = (".next-", "dist-", "build-")
 TEXT_SUFFIXES = {".html", ".css", ".scss", ".js", ".jsx", ".ts", ".tsx", ".vue", ".svelte", ".astro", ".mjs", ".cjs"}
 MAX_SCAN_FILES = 400
 
@@ -66,7 +73,7 @@ COMPONENT_LIBRARIES = (
     ("bootstrap", "Bootstrap"),
 )
 COMPONENT_PREFIXES = (("@radix-ui/", "Radix UI primitives"), ("@ark-ui/", "Ark UI"), ("@base-ui-components/", "Base UI"))
-CACHE_VERSION = 2
+CACHE_VERSION = 3
 FONT_PACKAGES = re.compile(r"^(?:@fontsource(?:-variable)?/.+|geist|next/font)$")
 
 # House accent families. The first value is the UI accent, the second the
@@ -95,7 +102,9 @@ def find_design_file(root):
 def _walk_files(root):
     """Yield project files in a stable order without entering dependency or build folders."""
     for directory, subdirectories, files in os.walk(root):
-        subdirectories[:] = sorted(name for name in subdirectories if name not in SKIP_DIRS)
+        subdirectories[:] = sorted(
+            name for name in subdirectories if name not in SKIP_DIRS and not name.startswith(SKIP_PREFIXES)
+        )
         for name in sorted(files):
             yield Path(directory) / name
 

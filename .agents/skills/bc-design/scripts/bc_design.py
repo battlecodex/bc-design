@@ -522,7 +522,7 @@ def _gsap_violations(content, source_file):
     if not GSAP_CALL_RE.search(content):
         return []
     violations = []
-    if not re.search(r"prefers-reduced-motion|reduceMotion|gsap\.matchMedia", content):
+    if not re.search(r"prefers-reduced-motion|reduced?[-_ ]?motion|gsap\.matchMedia", content, re.IGNORECASE):
         violations.append((
             "gsap-reduced-motion",
             "Wrap GSAP choreography in gsap.matchMedia with a prefers-reduced-motion branch.",
@@ -535,6 +535,43 @@ def _gsap_violations(content, source_file):
             source_file,
         ))
     return violations
+
+
+ROUND_BY_NATURE_RE = re.compile(
+    r"avatar|radio|checkbox|switch|toggle|thumb|slider|progress|spinner|\bdot\b|indicator|aspect-square|\bsize-\d",
+    re.IGNORECASE,
+)
+# A layout property named as what a transition or animation changes, in CSS, Tailwind, or a JS animate prop.
+LAYOUT_ANIMATION_RE = re.compile(
+    r"transition(?:-property)?\s*:\s*[^;{}\n]*\b(?:width|height|margin|padding)\b"
+    r"|\btransition-\[[^\]]*(?:width|height|margin|padding)[^\]]*\]"
+    r"|\banimate\s*[=:(]\s*\{\{?[^{}]*\b(?:width|height|margin\w*|padding\w*)\s*:",
+    re.IGNORECASE,
+)
+IGNORE_COMMENT_RE = re.compile(r"bc-audit-ignore:\s*([a-z0-9-]+(?:\s*,\s*[a-z0-9-]+)*)", re.IGNORECASE)
+
+
+def _naturally_round(line):
+    """Avatars, radios, dots, progress bars, and equal-sided circles are round by nature, not pill buttons."""
+    if ROUND_BY_NATURE_RE.search(line):
+        return True
+    return any(
+        re.search(rf"\bw-{re.escape(size)}\b", line)
+        for size in re.findall(r"\bh-(\d+(?:\.\d+)?|\[[^\]]+\])", line)
+    )
+
+
+def _pill_context(content, match):
+    """The class list or CSS rule a radius sits in: its own line plus the selector of the rule it belongs to."""
+    line_start = content.rfind("\n", 0, match.start()) + 1
+    line_end = content.find("\n", match.end())
+    rule_start = max(content.rfind("}", 0, match.start()) + 1, match.start() - 300)
+    return content[min(line_start, rule_start):line_end if line_end != -1 else len(content)]
+
+
+def _ignored_rules(content):
+    """Rules a file opts out of with a `bc-audit-ignore: rule-id, rule-id` comment, for a reason stated beside it."""
+    return {rule.strip().lower() for match in IGNORE_COMMENT_RE.finditer(content) for rule in match.group(1).split(",")}
 
 
 def find_audit_violations(content, source_file):
@@ -606,7 +643,10 @@ def find_audit_violations(content, source_file):
             source_file,
         ))
 
-    pill_count = len(re.findall(r"(?:border-radius\s*:\s*999(?:px)?|rounded-full)", content, re.IGNORECASE))
+    pill_count = sum(
+        1 for match in re.finditer(r"(?:border-radius\s*:\s*999(?:px)?|rounded-full)", content, re.IGNORECASE)
+        if not _naturally_round(_pill_context(content, match))
+    )
     if pill_count >= 3:
         violations.append((
             "excessive-pill-capsules",
@@ -690,7 +730,12 @@ def find_audit_violations(content, source_file):
             "Remove copied platform labels unless they are required by the product's own information architecture.",
             source_file,
         ))
-    generic_cta_count = len(re.findall(r"(?:>|[\"'])\s*(?:get started|learn more|explore now|sign up|submit)\s*(?:<|[\"'])", content, re.IGNORECASE))
+    # Count visible labels only (element text or a label attribute), not state names such as status === "submit".
+    generic_cta_count = len(re.findall(
+        r"(?:>|\b(?:aria-label|label|title|value)=[\"'])\s*(?:get started|learn more|explore now|sign up|submit)\s*(?:<|[\"'])",
+        content,
+        re.IGNORECASE,
+    ))
     if generic_cta_count >= 3:
         violations.append((
             "repeated-generic-cta",
@@ -699,11 +744,7 @@ def find_audit_violations(content, source_file):
         ))
 
     streaming_marker = re.search(r"\b(stream|streaming|token|ai[- ]output)\b", content, re.IGNORECASE)
-    dimension_animation = re.search(
-        r"(?:transition|animation|animate)[^;{}\n]*(?:width|height|margin|padding)",
-        content,
-        re.IGNORECASE,
-    )
+    dimension_animation = LAYOUT_ANIMATION_RE.search(content)
     if streaming_marker and dimension_animation:
         violations.append(
             (
@@ -716,7 +757,8 @@ def find_audit_violations(content, source_file):
     violations.extend(_craft_violations(content, source_file))
     violations.extend(_gsap_violations(content, source_file))
     violations.extend(_accent_fill_violations(content, source_file))
-    return violations
+    ignored = _ignored_rules(content)
+    return [violation for violation in violations if violation[0] not in ignored]
 
 
 def audit_target(target):

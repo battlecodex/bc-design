@@ -33,6 +33,16 @@ py -3 scripts/install.py --ai all
 
 On macOS or Linux, use `python3` in place of `py -3`, or run `scripts/install.sh`. On Windows PowerShell, `scripts/install.ps1` wraps the same installer.
 
+The installer copies each skill into the runtime's folder and rewrites the documented script paths to match, so a Claude Code install tells the agent to run `.claude/skills/bc-design/scripts/project.py`. If the project already has its own `CLAUDE.md`, `AGENTS.md`, or `GEMINI.md`, the installer keeps every line and adds a BC Design section between `<!-- bc-design:start -->` and `<!-- bc-design:end -->` markers. Running it again leaves that section alone; `--force` replaces only the section and the installed skills.
+
+To make BC Design available in every Claude Code project, install it once into your home folder:
+
+```bash
+py -3 scripts/install.py --ai claude --global
+```
+
+This writes `~/.claude/skills/` and adds the section to `~/.claude/CLAUDE.md`. Do not clone this repository into `~/.claude/skills/` directly: the repository root is not a skill, so the assistant will not find `bc-design` there.
+
 After installing, confirm the assistant actually loads the skill. Open the workspace in the tool, ask *"Design a pricing page for a bakery"*, and check that it names or reads `bc-design` before writing code.
 
 If it does not, check that the family sits where that runtime looks for skills: `.claude/skills/` for Claude Code, `.kiro/skills/` for Kiro, and `.agents/skills/` for Codex and Antigravity.
