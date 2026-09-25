@@ -67,6 +67,7 @@ Keep `bc-design` as the entrypoint for mixed or ambiguous requests. Sibling skil
 
 - Read [references/bc-design-guidelines.md](./references/bc-design-guidelines.md) for subject grounding, hierarchy, copy, and distinctiveness checks.
 - Read [references/visual-language.md](./references/visual-language.md) for the house style, the luxury standard, composition patterns, and signature options before choosing typography, palette, shape, illustration, or layout.
+- Open [assets/patterns/editorial-patterns.html](./assets/patterns/editorial-patterns.html) for a working reference of every composition pattern: centered editorial sections, a sentence selector, stacked illustration tiles, a hairline feature list, a proof card placeholder, a quiet announcement, and an ink footer.
 - Read [references/design-dimensions.md](./references/design-dimensions.md) for the twelve UI and six UX dimensions that every contract, review, and handoff must cover, with the scorecard template.
 - Read [references/gsap-orchestration.md](./references/gsap-orchestration.md) when motion sequences several elements, follows scroll, or drives a 3D scene; reuse [assets/motion/bc-motion.js](./assets/motion/bc-motion.js).
 - Read [references/catalog-alignment.md](./references/catalog-alignment.md) when a catalog search or generated direction needs compatibility classification; automatic output is limited to `core` and `compatible` entries.

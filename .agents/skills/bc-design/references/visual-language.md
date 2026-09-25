@@ -27,7 +27,7 @@ Luxury here means restraint, precision, and material quality. It never means mor
 
 ## Composition patterns
 
-These patterns carry the house style. Use one or two per page, not all of them.
+These patterns carry the house style. Use one or two per page, not all of them. [`assets/patterns/editorial-patterns.html`](../assets/patterns/editorial-patterns.html) shows every pattern on one reference page, with original illustrations and a fictional product.
 
 - **Centered editorial section.** A small monoline icon, a serif headline in two short lines, and one sentence of secondary ink, centered above the content.
 - **Hairline feature list.** Rows separated by hairlines: a small icon and a serif title on the left, a two-line description on the right. It replaces a grid of identical cards.

@@ -174,6 +174,7 @@ BC Design orchestrates multi-element and scroll-driven motion with [GSAP](https:
 
 - [GSAP orchestration guide](./.agents/skills/bc-design/references/gsap-orchestration.md): token mapping, choreography budgets, ScrollTrigger narratives, 3D stage control, React.
 - [`bc-motion.js`](./.agents/skills/bc-design/assets/motion/bc-motion.js): `BCMotion.orchestrate`, `heroSequence`, `revealOnce`, and `staggerList` helpers.
+- [`editorial-patterns.html`](./.agents/skills/bc-design/assets/patterns/editorial-patterns.html): every house composition pattern on one reference page.
 - [`gsap-atelier.html`](./.agents/skills/bc-design/assets/motion/gsap-atelier.html): a complete luxury page with an orchestrated hero and a pinned, scroll-scrubbed 3D exploded view of a watch movement.
 
 The audit flags GSAP code without a reduced-motion branch (`gsap-reduced-motion`) and tweens of layout properties (`gsap-layout-property`).
