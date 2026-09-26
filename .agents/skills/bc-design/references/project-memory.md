@@ -13,6 +13,8 @@ All commands run from the project root. They are standard-library Python:
 ```bash
 python .agents/skills/bc-design/scripts/project.py preflight
 python .agents/skills/bc-design/scripts/project.py lock "Maison Oriel" --accent amber-brass --signature "3D exploded view" --pattern "Hairline feature list"
+python .agents/skills/bc-design/scripts/project.py lock "CKP Tasks" --accent "#2E1A6E"
+python .agents/skills/bc-design/scripts/project.py accent "#2E1A6E"
 python .agents/skills/bc-design/scripts/project.py record "Maison Oriel landing" --signature "3D exploded view" --pattern "Stacked tiles"
 python .agents/skills/bc-design/scripts/project.py log
 ```
@@ -22,7 +24,7 @@ python .agents/skills/bc-design/scripts/project.py log
 Run `project.py preflight` before the first question to the user and before any visual decision.
 
 1. **DESIGN.md first.** If `DESIGN.md` (or `design.md`) exists at the root, read it in full. It overrides the BC house defaults, and new pages share its system instead of choosing a new one.
-2. **Existing decisions next.** The scan reports the framework, font stack, palette (`:root` properties, Tailwind `@theme` or config, DTCG token files), spacing scale, motion libraries, and component libraries (shadcn/ui with its installed components and extra registries, Radix, Headless UI, MUI, and others), each with a `file:line` citation. Installed components are the starting point; `components.py` then picks upgrades from newer libraries, and adding a new package still needs a yes.
+2. **Existing decisions next.** A brand color the scan finds (a `--brand`, `--primary`, or `--accent` token) becomes the page accent and the primary button fill; the house terracotta is only for projects with no brand color. The scan reports the framework, font stack, palette (`:root` properties, Tailwind `@theme` or config, DTCG token files), spacing scale, motion libraries, and component libraries (shadcn/ui with its installed components and extra registries, Radix, Headless UI, MUI, and others), each with a `file:line` citation. Installed components are the starting point; `components.py` then picks upgrades from newer libraries, and adding a new package still needs a yes.
 3. **Say what you will keep.** Show the findings to the user with a one-line summary: what BC Design will preserve (fonts, palette, spacing) and what it will introduce. The user can override any preserved item.
 4. **Flag conflicts.** When evidence disagrees (a font package installed but a different font hard-coded), name both locations and ask which one wins.
 

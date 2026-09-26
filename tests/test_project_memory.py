@@ -92,6 +92,8 @@ class PreflightTests(unittest.TestCase):
         )
         self.assertEqual(findings["components"], ["Project components: src/components/ (2 files: Sidebar, TaskList)"])
         self.assertEqual(findings["fonts"], [])
+        self.assertEqual(findings["brand"], ["--brand #2E1A6E (app/globals.css:1)"])
+        self.assertIn("Brand rule", project.format_preflight(findings))
 
     def test_reuses_the_cache_until_package_json_changes(self):
         with tempfile.TemporaryDirectory() as tempdir:
@@ -198,6 +200,29 @@ class LockTests(unittest.TestCase):
         self.assertIn("--bc-accent-active: #24155A;", design)
         self.assertIn("--bc-radius-md: 8px;", design)
         self.assertIn("- UI accent: CKP indigo", design)
+        self.assertNotIn("#D97757", design)
+
+    def test_any_brand_hue_gets_an_accessible_family(self):
+        sys.path.insert(0, str(SCRIPTS))
+        from contrast import compute_contrast
+
+        for brand in ("#2E1A6E", "#F97316", "#2563EB", "#9333EA", "#FACC15"):
+            with self.subTest(brand=brand):
+                ui, strong, active = project.accent_family(brand)
+                self.assertEqual(ui, brand)
+                self.assertGreaterEqual(compute_contrast(strong, "#FFFFFF"), 4.5)
+                self.assertGreaterEqual(compute_contrast(strong, "#FAF9F5"), 4.5)
+                self.assertGreater(compute_contrast(active, "#FFFFFF"), compute_contrast(strong, "#FFFFFF"))
+        self.assertEqual(project.accent_family("#2E1A6E")[1], "#2E1A6E")
+
+    def test_locking_a_brand_color_fills_primary_buttons_with_it(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            root = Path(tempdir)
+            project.lock(root, "CKP Tasks", "#2E1A6E")
+            design = (root / "DESIGN.md").read_text(encoding="utf-8")
+        self.assertIn("- UI accent: brand (`#2E1A6E`", design)
+        self.assertIn("- Primary: solid brand fill `#2E1A6E` with white text", design)
+        self.assertIn("--bc-accent: #2E1A6E;", design)
         self.assertNotIn("#D97757", design)
 
     def test_rejects_unknown_accent(self):

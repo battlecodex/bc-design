@@ -4,7 +4,7 @@ Copy-paste component libraries save time, and many ship exactly the effects this
 
 ## The house style on modern components
 
-BC Design's warm editorial language is meant to run on current component libraries, not on hand-rolled markup. For React projects the default base is **shadcn/ui** (Radix primitives with Tailwind), themed with [`assets/components/shadcn-bc-theme.css`](../assets/components/shadcn-bc-theme.css). That file maps every shadcn variable onto the house palette: parchment canvas, ink primary actions, hairline borders, a terracotta focus ring, and the illustration palette for charts. Blocks from registries built on shadcn (shadcnblocks, ReUI, Evil Charts, and others) inherit the same look.
+BC Design's warm editorial language is meant to run on current component libraries, not on hand-rolled markup. For React projects the default base is **shadcn/ui** (Radix primitives with Tailwind), themed with [`assets/components/shadcn-bc-theme.css`](../assets/components/shadcn-bc-theme.css). That file maps every shadcn variable onto the house palette: parchment canvas, ink primary actions, hairline borders, a terracotta focus ring, and the illustration palette for charts. When the project has a brand color, set `--primary` to its strong variant and `--ring` to the brand color (`project.py accent HEX` prints both). Blocks from registries built on shadcn (shadcnblocks, ReUI, Evil Charts, and others) inherit the same look.
 
 ## Brainstorm, choose, and apply
 
@@ -54,7 +54,7 @@ Every adopted component goes through the checklist below.
 | [Evil Charts](https://evilcharts.com) | Chart components | Use for data views; follow the chart guidance in `charts.md` and keep colors on tokens |
 | [React Bits](https://reactbits.dev), [Rare UI](https://rareui.com), [BeUI](https://beui.dev), [Easy UI](https://easyui.site), [Vanta UI](https://vantaui.com) | Animated and decorative components and templates | Use sparingly. Most effects are the kind of motion the audit flags; keep at most one, as the page's signature moment, and rebuild its motion on GSAP tokens |
 | [8bitcn](https://8bitcn.com) | Retro pixel-art components | A deliberate theme, not the house style; use only when the brand calls for it |
-| [Simply Buttons](https://simply-buttons.vercel.app) | Button styles | Inspiration only; buttons follow the house CTA voice (ink primary, outline secondary) |
+| [Simply Buttons](https://simply-buttons.vercel.app) | Button styles | Inspiration only; buttons follow the CTA voice (brand or ink primary, outline secondary) |
 | [Keyline Icons](https://github.com/keyline-icons/keyline-icons) | MIT icon set in four styles | See [icons.md](./icons.md) |
 
 ## Red flags that mean restyle or reject

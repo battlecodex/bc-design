@@ -85,7 +85,7 @@ COMPONENT_LIBRARIES = (
     ("bootstrap", "Bootstrap"),
 )
 COMPONENT_PREFIXES = (("@radix-ui/", "Radix UI primitives"), ("@ark-ui/", "Ark UI"), ("@base-ui-components/", "Base UI"))
-CACHE_VERSION = 4
+CACHE_VERSION = 5
 FONT_PACKAGES = re.compile(r"^(?:@fontsource(?:-variable)?/.+|geist|next/font)$")
 
 # House accent families. The first value is the UI accent, the second the
@@ -95,6 +95,60 @@ ACCENTS = {
     "amber-brass": ("#D4973B", "#9C671D", "#8A5B19"),
     "sage": ("#7A9A8B", "#4D6B5D", "#435D51"),
 }
+
+HEX_VALUE_RE = re.compile(r"^#?[0-9a-fA-F]{6}$|^#?[0-9a-fA-F]{3}$")
+# Custom properties that usually carry a project's own brand color.
+BRAND_PROPERTY_RE = re.compile(
+    r"(--(?:color-)?(?:brand|primary|accent)[\w-]*)\s*:\s*(#[0-9a-fA-F]{6}|#[0-9a-fA-F]{3})\b", re.IGNORECASE
+)
+
+
+def _hex(rgb):
+    return "#" + "".join(f"{round(max(0, min(1, channel)) * 255):02X}" for channel in rgb)
+
+
+def _darken(value, until):
+    """Step HSL lightness down until ``until(hex)`` holds; returns the first hex that passes."""
+    import colorsys
+
+    from contrast import parse_hex_color
+
+    red, green, blue = (channel / 255 for channel in parse_hex_color(value))
+    hue, lightness, saturation = colorsys.rgb_to_hls(red, green, blue)
+    candidate = _hex((red, green, blue))
+    while not until(candidate) and lightness > 0:
+        lightness = max(0.0, lightness - 0.01)
+        candidate = _hex(colorsys.hls_to_rgb(hue, lightness, saturation))
+    return candidate
+
+
+def accent_family(value):
+    """(ui, strong, active) for a house accent name or any brand hex.
+
+    ``strong`` is the brand color itself when white text on it, and it as text on
+    the canvas, pass WCAG AA (4.5:1); otherwise the brand hue darkened until they
+    do. ``active`` is a
+    step darker for pressed states. The UI value stays the brand color.
+    """
+    if value in ACCENTS:
+        return ACCENTS[value]
+    if not isinstance(value, str) or not HEX_VALUE_RE.match(value.strip()):
+        raise ValueError(f"Unknown accent '{value}'. Use a hex color like #2E1A6E or one of: {', '.join(ACCENTS)}")
+    from contrast import compute_contrast, parse_hex_color
+
+    ui = _hex(tuple(channel / 255 for channel in parse_hex_color(value)))
+    # Strong carries text both ways: white text on it, and it as link text on the parchment canvas.
+    strong = _darken(
+        ui, lambda candidate: min(compute_contrast(candidate, "#FFFFFF"), compute_contrast(candidate, "#FAF9F5")) >= 4.5
+    )
+    target = min(21.0, compute_contrast(strong, "#FFFFFF") + 1.2)
+    active = _darken(strong, lambda candidate: candidate != strong and compute_contrast(candidate, "#FFFFFF") >= target)
+    return ui, strong, active
+
+
+def accent_label(value):
+    return value if value in ACCENTS else "brand"
+
 
 EXPORTS_START = "<!-- bc-design:exports:start -->"
 EXPORTS_END = "<!-- bc-design:exports:end -->"
@@ -186,6 +240,7 @@ def scan_project(root):
         "spacing": [],
         "tokens_files": [],
         "components": [],
+        "brand": [],
     }
     design_file = find_design_file(root)
     if design_file:
@@ -238,6 +293,9 @@ def scan_project(root):
                 colors = COLOR_PROPERTY_RE.findall(body)
                 if colors:
                     findings["palette"].append(f"{len(colors)} color custom properties in {selector[:60]} ({_cite(root, path, line)})")
+                if selector.lower().startswith((":root", "html", ":host")):
+                    for name, value in BRAND_PROPERTY_RE.findall(body):
+                        findings["brand"].append(f"{name} {value.upper()} ({_cite(root, path, line)})")
                 spacing = re.findall(r"--(?:space|spacing)[\w-]*\s*:", body)
                 if spacing:
                     findings["spacing"].append(f"{len(spacing)} spacing custom properties in {selector[:60]} ({_cite(root, path, line)})")
@@ -329,6 +387,7 @@ def format_preflight(findings, cached_on=None):
         ("Spacing", findings["spacing"]),
         ("Motion", findings["motion"]),
         ("Components", findings.get("components", [])),
+        ("Brand color", findings.get("brand", [])),
     ]
     found_any = any(values for _, values in rows)
     if not found_any and not findings["design_file"]:
@@ -345,6 +404,12 @@ def format_preflight(findings, cached_on=None):
         lines.append(
             "  Component rule: start from the installed components and run components.py to choose upgrades; ask before adding a new package."
         )
+    if findings.get("brand"):
+        preserve.append("brand color")
+        lines.append(
+            "  Brand rule: the project has its own brand color. Use it as the accent and as the primary button fill "
+            "(run project.py accent HEX for its AA-safe strong variant); do not fall back to the house terracotta."
+        )
     if preserve:
         lines.append(f"BC Design will preserve: {', '.join(preserve)}. Say so to override any of them.")
     return "\n".join(lines)
@@ -354,8 +419,8 @@ def format_preflight(findings, cached_on=None):
 
 
 def _exports(accent):
-    """Render the exports block for a named house accent or a (ui, strong, active) hex triple."""
-    ui, strong, active = ACCENTS[accent] if isinstance(accent, str) else accent
+    """Render the exports block for a house accent name, a brand hex, or a (ui, strong, active) triple."""
+    ui, strong, active = accent_family(accent) if isinstance(accent, str) else accent
     css = f""":root {{
   --bc-canvas: #FAF9F5;
   --bc-surface: #FFFFFF;
@@ -423,7 +488,11 @@ def _exports(accent):
 
 
 def render_design_file(project, accent, signature, patterns):
-    ui, strong, _ = ACCENTS[accent]
+    ui, strong, _ = accent_family(accent)
+    if accent in ACCENTS:
+        primary = 'solid ink, 8px radius, verb that names the outcome ("Book a visit")'
+    else:
+        primary = f'solid brand fill `{strong}` with white text (AA), 8px radius, verb that names the outcome ("Book a visit")'
     pattern_lines = "\n".join(f"- {pattern}" for pattern in patterns) if patterns else "- Choose per page from visual-language.md; keep them consistent across pages."
     return f"""# Design: {project}
 
@@ -436,7 +505,7 @@ a `## Variants` entry here rather than overriding locally.
 
 ## System
 - Style: BC Design house style (warm editorial)
-- UI accent: {accent} (`{ui}`; text-bearing fills use `{strong}`)
+- UI accent: {accent_label(accent)} (`{ui}`; text-bearing fills use `{strong}`)
 - Signature moment: {signature or "to be chosen with the first page"}
 
 ## Composition patterns
@@ -448,7 +517,7 @@ a `## Variants` entry here rather than overriding locally.
 - Mono: code and tabular figures only
 
 ## CTA voice
-- Primary: solid ink, 8px radius, verb that names the outcome ("Book a visit")
+- Primary: {primary}
 - Secondary: 1px outline, same radius
 - Tertiary: text link in ink with an underline on hover
 
@@ -502,8 +571,8 @@ def lock(root, project, accent=None, signature=None, patterns=(), refresh_export
     A new lock uses ``accent`` or terracotta. A refresh keeps the accent DESIGN.md already locks and
     changes it only when ``accent`` is given explicitly.
     """
-    if accent is not None and accent not in ACCENTS:
-        raise ValueError(f"Unknown accent '{accent}'. Choose one of: {', '.join(ACCENTS)}")
+    if accent is not None:
+        accent_family(accent)  # raises ValueError for anything but a house name or a hex color
     root = Path(root).resolve()
     existing = find_design_file(root)
     if existing:
@@ -520,10 +589,10 @@ def lock(root, project, accent=None, signature=None, patterns=(), refresh_export
             existing.write_text(block.sub(lambda _: _exports(current), text), encoding="utf-8")
             return f"{existing.name}: Exports refreshed with the locked accent, system unchanged."
         # An explicit accent changes the locked accent line and the exports together.
-        ui, strong, _ = ACCENTS[accent]
+        ui, strong, _ = accent_family(accent)
         text = re.sub(
             r"^- UI accent: .+$",
-            lambda _: f"- UI accent: {accent} (`{ui}`; text-bearing fills use `{strong}`)",
+            lambda _: f"- UI accent: {accent_label(accent)} (`{ui}`; text-bearing fills use `{strong}`)",
             text,
             count=1,
             flags=re.MULTILINE,
@@ -593,7 +662,7 @@ def main(argv=None):
 
     lk = sub.add_parser("lock", help="Write DESIGN.md at the project root (never overwrites)")
     lk.add_argument("project", help="Project name")
-    lk.add_argument("--accent", choices=sorted(ACCENTS), help="A new lock defaults to terracotta; with --refresh-exports, only an explicit --accent changes the locked one")
+    lk.add_argument("--accent", help="A brand hex such as #2E1A6E, or a house accent (terracotta, amber-brass, sage). A new lock without one uses terracotta; with --refresh-exports, only an explicit --accent changes the locked one")
     lk.add_argument("--signature", help="The project's signature moment")
     lk.add_argument("--pattern", action="append", default=[], help="A composition pattern the pages share (repeatable)")
     lk.add_argument("--refresh-exports", action="store_true", help="Only rewrite the Exports block of an existing DESIGN.md")
@@ -602,7 +671,10 @@ def main(argv=None):
     rec.add_argument("brief", help="One line: product and page")
     rec.add_argument("--signature", required=True, help="Signature moment used")
     rec.add_argument("--pattern", action="append", default=[], help="Composition pattern used (repeatable)")
-    rec.add_argument("--accent", choices=sorted(ACCENTS))
+    rec.add_argument("--accent", help="Accent used: a brand hex or a house accent name")
+
+    ac = sub.add_parser("accent", help="Show the AA-safe accent family for a brand hex or a house accent")
+    ac.add_argument("value", help="A hex color such as #2E1A6E, or terracotta, amber-brass, sage")
 
     lg = sub.add_parser("log", help="Show recent builds and the rotation note")
     lg.add_argument("--count", type=int, default=5)
@@ -627,6 +699,19 @@ def main(argv=None):
         except ValueError as exc:
             print(f"Error: {exc}", file=sys.stderr)
             return 2
+        return 0
+    if args.command == "accent":
+        from contrast import compute_contrast
+
+        try:
+            ui, strong, active = accent_family(args.value)
+        except ValueError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 2
+        print(f"UI accent (links, focus ring, selection, marks): {ui}")
+        print(f"Strong (primary button fill, white text): {strong}  white text {compute_contrast(strong, '#FFFFFF'):.2f}:1")
+        print(f"Active (pressed and hover): {active}  white text {compute_contrast(active, '#FFFFFF'):.2f}:1")
+        print(f"On the canvas #FAF9F5 as text: {ui} {compute_contrast(ui, '#FAF9F5'):.2f}:1, {strong} {compute_contrast(strong, '#FAF9F5'):.2f}:1")
         return 0
     if args.command == "record":
         entry = record(root, args.brief, args.signature, args.pattern, args.accent)

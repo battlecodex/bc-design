@@ -5,8 +5,8 @@ BC Design is a house style: warm, literary, and editorial, with the quiet confid
 ## House style
 
 - **Canvas and ink.** Warm parchment (`#FAF9F5`) in light mode and espresso (`#181816`) in dark mode, with high-contrast ink (`#1F1E1B` / `#FAF9F5`). Hairline borders at 8–9% ink opacity separate content instead of boxes.
-- **Ink does the work.** Primary buttons, the footer, and headings are solid ink (`#141413` to `#1F1E1B`). Secondary text steps down through warm grays (`#5E5D59` at 6.26:1, then the tertiary token `#73716A` at 4.64:1 for metadata and placeholders), and borders through `#D1CFC5` and `#E8E6DC`.
-- **One UI accent, chosen by subject.** Terracotta (`#D97757`) is the default. Use amber-brass for finance, instruments, and craft, and sage for health, wellbeing, and nature. The UI accent marks links, focus, selection, and the occasional highlight; lock it for the whole page. Text-bearing fills use the strong accent (`#B35637`).
+- **Ink does the work.** Headings, the footer, and, with a house accent, primary buttons are solid ink (`#141413` to `#1F1E1B`). With a brand accent, primary buttons take the brand's strong variant instead. Secondary text steps down through warm grays (`#5E5D59` at 6.26:1, then the tertiary token `#73716A` at 4.64:1 for metadata and placeholders), and borders through `#D1CFC5` and `#E8E6DC`.
+- **One UI accent: the brand's, or one chosen by subject.** A project's own brand color always wins, in any hue. Without one, terracotta (`#D97757`) is the default, amber-brass suits finance, instruments, and craft, and sage suits health, wellbeing, and nature. The UI accent marks links, focus, selection, and the occasional highlight; lock it for the whole page. Text-bearing fills use the strong variant (`#B35637` for terracotta; `project.py accent HEX` computes it for a brand color).
 - **A separate illustration palette.** Flat, muted tiles in clay, sky, heather, olive, sage, and apricot (`--bc-illus-*`) sit behind illustrations and category cards, often with fine white organic line patterns. These tones never carry text, buttons, or status.
 - **Type.** A serif display in a light weight (Newsreader 300–400) with optical sizing: about 72px for the hero, 48–52px for section heads, 30px for sub-heads. A quiet sans (Inter) for UI at 15px, body at 17px, and lead paragraphs at about 22px in secondary ink. Monospace only for code and tabular figures.
 - **Shape.** Radius 4px for small controls, 8px for buttons and inputs, 12px for cards and tiles, 16px for large panels. Hairline borders, and a soft shadow only on floating layers. Pills are for tags, filters, and compact statuses.
@@ -51,7 +51,7 @@ These patterns carry the house style. Use one or two per page, not all of them. 
 
 1. Preserve existing brand evidence and product constraints.
 2. Choose the information hierarchy and the one signature moment.
-3. Select the house accent from the subject, or map the brand palette onto house roles.
+3. Use the brand color as the accent when the project has one; otherwise select the house accent from the subject.
 4. Assign typography by role and license availability.
 5. Define component shape and motion from function.
 6. Verify contrast, keyboard behavior, responsive states, loading, error, and reduced motion, then run `render_check.py` on the rendered page.
