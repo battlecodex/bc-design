@@ -35,6 +35,10 @@ SEVERITY = {
     "focus-outline-removed": "error",
     "gsap-reduced-motion": "error",
     "gsap-layout-property": "warning",
+    "unicode-glyph-copy": "warning",
+    "tracked-uppercase-label": "warning",
+    "button-focus-ring-missing": "error",
+    "pure-black-overlay": "warning",
 }
 
 CATEGORY = {
@@ -67,6 +71,10 @@ CATEGORY = {
     "focus-outline-removed": "accessibility",
     "gsap-reduced-motion": "accessibility",
     "gsap-layout-property": "performance",
+    "unicode-glyph-copy": "identity",
+    "tracked-uppercase-label": "hierarchy",
+    "button-focus-ring-missing": "accessibility",
+    "pure-black-overlay": "identity",
 }
 
 # Every rule reports under one of the review dimensions in
@@ -117,6 +125,10 @@ DIMENSION = {
     "gsap-reduced-motion": "Motion",
     "gsap-layout-property": "Motion",
     "spatial-uncapped-pixel-ratio": "Responsiveness",
+    "unicode-glyph-copy": "Imagery & icons",
+    "tracked-uppercase-label": "Typography",
+    "button-focus-ring-missing": "Accessibility",
+    "pure-black-overlay": "Color",
 }
 
 RECOMMENDATIONS = {
@@ -149,6 +161,10 @@ RECOMMENDATIONS = {
     "focus-outline-removed": "Add a :focus-visible rule with a 2px accent outline or equivalent ring.",
     "gsap-reduced-motion": "Use gsap.matchMedia() with a (prefers-reduced-motion: reduce) branch that sets final states without tweening.",
     "gsap-layout-property": "Replace width/height/top/left/margin/padding tweens with x, y, scale, clipPath, or opacity.",
+    "unicode-glyph-copy": "Replace the glyph with a 1.5px monoline SVG icon, or say it in words.",
+    "tracked-uppercase-label": "Use sentence case with normal tracking; size and weight carry the hierarchy.",
+    "button-focus-ring-missing": "Add focus-visible:ring-2 with the accent ring color, or a :focus-visible rule for the button.",
+    "pure-black-overlay": "Use var(--bc-scrim) (warm ink at 45%) for overlays and backdrops.",
 }
 
 EVIDENCE_MARKERS = {
@@ -181,6 +197,9 @@ EVIDENCE_MARKERS = {
     "focus-outline-removed": ("outline: none", "outline:none", "outline: 0", "outline:0"),
     "gsap-reduced-motion": ("gsap.",),
     "gsap-layout-property": ("gsap.to", "gsap.from"),
+    "tracked-uppercase-label": ("uppercase",),
+    "button-focus-ring-missing": ("<button", "button"),
+    "pure-black-overlay": ("bg-black", "rgba(0, 0, 0", "rgba(0,0,0", "#000"),
 }
 
 
@@ -214,6 +233,12 @@ def _line_for_rule(content, rule_id, message):
             if re.search(r"(?:[5-9]\d{2}|\d{4,})ms\b|(?:\.5|[1-9]\d*)s\b", lowered):
                 return number
         if rule_id == "motion-easing-token" and re.search(r"(?:transition|animation).*\b(?:linear|ease(?:-in|-out|-in-out)?)\b", lowered):
+            return number
+        if rule_id == "motion-easing-token" and re.search(r"(?<![\w-])ease-(?:in|out|linear)|\bease\s*:\s*[\"'](?!expo\.out|power2\.inout|none|linear)", lowered):
+            return number
+        if rule_id == "motion-duration-budget" and re.search(r"(?<![\w-])duration-(?:[3-9]\d{2}|\d{4,}|\[)|\bduration\s*:\s*\d*\.\d+", lowered):
+            return number
+        if rule_id == "unicode-glyph-copy" and _legacy().UNICODE_GLYPH_RE.search(line):
             return number
         if markers and any(marker.lower() in lowered for marker in markers):
             return number

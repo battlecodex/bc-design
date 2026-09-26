@@ -26,13 +26,15 @@ These are non-optional defaults for every BC Design implementation. Treat a devi
 - Primary action buttons follow the canonical high-contrast standard (`.bc-btn-contrast`, or white text on `--bc-accent-strong`); never put button text on the mid-tone `#D97757`, in white or in dark ink.
 - Write metadata as labels or separate lines; do not use middle-dot separators (`A · B`).
 - Use meaningful action labels; do not append Unicode arrows to links or buttons.
-- Use purposeful 1.5px monoline SVG icons instead of Unicode glyphs for interface symbols.
+- Use purposeful 1.5px monoline SVG icons instead of Unicode glyphs (checks, stars, bullets, emoji) for interface symbols.
+- Set labels and eyebrows in sentence case; do not combine all caps with wide tracking.
+- Tint overlays and dialog backdrops with `--bc-scrim` (warm ink), never pure black.
 - Do not add A/B/C or 01/02/03 markers unless they encode a real ordered sequence.
 - Use a visible 2px focus ring derived from the active accent and the semantic sticky-navigation z-index token (`30`).
 - Keep ordinary transitions/animations on motion tokens (150–250ms; up to 400ms for drawers/modals), use the shimmer token for 1800ms thinking states, and avoid browser-default easing keywords.
 - Include a `prefers-reduced-motion: reduce` override in any source file that defines transitions or animations.
 
-The CLI audit enforces these checks, including motion duration, easing-token, reduced-motion, and streaming-layout rules. A clean result still requires rendered-state verification.
+The CLI audit enforces these checks in CSS, Tailwind class lists, and GSAP calls, including motion duration, easing-token, reduced-motion, and streaming-layout rules, Unicode glyphs in copy, tracked all-caps labels, buttons without a focus-visible ring, and pure-black overlays. It reads copy from element text and string labels, never from code comments. A clean result still requires rendered-state verification.
 
 ## Workflow router
 

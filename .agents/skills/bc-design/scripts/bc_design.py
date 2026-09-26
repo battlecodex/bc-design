@@ -327,6 +327,13 @@ MOTION_EASING_TOKEN_RE = re.compile(
 )
 
 
+# A reduced-motion branch: a CSS media query, a matchMedia query in script, or a Tailwind motion-reduce variant.
+REDUCED_MOTION_BRANCH_RE = re.compile(
+    r"prefers-reduced-motion\s*:\s*reduce|motion-reduce:|useReducedMotion|prefersReducedMotion",
+    re.IGNORECASE,
+)
+
+
 def _motion_declarations(content):
     """Return CSS transition/animation declarations with normalized properties."""
     return [
@@ -404,9 +411,7 @@ def _motion_violations(content, source_file):
                 source_file,
             )
         )
-    if _has_active_motion(declarations, audit_content) and not re.search(
-        r"@media\s*\([^)]*prefers-reduced-motion\s*:\s*reduce", audit_content, re.IGNORECASE
-    ):
+    if _has_active_motion(declarations, audit_content) and not REDUCED_MOTION_BRANCH_RE.search(audit_content):
         violations.append(
             (
                 "reduced-motion-support",
@@ -449,12 +454,167 @@ GSAP_LAYOUT_TWEEN_RE = re.compile(
 )
 
 
+SCRIPT_MARKUP_EXTENSIONS = {".jsx", ".tsx", ".vue", ".svelte"}
+# Strings come first so a comment marker inside a string (a URL, for example) is kept as text.
+CODE_TOKEN_RE = re.compile(
+    r"(?P<string>\"(?:\\.|[^\"\\\n])*\"|'(?:\\.|[^'\\\n])*'|`(?:\\.|[^`\\])*`)"
+    r"|(?P<jsx_comment>\{\s*/\*[\s\S]*?\*/\s*\})"
+    r"|(?P<block_comment>/\*[\s\S]*?\*/)"
+    r"|(?P<line_comment>(?<![:\w\\])//[^\n]*)"
+    r"|(?P<html_comment><!--[\s\S]*?-->)"
+)
+# Attribute values that hold code, not copy.
+NON_COPY_ATTRIBUTE_RE = re.compile(
+    r"\b(?:class(?:Name)?|href|src|id|key|type|name|role|rel|target|style|variant|size|as|ref|import|from|require)\s*[=(]?\s*$"
+)
+
+
+def strip_code_comments(content):
+    """Remove //, /* */, {/* */}, and <!-- --> comments while keeping string literals intact."""
+    return CODE_TOKEN_RE.sub(lambda match: match.group("string") or " ", content)
+
+
+def _string_copy(markup):
+    """Human-readable string literals in script markup: labels, titles, and messages, not class lists or paths."""
+    copy = []
+    for match in CODE_TOKEN_RE.finditer(markup):
+        literal = match.group("string")
+        if not literal:
+            continue
+        text = literal[1:-1]
+        if not re.search(r"[A-Za-z]{2,}", text) or not re.search(r"\s", text.strip()):
+            continue
+        if NON_COPY_ATTRIBUTE_RE.search(markup[max(0, match.start() - 40):match.start()]):
+            continue
+        copy.append(text)
+    return copy
+
+
 def visible_text(content, source_file):
-    """Return the human-readable copy of a markup file, or an empty string."""
-    if Path(source_file).suffix.lower() not in MARKUP_EXTENSIONS:
+    """Return the human-readable copy of a markup file (element text and, in script markup, string labels)."""
+    suffix = Path(source_file).suffix.lower()
+    if suffix not in MARKUP_EXTENSIONS:
         return ""
-    markup = HIDDEN_MARKUP_RE.sub(" ", content)
-    return "\n".join(segment for segment in re.findall(r">([^<>]+)<", markup) if segment.strip())
+    markup = strip_code_comments(HIDDEN_MARKUP_RE.sub(" ", content))
+    segments = re.findall(r">([^<>]+)<", markup)
+    if suffix in SCRIPT_MARKUP_EXTENSIONS:
+        # JSX text sits between tags; {expressions} inside it are code, so drop them.
+        cleaned = []
+        for segment in segments:
+            previous = None
+            while previous != segment:
+                previous, segment = segment, re.sub(r"\{[^{}]*\}", " ", segment)
+            cleaned.append(segment)
+        segments = cleaned + _string_copy(markup)
+    return "\n".join(segment for segment in segments if segment.strip())
+
+
+# Symbols standing in for icons: bullets, checks, stars, sparkles, dingbats, geometric shapes, and emoji.
+UNICODE_GLYPH_RE = re.compile(
+    "[\u2022\u2023\u2043\u25a0-\u25ff\u2600-\u26ff\u2700-\u27bf\u2b50\u2b55\U0001f300-\U0001faff]"
+)
+CLASS_ATTRIBUTE_RE = re.compile(r"\bclass(?:Name)?\s*=\s*\{?\s*[\"'`]([^\"'`]*)[\"'`]")
+CSS_BLOCK_RE = re.compile(r"\{([^{}]*)\}")
+
+
+def iter_css_rules(content):
+    """Yield (selector, body) for each innermost {...} block; the selector is the text since the previous brace."""
+    for match in CSS_BLOCK_RE.finditer(content):
+        start = max(content.rfind("{", 0, match.start()), content.rfind("}", 0, match.start())) + 1
+        yield content[start:match.start()], match.group(1)
+
+
+def _letter_spacing_is_wide(value):
+    match = re.match(r"\s*(-?\d*\.?\d+)(em|rem|px)", value)
+    if not match:
+        return value.strip().lower() in {"wide", "wider", "widest"}
+    amount, unit = float(match.group(1)), match.group(2)
+    return amount >= (1 if unit == "px" else 0.05)
+
+
+def _tracked_uppercase(content):
+    for classes in CLASS_ATTRIBUTE_RE.findall(content):
+        if not re.search(r"(?<![\w-])uppercase(?![\w-])", classes):
+            continue
+        for tracking in re.findall(r"(?<![\w-])tracking-(wide|wider|widest|\[[^\]]+\])", classes):
+            if _letter_spacing_is_wide(tracking.strip("[]")):
+                return True
+    for _, body in iter_css_rules(content):
+        if re.search(r"text-transform\s*:\s*uppercase", body, re.IGNORECASE):
+            spacing = re.search(r"letter-spacing\s*:\s*([^;]+)", body, re.IGNORECASE)
+            if spacing and _letter_spacing_is_wide(spacing.group(1)):
+                return True
+    return False
+
+
+GLOBAL_FOCUS_VISIBLE_RE = re.compile(
+    r"(?:^|[\s,{}])(?:\*|button|:where\([^)]*\)|:is\([^)]*\))?\s*:focus-visible\s*[,{]", re.IGNORECASE
+)
+
+
+def _button_without_focus_ring(content, source_file, context):
+    """A styled button with no focus-visible style in its class list, its stylesheet, or a global rule."""
+    if (context or {}).get("global_focus_visible") or ":focus-visible" in content:
+        return False
+    if Path(source_file).suffix.lower() == ".css":
+        # A button rule that paints its own surface needs its own focus style.
+        return any(
+            re.search(r"(?:^|[\s,>+~])(?:button\b|\.btn\b|\.button\b|\[type=[\"']?(?:button|submit))", selector)
+            and re.search(r"\b(?:background|border)(?:-color)?\s*:", body, re.IGNORECASE)
+            for selector, body in iter_css_rules(content)
+        )
+    for tag in re.finditer(r"<button\b[^>]*>", content):
+        classes = CLASS_ATTRIBUTE_RE.search(tag.group(0))
+        if classes and not re.search(r"(?<![\w-])focus(?:-visible)?:", classes.group(1)):
+            return True
+    return False
+
+
+PURE_BLACK_RE = r"(?:#000(?:000)?\b|\bblack\b|rgba?\(\s*0\s*,\s*0\s*,\s*0\b|rgba?\(\s*0\s+0\s+0\b)"
+OVERLAY_CONTEXT_RE = re.compile(r"overlay|backdrop|scrim|modal|dialog|lightbox|(?<![\w-])inset-0(?![\w-])", re.IGNORECASE)
+
+
+def _pure_black_overlay(content):
+    """A translucent or overlay background in pure black instead of the warm ink scrim."""
+    if re.search(r"(?<![\w-])bg-black/(?:\d+|\[[^\]]+\])", content):
+        return True
+    for classes in CLASS_ATTRIBUTE_RE.findall(content):
+        if re.search(r"(?<![\w-])bg-black(?![\w/-])", classes) and OVERLAY_CONTEXT_RE.search(classes):
+            return True
+    for selector, body in iter_css_rules(content):
+        if OVERLAY_CONTEXT_RE.search(selector) and re.search(
+            r"background(?:-color)?\s*:\s*" + PURE_BLACK_RE, body, re.IGNORECASE
+        ):
+            return True
+    for line in content.splitlines():
+        if OVERLAY_CONTEXT_RE.search(line) and re.search(r"background(?:Color)?\s*:\s*[\"'`]?\s*" + PURE_BLACK_RE, line, re.IGNORECASE):
+            return True
+    return False
+
+
+def _component_violations(content, source_file, context=None):
+    """House rules that live in class lists and stylesheets: tracked capitals, focus rings, and overlays."""
+    code = strip_code_comments(content)
+    violations = []
+    if _tracked_uppercase(code):
+        violations.append((
+            "tracked-uppercase-label",
+            "Set labels in sentence case without wide tracking; let size and weight carry the hierarchy.",
+            source_file,
+        ))
+    if _button_without_focus_ring(code, source_file, context):
+        violations.append((
+            "button-focus-ring-missing",
+            "Give every button a visible 2px focus-visible ring (focus-visible:ring-2 or a :focus-visible rule).",
+            source_file,
+        ))
+    if _pure_black_overlay(code):
+        violations.append((
+            "pure-black-overlay",
+            "Tint overlays and backdrops with the warm ink scrim (var(--bc-scrim)), not pure black.",
+            source_file,
+        ))
+    return violations
 
 
 def _craft_violations(content, source_file):
@@ -486,6 +646,13 @@ def _craft_violations(content, source_file):
             "Point every link at a real page or section, or render the item as plain text until it exists.",
             source_file,
         ))
+    glyph = UNICODE_GLYPH_RE.search(copy)
+    if glyph:
+        violations.append((
+            "unicode-glyph-copy",
+            f"Replace the Unicode glyph '{glyph.group(0)}' in interface copy with a 1.5px monoline SVG icon or plain words.",
+            source_file,
+        ))
     removes_outline = re.search(r"\boutline\s*:\s*(?:none|0)\b", content, re.IGNORECASE)
     replaces_focus = re.search(r":focus-visible[^{}]*\{[^{}]*\b(?:outline|box-shadow)\s*:", content, re.IGNORECASE)
     if removes_outline and not replaces_focus:
@@ -515,6 +682,60 @@ def _accent_fill_violations(content, source_file):
             source_file,
         )]
     return []
+
+
+TAILWIND_DURATION_RE = re.compile(r"(?<![\w-])duration-(?:(?P<steps>\d+)|\[(?P<amount>\d*\.?\d+)(?P<unit>ms|s)\])(?![\w-])")
+TAILWIND_EASE_RE = re.compile(r"(?<![\w-])ease-(?:in-out|in|out|linear)(?![\w-])")
+GSAP_EASE_RE = re.compile(r"\bease\s*:\s*[\"']([^\"']+)[\"']")
+GSAP_DURATION_RE = re.compile(r"\bduration\s*:\s*(\d*\.?\d+)(?![\w.])")
+# GSAP equivalents of the BC tokens (see references/gsap-orchestration.md).
+GSAP_TOKEN_EASES = {"expo.out", "power2.inout", "none", "linear"}
+GSAP_TOKEN_DURATIONS = {0.0, 0.15, 0.25, 0.4, 0.6, 1.8}
+
+
+def _utility_motion_violations(content, source_file):
+    """Tailwind duration and easing classes, and GSAP eases and durations, measured against the BC motion tokens."""
+    code = strip_code_comments(content)
+    duration_violation = easing_violation = False
+    for match in TAILWIND_DURATION_RE.finditer(code):
+        if match.group("steps"):
+            duration = float(match.group("steps"))
+        else:
+            duration = _duration_ms(match.group("amount"), match.group("unit"))
+        line_start = code.rfind("\n", 0, match.start()) + 1
+        line_end = code.find("\n", match.end())
+        line = code[line_start:line_end if line_end != -1 else len(code)]
+        if re.search(r"reveal", line, re.IGNORECASE):
+            limit = 600
+        elif re.search(r"drawer|sheet|dialog|modal", line, re.IGNORECASE):
+            limit = 400
+        else:
+            limit = 250
+        if duration > limit:
+            duration_violation = True
+    if TAILWIND_EASE_RE.search(code):
+        easing_violation = True
+    if GSAP_CALL_RE.search(code):
+        if any(value.lower() not in GSAP_TOKEN_EASES for value in GSAP_EASE_RE.findall(code)):
+            easing_violation = True
+        # A scrubbed timeline's durations are proportions of the scroll distance, not time.
+        if not re.search(r"\bscrub\s*:", code):
+            if any(float(value) not in GSAP_TOKEN_DURATIONS for value in GSAP_DURATION_RE.findall(code)):
+                duration_violation = True
+    violations = []
+    if duration_violation:
+        violations.append((
+            "motion-duration-budget",
+            "Use the BC duration tokens: duration-150 or duration-250 for UI (0.15 or 0.25 in GSAP), 400ms for drawers and dialogs, 600ms only for once-only reveals.",
+            source_file,
+        ))
+    if easing_violation:
+        violations.append((
+            "motion-easing-token",
+            "Replace ease-in, ease-out, ease-linear, and off-token GSAP eases with the BC curve: ease-[var(--bc-ease)] in Tailwind, \"expo.out\" or \"power2.inOut\" in GSAP.",
+            source_file,
+        ))
+    return violations
 
 
 def _gsap_violations(content, source_file):
@@ -574,7 +795,7 @@ def _ignored_rules(content):
     return {rule.strip().lower() for match in IGNORE_COMMENT_RE.finditer(content) for rule in match.group(1).split(",")}
 
 
-def find_audit_violations(content, source_file):
+def find_audit_violations(content, source_file, context=None):
     """Return explainable BC Design quality findings for one source file."""
     violations = []
     checks = [
@@ -754,11 +975,17 @@ def find_audit_violations(content, source_file):
             )
         )
     violations.extend(_motion_violations(content, source_file))
+    violations.extend(_utility_motion_violations(content, source_file))
+    violations.extend(_component_violations(content, source_file, context))
     violations.extend(_craft_violations(content, source_file))
     violations.extend(_gsap_violations(content, source_file))
     violations.extend(_accent_fill_violations(content, source_file))
     ignored = _ignored_rules(content)
-    return [violation for violation in violations if violation[0] not in ignored]
+    unique = {}
+    for violation in violations:
+        if violation[0] not in ignored:
+            unique.setdefault(violation[0], violation)
+    return list(unique.values())
 
 
 def audit_target(target):
@@ -766,10 +993,18 @@ def audit_target(target):
     target = Path(target)
     if not target.exists():
         raise FileNotFoundError(str(target))
+    files = [(source_file, source_file.read_text(encoding="utf-8", errors="ignore")) for source_file in iter_source_files(target)]
+    # A global :focus-visible rule in any stylesheet covers buttons in every component.
+    context = {
+        "global_focus_visible": any(
+            GLOBAL_FOCUS_VISIBLE_RE.search(strip_code_comments(content))
+            for source_file, content in files
+            if source_file.suffix.lower() == ".css"
+        )
+    }
     violations = []
-    for source_file in iter_source_files(target):
-        content = source_file.read_text(encoding="utf-8", errors="ignore")
-        violations.extend(find_audit_violations(content, source_file))
+    for source_file, content in files:
+        violations.extend(find_audit_violations(content, source_file, context))
     return violations
 
 # ----------------- MAIN CLI DISPATCHER -----------------

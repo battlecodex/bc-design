@@ -673,8 +673,7 @@
       font-size: 12px;
       font-weight: 500;
       color: var(--bc-accent);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.01em;
       margin-bottom: 12px;
     }
 
@@ -1227,8 +1226,7 @@
 
     .footer-col h5 {
       font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.01em;
       color: var(--bc-text-tertiary);
       margin-bottom: 16px;
       font-weight: 600;
@@ -1347,6 +1345,12 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
+    }
+    /* Visible keyboard focus for every control */
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--bc-accent-strong, #B35637);
+      outline-offset: 2px;
     }
   </style>
 </head>
@@ -1515,7 +1519,7 @@
                 <div class="artifact-snippet-card" id="streamArtifactBox">
                   <div class="snippet-top">
                     <span>artifact: cognitive-permanence.ts</span>
-                    <span>TypeScript • v3.5</span>
+                    <span>TypeScript, v3.5</span>
                   </div>
                   <div class="snippet-body">
                     <code>export interface ThoughtArtifact {<br>
@@ -1768,7 +1772,7 @@
           <div style="padding:10px; background:var(--bc-surface); border-radius:6px; border:1px solid var(--bc-border); font-family:var(--bc-font-serif); font-size:16px;">
             $$\oint_{\partial \Omega} \omega = \int_{\Omega} d\omega$$
           </div>
-          <p style="margin-top:10px; font-size:11px; color:#4EAA79;">✔ Generalized Stokes Theorem verified over smooth manifolds.</p>
+          <p style="margin-top:10px; font-size:11px; color:#4EAA79;">Generalized Stokes Theorem verified over smooth manifolds.</p>
         </div>
       </div>
 
