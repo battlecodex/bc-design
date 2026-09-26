@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Tasks</title></head>
+<body>
+  <main>
+    <h1>Your tasks</h1>
+    <ul id="tasks"></ul>
+  </main>
+  <script>
+    fetch("/api/tasks")
+      .then((response) => {
+        if (!response.ok) throw new Error("Tasks failed to load: " + response.status);
+        return response.json();
+      })
+      .then((tasks) => {
+        document.getElementById("tasks").innerHTML = tasks.map((task) => "<li>" + task.title + "</li>").join("");
+      })
+      .catch((error) => console.error(error.message));
+  </script>
+</body>
+</html>

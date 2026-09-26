@@ -76,6 +76,23 @@ class PreflightTests(unittest.TestCase):
             findings, _ = project.preflight(root)
         self.assertEqual(findings["palette"], [])
 
+    def test_reads_theme_token_blocks_and_component_folders_but_not_build_or_vendor_copies(self):
+        import shutil
+
+        with tempfile.TemporaryDirectory() as tempdir:
+            root = Path(tempdir) / "project"
+            shutil.copytree(ROOT / "tests" / "fixtures" / "preflight-project", root)
+            findings, _ = project.preflight(root)
+        self.assertEqual(
+            findings["palette"],
+            [
+                "3 color custom properties in :root:has(.theme-ckp) (app/globals.css:1)",
+                "2 color custom properties in .dark (app/globals.css:7)",
+            ],
+        )
+        self.assertEqual(findings["components"], ["Project components: src/components/ (2 files: Sidebar, TaskList)"])
+        self.assertEqual(findings["fonts"], [])
+
     def test_reuses_the_cache_until_package_json_changes(self):
         with tempfile.TemporaryDirectory() as tempdir:
             root = Path(tempdir)
@@ -155,17 +172,33 @@ class LockTests(unittest.TestCase):
             self.assertIn("was not changed", project.lock(root, "Other"))
             self.assertIn("(edited)", (root / "DESIGN.md").read_text(encoding="utf-8"))
 
-    def test_refresh_exports_keeps_the_locked_accent(self):
+    def test_refresh_exports_keeps_the_locked_accent_unless_one_is_given(self):
         with tempfile.TemporaryDirectory() as tempdir:
             root = Path(tempdir)
             project.lock(root, "Oriel", "sage")
             path = root / "DESIGN.md"
             path.write_text(path.read_text(encoding="utf-8").replace("--bc-radius-md: 8px;", "--bc-radius-md: 99px;"), encoding="utf-8")
-            self.assertIn("Exports refreshed", project.lock(root, "Oriel", "amber-brass", refresh_exports=True))
+            self.assertIn("locked accent", project.lock(root, "Oriel", refresh_exports=True))
             design = path.read_text(encoding="utf-8")
+            self.assertIn("--bc-radius-md: 8px;", design)
+            self.assertIn("--bc-accent-strong: #4D6B5D;", design)
+            self.assertIn("accent changed to amber-brass", project.lock(root, "Oriel", "amber-brass", refresh_exports=True))
+            design = path.read_text(encoding="utf-8")
+        self.assertIn("- UI accent: amber-brass", design)
+        self.assertIn("--bc-accent-strong: #9C671D;", design)
+
+    def test_refresh_exports_keeps_a_custom_brand_accent(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            root = Path(tempdir)
+            source = (ROOT / "tests" / "fixtures" / "design" / "ckp-DESIGN.md").read_text(encoding="utf-8")
+            (root / "DESIGN.md").write_text(source, encoding="utf-8")
+            project.lock(root, "CKP Tasks", refresh_exports=True)
+            design = (root / "DESIGN.md").read_text(encoding="utf-8")
+        self.assertIn("--bc-accent: #2E1A6E;", design)
+        self.assertIn("--bc-accent-active: #24155A;", design)
         self.assertIn("--bc-radius-md: 8px;", design)
-        self.assertIn("--bc-accent-strong: #4D6B5D;", design)
-        self.assertNotIn("#9C671D", design)
+        self.assertIn("- UI accent: CKP indigo", design)
+        self.assertNotIn("#D97757", design)
 
     def test_rejects_unknown_accent(self):
         with tempfile.TemporaryDirectory() as tempdir:

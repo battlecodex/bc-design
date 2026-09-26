@@ -41,7 +41,7 @@ To make BC Design available in every Claude Code project, install it once into y
 py -3 scripts/install.py --ai claude --global
 ```
 
-This writes `~/.claude/skills/` and adds the section to `~/.claude/CLAUDE.md`. Do not clone this repository into `~/.claude/skills/` directly: the repository root is not a skill, so the assistant will not find `bc-design` there.
+This writes `~/.claude/skills/` and adds the section to `~/.claude/CLAUDE.md`. If you cloned this repository straight into a skills folder instead, the root `SKILL.md` still registers `bc-design` and points the assistant at `.agents/skills/bc-design/SKILL.md`, but only the installer registers the five sibling skills and rewrites their paths.
 
 After installing, confirm the assistant actually loads the skill. Open the workspace in the tool, ask *"Design a pricing page for a bakery"*, and check that it names or reads `bc-design` before writing code.
 

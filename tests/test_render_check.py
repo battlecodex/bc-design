@@ -85,5 +85,91 @@ class RenderCheckTests(unittest.TestCase):
         self.assertIn("does-not-exist.html", completed.stderr)
 
 
+FIXTURES = ROOT / "tests" / "fixtures" / "render"
+
+
+def _serve_signed_in_app():
+    """A tiny app: /dashboard needs a session cookie, and its /api/tasks backend is down."""
+    import http.server
+    import threading
+
+    page = (FIXTURES / "signed-in-app.html").read_bytes()
+
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            if self.path.startswith("/dashboard"):
+                if "session=signed-in" not in (self.headers.get("Cookie") or ""):
+                    self.send_response(302)
+                    self.send_header("Location", "/login")
+                    self.end_headers()
+                    return
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(page)
+            elif self.path.startswith("/login"):
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(b"<!doctype html><title>Sign in</title><h1>Sign in</h1>")
+            else:
+                self.send_response(503)
+                self.end_headers()
+
+        def log_message(self, *args):
+            pass
+
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    return server
+
+
+class SignedInRenderTests(unittest.TestCase):
+    def test_parses_cookies_and_mocks(self):
+        self.assertEqual(
+            render_check.parse_cookies(["session=abc=1"], "http://localhost:3000/dashboard"),
+            [{"name": "session", "value": "abc=1", "url": "http://localhost:3000"}],
+        )
+        with self.assertRaises(ValueError):
+            render_check.parse_cookies(["session=abc"], "file:///tmp/page.html")
+        mocks = render_check.parse_mocks(["**/api/tasks*=tasks.json"], base=FIXTURES)
+        self.assertEqual(mocks[0][0], "**/api/tasks*")
+        self.assertIn("Review the weekly plan", mocks[0][1])
+        self.assertTrue(render_check.redirected_to_sign_in("http://x/dashboard", "http://x/login?next=/dashboard"))
+        self.assertFalse(render_check.redirected_to_sign_in("http://x/login", "http://x/login"))
+
+    def test_renders_a_signed_in_page_with_mocked_data(self):
+        try:
+            import playwright  # noqa: F401
+        except ImportError:
+            self.skipTest("Playwright is not installed")
+        server = _serve_signed_in_app()
+        url = f"http://127.0.0.1:{server.server_address[1]}/dashboard"
+        try:
+            with tempfile.TemporaryDirectory() as tempdir:
+                out = Path(tempdir)
+                viewports = [(375, 812)]
+                _, signed_out = render_check.run_checks(url, viewports, out / "a")
+                _, with_cookie = render_check.run_checks(
+                    url, viewports, out / "b",
+                    cookies=render_check.parse_cookies(["session=signed-in"], url),
+                    mocks=render_check.parse_mocks(["**/api/tasks=tasks.json"], base=FIXTURES),
+                )
+                _, with_state = render_check.run_checks(
+                    url, viewports, out / "c",
+                    storage_state=render_check.check_storage_state(str(FIXTURES / "storage-state.json")),
+                    mocks=render_check.parse_mocks(["**/api/tasks=tasks.json"], base=FIXTURES),
+                )
+                _, unmocked = render_check.run_checks(
+                    url, viewports, out / "d", cookies=render_check.parse_cookies(["session=signed-in"], url)
+                )
+        finally:
+            server.shutdown()
+        self.assertIn("render-signed-out", {finding["rule_id"] for finding in signed_out})
+        self.assertEqual(with_cookie, [])
+        self.assertEqual(with_state, [])
+        self.assertIn("render-console-error", {finding["rule_id"] for finding in unmocked})
+
+
 if __name__ == "__main__":
     unittest.main()

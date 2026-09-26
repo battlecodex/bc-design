@@ -1,0 +1,10 @@
+:root:has(.theme-ckp) {
+  --brand: #2E1A6E;
+  --canvas: #FAF9F5;
+  --ink: #141413;
+}
+
+.dark {
+  --brand: #8C7BD6;
+  --canvas: #181816;
+}

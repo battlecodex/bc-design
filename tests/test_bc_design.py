@@ -393,6 +393,17 @@ class BCDesignTests(unittest.TestCase):
                 self.assertNotIn(".agents/skills/", skill)
                 self.assertIn(f"{skills_dir}/bc-design/scripts/project.py", skill)
 
+    def test_a_repository_checkout_registers_as_a_pointer_skill(self):
+        router = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        canonical = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        frontmatter = lambda text: text.split("---")[1]
+        self.assertEqual(frontmatter(router), frontmatter(canonical))
+        self.assertIn(".agents/skills/bc-design/SKILL.md", router)
+        self.assertTrue((ROOT / ".agents/skills/bc-design/SKILL.md").is_file())
+        # A pointer, not a copy: none of the canonical sections are repeated.
+        self.assertLess(len(router.splitlines()), 20)
+        self.assertNotIn("### Default enforcement", router)
+
     def test_global_install_uses_the_home_directory(self):
         with tempfile.TemporaryDirectory() as tempdir:
             sys.path.insert(0, str(SKILL_ROOT / "scripts"))
