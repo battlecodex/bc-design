@@ -317,7 +317,7 @@ AUDIT_EXTENSIONS = {".css", ".html", ".js", ".jsx", ".ts", ".tsx", ".vue", ".sve
 
 MOTION_DECLARATION_RE = re.compile(
     r"(?P<property>(?<![-\w])(?:transition|animation)(?:-[a-z-]+)?\s*):(?!\s*\{)\s*"
-    r"(?P<value>[^;{}]*\S[^;{}]*)",
+    r"(?P<value>[^;{}]*[^;{}\s][^;{}]*)",
     re.IGNORECASE,
 )
 MOTION_TIME_RE = re.compile(r"(?<![\w.-])(?P<amount>(?:\d+\.?\d*|\.\d+))(?P<unit>ms|s)\b", re.IGNORECASE)
@@ -325,6 +325,25 @@ MOTION_EASING_TOKEN_RE = re.compile(
     r"var\(\s*--[^)]*ease[^)]*\)|cubic-bezier\s*\(",
     re.IGNORECASE,
 )
+# The four control points; Tailwind arbitrary values separate them with commas or underscores.
+CUBIC_BEZIER_RE = re.compile(
+    r"cubic-bezier\(\s*(-?\d*\.?\d+)[\s,_]+(-?\d*\.?\d+)[\s,_]+(-?\d*\.?\d+)[\s,_]+(-?\d*\.?\d+)\s*\)",
+    re.IGNORECASE,
+)
+
+
+def _overshoots(value):
+    """A cubic-bezier whose y1 or y2 leaves [0, 1] overshoots or bounces past its end state."""
+    for match in CUBIC_BEZIER_RE.finditer(value):
+        y1, y2 = float(match.group(2)), float(match.group(4))
+        if not (0 <= y1 <= 1 and 0 <= y2 <= 1):
+            return True
+    return False
+
+
+def _easing_value_ok(value):
+    """An approved easing: a BC ease token or a calm cubic-bezier, never an overshooting curve."""
+    return bool(MOTION_EASING_TOKEN_RE.search(value)) and not _overshoots(value)
 
 
 # A reduced-motion branch: a CSS media query, a matchMedia query in script, or a Tailwind motion-reduce variant.
@@ -342,9 +361,14 @@ def _motion_declarations(content):
     ]
 
 
+def _blank(text):
+    """Replace text with spaces of the same length, keeping line breaks, so offsets and line numbers still line up."""
+    return re.sub(r"[^\n]", " ", text)
+
+
 def _strip_motion_comments(content):
     """Ignore block comments so examples and disabled declarations are not audited."""
-    return re.sub(r"/\*[\s\S]*?\*/", "", content)
+    return re.sub(r"/\*[\s\S]*?\*/", lambda match: _blank(match.group(0)), content)
 
 
 def _duration_ms(amount, unit):
@@ -364,62 +388,16 @@ def _has_active_motion(declarations, content):
 
 
 def _motion_violations(content, source_file):
-    """Return animation budget, easing-token, and reduced-motion findings."""
+    """Reduced-motion findings for CSS transitions and animations; durations and easing come from _motion_hits."""
     audit_content = _strip_motion_comments(content)
     declarations = _motion_declarations(audit_content)
-    if not declarations and not re.search(r"@(?:-webkit-)?keyframes\b", audit_content, re.IGNORECASE):
-        return []
-
-    violations = []
-    duration_violation = False
-    easing_violation = False
-    for property_name, value in declarations:
-        # Delays and iteration counts are not the visual motion duration budget.
-        checks_duration = property_name in {"transition", "animation"} or property_name.endswith("-duration")
-        if checks_duration:
-            for match in MOTION_TIME_RE.finditer(value):
-                duration = _duration_ms(match.group("amount"), match.group("unit"))
-                is_thinking_exception = duration == 1800 and re.search(
-                    r"thinking|shimmer|pulse", f"{property_name} {value}", re.IGNORECASE
-                )
-                if duration > 400 and not is_thinking_exception:
-                    duration_violation = True
-                    break
-
-        # Every active transition/animation must name an approved easing token or curve.
-        checks_easing = (
-            property_name in {"transition", "animation"}
-            or property_name.endswith("-timing-function")
-        )
-        if checks_easing and value.lower() not in {"none", "initial", "inherit", "unset"}:
-            if not MOTION_EASING_TOKEN_RE.search(value):
-                easing_violation = True
-
-    if duration_violation:
-        violations.append(
-            (
-                "motion-duration-budget",
-                "Keep ordinary motion at 150–250ms (up to 400ms for drawers/modals); use var(--bc-duration-reveal) for once-only reveals and the shimmer token for 1800ms thinking states.",
-                source_file,
-            )
-        )
-    if easing_violation:
-        violations.append(
-            (
-                "motion-easing-token",
-                "Use a BC easing token (for example var(--bc-ease)) or the approved deceleration cubic-bezier curve; avoid browser-default easing keywords.",
-                source_file,
-            )
-        )
     if _has_active_motion(declarations, audit_content) and not REDUCED_MOTION_BRANCH_RE.search(audit_content):
-        violations.append(
-            (
-                "reduced-motion-support",
-                "Provide a prefers-reduced-motion: reduce override whenever the source defines transitions or animations.",
-                source_file,
-            )
-        )
-    return violations
+        return [(
+            "reduced-motion-support",
+            "Provide a prefers-reduced-motion: reduce override whenever the source defines transitions or animations.",
+            source_file,
+        )]
+    return []
 
 
 def iter_source_files(target):
@@ -470,58 +448,113 @@ NON_COPY_ATTRIBUTE_RE = re.compile(
 
 
 def strip_code_comments(content):
-    """Remove //, /* */, {/* */}, and <!-- --> comments while keeping string literals intact."""
-    return CODE_TOKEN_RE.sub(lambda match: match.group("string") or " ", content)
+    """Blank //, /* */, {/* */}, and <!-- --> comments, keeping string literals, offsets, and line numbers intact."""
+    return CODE_TOKEN_RE.sub(lambda match: match.group("string") or _blank(match.group(0)), content)
 
 
-def _string_copy(markup):
-    """Human-readable string literals in script markup: labels, titles, and messages, not class lists or paths."""
-    copy = []
-    for match in CODE_TOKEN_RE.finditer(markup):
-        literal = match.group("string")
-        if not literal:
+ARIA_HIDDEN_RE = re.compile(r"aria-hidden\s*=\s*(?:[\"']true[\"']|\{\s*true\s*\})", re.IGNORECASE)
+
+
+def _copy_markup(content):
+    """The markup with scripts, styles, and comments blanked out; same length as ``content``."""
+    return strip_code_comments(HIDDEN_MARKUP_RE.sub(lambda match: _blank(match.group(0)), content))
+
+
+def _top_level_spans(markup, start, end):
+    """Parts of a JSX text run outside {expressions}."""
+    spans, depth, run_start = [], 0, start
+    for index in range(start, end):
+        char = markup[index]
+        if char == "{":
+            if depth == 0 and index > run_start:
+                spans.append((run_start, index))
+            depth += 1
+        elif char == "}" and depth:
+            depth -= 1
+            if depth == 0:
+                run_start = index + 1
+    if depth == 0 and end > run_start:
+        spans.append((run_start, end))
+    return spans
+
+
+def _copy_spans(content, source_file):
+    """(markup, spans): where interface copy sits, as offsets into ``content``.
+
+    Copy is element text and, in script markup, human-readable string labels. Comments, scripts,
+    styles, {expressions}, class lists, keys, ids, and text inside aria-hidden elements are not copy.
+    """
+    suffix = Path(source_file).suffix.lower()
+    if suffix not in MARKUP_EXTENSIONS:
+        return "", []
+    markup = _copy_markup(content)
+    spans = []
+    for match in re.finditer(r">([^<>]+)<", markup):
+        tag = markup[markup.rfind("<", 0, match.start()):match.start() + 1]
+        # Decorative (aria-hidden) text and keyboard keys such as <kbd>⌘↵</kbd> are not prose.
+        if ARIA_HIDDEN_RE.search(tag) or re.match(r"<kbd\b", tag, re.IGNORECASE):
             continue
-        text = literal[1:-1]
-        if not re.search(r"[A-Za-z]{2,}", text) or not re.search(r"\s", text.strip()):
-            continue
-        if NON_COPY_ATTRIBUTE_RE.search(markup[max(0, match.start() - 40):match.start()]):
-            continue
-        copy.append(text)
-    return copy
+        if suffix in SCRIPT_MARKUP_EXTENSIONS:
+            spans.extend(_top_level_spans(markup, match.start(1), match.end(1)))
+        else:
+            spans.append((match.start(1), match.end(1)))
+    if suffix in SCRIPT_MARKUP_EXTENSIONS:
+        for match in CODE_TOKEN_RE.finditer(markup):
+            literal = match.group("string")
+            if not literal:
+                continue
+            text = literal[1:-1]
+            if not re.search(r"[A-Za-z]{2,}", text) or not re.search(r"\s", text.strip()):
+                continue
+            if NON_COPY_ATTRIBUTE_RE.search(markup[max(0, match.start() - 40):match.start()]):
+                continue
+            spans.append((match.start() + 1, match.end() - 1))
+    merged = []
+    for start, end in sorted(spans):
+        if merged and start < merged[-1][1]:
+            merged[-1] = (merged[-1][0], max(end, merged[-1][1]))
+        else:
+            merged.append((start, end))
+    return markup, [(start, end) for start, end in merged if markup[start:end].strip()]
 
 
 def visible_text(content, source_file):
     """Return the human-readable copy of a markup file (element text and, in script markup, string labels)."""
-    suffix = Path(source_file).suffix.lower()
-    if suffix not in MARKUP_EXTENSIONS:
-        return ""
-    markup = strip_code_comments(HIDDEN_MARKUP_RE.sub(" ", content))
-    segments = re.findall(r">([^<>]+)<", markup)
-    if suffix in SCRIPT_MARKUP_EXTENSIONS:
-        # JSX text sits between tags; {expressions} inside it are code, so drop them.
-        cleaned = []
-        for segment in segments:
-            previous = None
-            while previous != segment:
-                previous, segment = segment, re.sub(r"\{[^{}]*\}", " ", segment)
-            cleaned.append(segment)
-        segments = cleaned + _string_copy(markup)
-    return "\n".join(segment for segment in segments if segment.strip())
+    markup, spans = _copy_spans(content, source_file)
+    return "\n".join(markup[start:end] for start, end in spans)
 
 
-# Symbols standing in for icons: bullets, checks, stars, sparkles, dingbats, geometric shapes, and emoji.
+def _copy_hits(content, source_file, pattern):
+    """(offset, matched text) for each match of ``pattern`` inside interface copy."""
+    markup, spans = _copy_spans(content, source_file)
+    return [
+        (start + match.start(), match.group(0))
+        for start, end in spans
+        for match in pattern.finditer(markup[start:end])
+    ]
+
+
+# Symbols standing in for icons: bullets, arrows, checks, stars, sparkles, dingbats, geometric shapes, and emoji.
 UNICODE_GLYPH_RE = re.compile(
-    "[\u2022\u2023\u2043\u25a0-\u25ff\u2600-\u26ff\u2700-\u27bf\u2b50\u2b55\U0001f300-\U0001faff]"
+    "[\u2022\u2023\u2043\u2190-\u21ff\u25a0-\u25ff\u2600-\u26ff\u2700-\u27bf\u27f0-\u27ff"
+    "\u2b50\u2b55\U0001f300-\U0001faff]"
 )
+EM_DASH_COPY_RE = re.compile(r"\w[ \t]*\u2014[ \t]*\w")
 CLASS_ATTRIBUTE_RE = re.compile(r"\bclass(?:Name)?\s*=\s*\{?\s*[\"'`]([^\"'`]*)[\"'`]")
 CSS_BLOCK_RE = re.compile(r"\{([^{}]*)\}")
 
 
-def iter_css_rules(content):
-    """Yield (selector, body) for each innermost {...} block; the selector is the text since the previous brace."""
+def iter_css_rule_spans(content):
+    """Yield (selector, body, body offset) for each innermost {...} block."""
     for match in CSS_BLOCK_RE.finditer(content):
         start = max(content.rfind("{", 0, match.start()), content.rfind("}", 0, match.start())) + 1
-        yield content[start:match.start()], match.group(1)
+        yield content[start:match.start()], match.group(1), match.start(1)
+
+
+def iter_css_rules(content):
+    """Yield (selector, body) for each innermost {...} block; the selector is the text since the previous brace."""
+    for selector, body, _ in iter_css_rule_spans(content):
+        yield selector, body
 
 
 def _letter_spacing_is_wide(value):
@@ -532,19 +565,24 @@ def _letter_spacing_is_wide(value):
     return amount >= (1 if unit == "px" else 0.05)
 
 
-def _tracked_uppercase(content):
-    for classes in CLASS_ATTRIBUTE_RE.findall(content):
+def _tracked_uppercase_hits(content):
+    hits = []
+    for match in CLASS_ATTRIBUTE_RE.finditer(content):
+        classes = match.group(1)
         if not re.search(r"(?<![\w-])uppercase(?![\w-])", classes):
             continue
-        for tracking in re.findall(r"(?<![\w-])tracking-(wide|wider|widest|\[[^\]]+\])", classes):
-            if _letter_spacing_is_wide(tracking.strip("[]")):
-                return True
-    for _, body in iter_css_rules(content):
-        if re.search(r"text-transform\s*:\s*uppercase", body, re.IGNORECASE):
+        if any(
+            _letter_spacing_is_wide(tracking.strip("[]"))
+            for tracking in re.findall(r"(?<![\w-])tracking-(wide|wider|widest|\[[^\]]+\])", classes)
+        ):
+            hits.append((match.start(), None))
+    for _, body, offset in iter_css_rule_spans(content):
+        transform = re.search(r"text-transform\s*:\s*uppercase", body, re.IGNORECASE)
+        if transform:
             spacing = re.search(r"letter-spacing\s*:\s*([^;]+)", body, re.IGNORECASE)
             if spacing and _letter_spacing_is_wide(spacing.group(1)):
-                return True
-    return False
+                hits.append((offset + transform.start(), None))
+    return hits
 
 
 GLOBAL_FOCUS_VISIBLE_RE = re.compile(
@@ -552,63 +590,83 @@ GLOBAL_FOCUS_VISIBLE_RE = re.compile(
 )
 
 
-def _button_without_focus_ring(content, source_file, context):
-    """A styled button with no focus-visible style in its class list, its stylesheet, or a global rule."""
+def _button_focus_hits(content, source_file, context=None):
+    """Styled buttons with no focus-visible style in their class list, their stylesheet, or a global rule."""
     if (context or {}).get("global_focus_visible") or ":focus-visible" in content:
-        return False
+        return []
     if Path(source_file).suffix.lower() == ".css":
         # A button rule that paints its own surface needs its own focus style.
-        return any(
-            re.search(r"(?:^|[\s,>+~])(?:button\b|\.btn\b|\.button\b|\[type=[\"']?(?:button|submit))", selector)
+        return [
+            (offset, None)
+            for selector, body, offset in iter_css_rule_spans(content)
+            if re.search(r"(?:^|[\s,>+~])(?:button\b|\.btn\b|\.button\b|\[type=[\"']?(?:button|submit))", selector)
             and re.search(r"\b(?:background|border)(?:-color)?\s*:", body, re.IGNORECASE)
-            for selector, body in iter_css_rules(content)
-        )
+        ]
+    hits = []
     for tag in re.finditer(r"<button\b[^>]*>", content):
         classes = CLASS_ATTRIBUTE_RE.search(tag.group(0))
         if classes and not re.search(r"(?<![\w-])focus(?:-visible)?:", classes.group(1)):
-            return True
-    return False
+            hits.append((tag.start(), None))
+    return hits
 
 
 PURE_BLACK_RE = r"(?:#000(?:000)?\b|\bblack\b|rgba?\(\s*0\s*,\s*0\s*,\s*0\b|rgba?\(\s*0\s+0\s+0\b)"
 OVERLAY_CONTEXT_RE = re.compile(r"overlay|backdrop|scrim|modal|dialog|lightbox|(?<![\w-])inset-0(?![\w-])", re.IGNORECASE)
 
 
-def _pure_black_overlay(content):
-    """A translucent or overlay background in pure black instead of the warm ink scrim."""
-    if re.search(r"(?<![\w-])bg-black/(?:\d+|\[[^\]]+\])", content):
-        return True
-    for classes in CLASS_ATTRIBUTE_RE.findall(content):
-        if re.search(r"(?<![\w-])bg-black(?![\w/-])", classes) and OVERLAY_CONTEXT_RE.search(classes):
-            return True
-    for selector, body in iter_css_rules(content):
-        if OVERLAY_CONTEXT_RE.search(selector) and re.search(
-            r"background(?:-color)?\s*:\s*" + PURE_BLACK_RE, body, re.IGNORECASE
-        ):
-            return True
-    for line in content.splitlines():
-        if OVERLAY_CONTEXT_RE.search(line) and re.search(r"background(?:Color)?\s*:\s*[\"'`]?\s*" + PURE_BLACK_RE, line, re.IGNORECASE):
-            return True
-    return False
+# bg-black and its arbitrary-value spellings: bg-[#000], bg-[#000000], bg-[rgb(0_0_0/0.5)], bg-[rgba(0,0,0,.5)].
+BLACK_BACKGROUND_UTILITY_RE = re.compile(
+    r"(?<![\w-])bg-(?:black|\[(?P<arbitrary>#000(?:000)?|rgba?\(\s*0[\s,_]+0[\s,_]+0(?P<alpha>[^\]]*)\))\])"
+    r"(?P<opacity>/(?:\d+|\[[^\]]+\]))?(?![\w/-])",
+    re.IGNORECASE,
+)
+
+
+def _line_at(content, offset):
+    start = content.rfind("\n", 0, offset) + 1
+    end = content.find("\n", offset)
+    return content[start:end if end != -1 else len(content)]
+
+
+def _pure_black_hits(content):
+    """Translucent black backgrounds, and opaque black on overlays, instead of the warm ink scrim."""
+    hits = []
+    for match in BLACK_BACKGROUND_UTILITY_RE.finditer(content):
+        translucent = bool(match.group("opacity")) or bool(re.search(r"[,/_]\s*\.?\d", match.group("alpha") or ""))
+        if translucent or OVERLAY_CONTEXT_RE.search(_line_at(content, match.start())):
+            hits.append((match.start(), None))
+    for selector, body, offset in iter_css_rule_spans(content):
+        if OVERLAY_CONTEXT_RE.search(selector):
+            background = re.search(r"background(?:-color)?\s*:\s*" + PURE_BLACK_RE, body, re.IGNORECASE)
+            if background:
+                hits.append((offset + background.start(), None))
+    # Inline styles on an overlay element: style={{ background: "#000" }} or style="background: #000".
+    position = 0
+    for line in content.splitlines(keepends=True):
+        inline = re.search(r"background(?:Color)?\s*:\s*[\"'`]?\s*" + PURE_BLACK_RE, line, re.IGNORECASE)
+        if inline and OVERLAY_CONTEXT_RE.search(line):
+            hits.append((position + inline.start(), None))
+        position += len(line)
+    return hits
 
 
 def _component_violations(content, source_file, context=None):
     """House rules that live in class lists and stylesheets: tracked capitals, focus rings, and overlays."""
     code = strip_code_comments(content)
     violations = []
-    if _tracked_uppercase(code):
+    if _tracked_uppercase_hits(code):
         violations.append((
             "tracked-uppercase-label",
             "Set labels in sentence case without wide tracking; let size and weight carry the hierarchy.",
             source_file,
         ))
-    if _button_without_focus_ring(code, source_file, context):
+    if _button_focus_hits(code, source_file, context):
         violations.append((
             "button-focus-ring-missing",
             "Give every button a visible 2px focus-visible ring (focus-visible:ring-2 or a :focus-visible rule).",
             source_file,
         ))
-    if _pure_black_overlay(code):
+    if _pure_black_hits(code):
         violations.append((
             "pure-black-overlay",
             "Tint overlays and backdrops with the warm ink scrim (var(--bc-scrim)), not pure black.",
@@ -617,24 +675,29 @@ def _component_violations(content, source_file, context=None):
     return violations
 
 
+def _glyph_message(glyphs):
+    distinct = ", ".join(f"'{glyph}'" for glyph in dict.fromkeys(glyphs))
+    noun = "glyph" if len(dict.fromkeys(glyphs)) == 1 else "glyphs"
+    return f"Replace the Unicode {noun} {distinct} in interface copy with a 1.5px monoline SVG icon or plain words."
+
+
 def _craft_violations(content, source_file):
     """Copy, honesty, and focus findings shared with the house luxury standard."""
     violations = []
-    copy = visible_text(content, source_file)
     # A dash between words is an aside; a leading dash used as a list marker is not copy.
-    if re.search(r"\w[ \t]*\u2014[ \t]*\w", copy):
+    if _copy_hits(content, source_file, EM_DASH_COPY_RE):
         violations.append((
             "em-dash-copy",
             "Rewrite interface copy without em dashes; use a period, comma, colon, or parentheses.",
             source_file,
         ))
-    if BUZZWORD_RE.search(copy):
+    if _copy_hits(content, source_file, BUZZWORD_RE):
         violations.append((
             "buzzword-copy",
             "Replace marketing buzzwords with a specific statement of what the product does.",
             source_file,
         ))
-    if UNVERIFIED_CLAIM_RE.search(copy):
+    if _copy_hits(content, source_file, UNVERIFIED_CLAIM_RE):
         violations.append((
             "unverified-claim",
             "Remove compliance, uptime, or speed claims unless the product can show evidence for them.",
@@ -646,13 +709,9 @@ def _craft_violations(content, source_file):
             "Point every link at a real page or section, or render the item as plain text until it exists.",
             source_file,
         ))
-    glyph = UNICODE_GLYPH_RE.search(copy)
-    if glyph:
-        violations.append((
-            "unicode-glyph-copy",
-            f"Replace the Unicode glyph '{glyph.group(0)}' in interface copy with a 1.5px monoline SVG icon or plain words.",
-            source_file,
-        ))
+    glyphs = [glyph for _, glyph in _copy_hits(content, source_file, UNICODE_GLYPH_RE)]
+    if glyphs:
+        violations.append(("unicode-glyph-copy", _glyph_message(glyphs), source_file))
     removes_outline = re.search(r"\boutline\s*:\s*(?:none|0)\b", content, re.IGNORECASE)
     replaces_focus = re.search(r":focus-visible[^{}]*\{[^{}]*\b(?:outline|box-shadow)\s*:", content, re.IGNORECASE)
     if removes_outline and not replaces_focus:
@@ -686,6 +745,7 @@ def _accent_fill_violations(content, source_file):
 
 TAILWIND_DURATION_RE = re.compile(r"(?<![\w-])duration-(?:(?P<steps>\d+)|\[(?P<amount>\d*\.?\d+)(?P<unit>ms|s)\])(?![\w-])")
 TAILWIND_EASE_RE = re.compile(r"(?<![\w-])ease-(?:in-out|in|out|linear)(?![\w-])")
+TAILWIND_ARBITRARY_EASE_RE = re.compile(r"(?<![\w-])ease-\[([^\]]+)\]")
 GSAP_EASE_RE = re.compile(r"\bease\s*:\s*[\"']([^\"']+)[\"']")
 GSAP_DURATION_RE = re.compile(r"\bduration\s*:\s*(\d*\.?\d+)(?![\w.])")
 # GSAP equivalents of the BC tokens (see references/gsap-orchestration.md).
@@ -693,48 +753,81 @@ GSAP_TOKEN_EASES = {"expo.out", "power2.inout", "none", "linear"}
 GSAP_TOKEN_DURATIONS = {0.0, 0.15, 0.25, 0.4, 0.6, 1.8}
 
 
-def _utility_motion_violations(content, source_file):
-    """Tailwind duration and easing classes, and GSAP eases and durations, measured against the BC motion tokens."""
+def _tailwind_duration_limit(line):
+    if re.search(r"reveal", line, re.IGNORECASE):
+        return 600
+    if re.search(r"drawer|sheet|dialog|modal", line, re.IGNORECASE):
+        return 400
+    return 250
+
+
+def _motion_hits(content):
+    """(duration hits, easing hits) across CSS declarations, Tailwind classes, and GSAP calls.
+
+    Each hit is (offset, None). CSS allows 400ms (drawers and modals) and the 1800ms thinking
+    shimmer; Tailwind allows 250ms, 400ms on drawers and dialogs, and 600ms on reveals; GSAP uses
+    the token table, except in scrubbed timelines, whose durations are proportions of scroll.
+    """
+    css = _strip_motion_comments(content)
     code = strip_code_comments(content)
-    duration_violation = easing_violation = False
+    durations, easings = [], []
+    for match in MOTION_DECLARATION_RE.finditer(css):
+        property_name = match.group("property").strip().lower()
+        value = match.group("value").strip()
+        # Delays and iteration counts are not the visual motion duration budget.
+        if property_name in {"transition", "animation"} or property_name.endswith("-duration"):
+            for time in MOTION_TIME_RE.finditer(value):
+                duration = _duration_ms(time.group("amount"), time.group("unit"))
+                thinking = duration == 1800 and re.search(r"thinking|shimmer|pulse", f"{property_name} {value}", re.IGNORECASE)
+                if duration > 400 and not thinking:
+                    durations.append((match.start(), None))
+                    break
+        # Every active transition/animation must name an approved easing token or calm curve.
+        if property_name in {"transition", "animation"} or property_name.endswith("-timing-function"):
+            if value.lower() not in {"none", "initial", "inherit", "unset"} and not _easing_value_ok(value):
+                easings.append((match.start(), None))
     for match in TAILWIND_DURATION_RE.finditer(code):
         if match.group("steps"):
             duration = float(match.group("steps"))
         else:
             duration = _duration_ms(match.group("amount"), match.group("unit"))
-        line_start = code.rfind("\n", 0, match.start()) + 1
-        line_end = code.find("\n", match.end())
-        line = code[line_start:line_end if line_end != -1 else len(code)]
-        if re.search(r"reveal", line, re.IGNORECASE):
-            limit = 600
-        elif re.search(r"drawer|sheet|dialog|modal", line, re.IGNORECASE):
-            limit = 400
-        else:
-            limit = 250
-        if duration > limit:
-            duration_violation = True
-    if TAILWIND_EASE_RE.search(code):
-        easing_violation = True
+        if duration > _tailwind_duration_limit(_line_at(code, match.start())):
+            durations.append((match.start(), None))
+    easings.extend((match.start(), None) for match in TAILWIND_EASE_RE.finditer(code))
+    for match in TAILWIND_ARBITRARY_EASE_RE.finditer(code):
+        if _overshoots(match.group(1)):
+            easings.append((match.start(), None))
     if GSAP_CALL_RE.search(code):
-        if any(value.lower() not in GSAP_TOKEN_EASES for value in GSAP_EASE_RE.findall(code)):
-            easing_violation = True
-        # A scrubbed timeline's durations are proportions of the scroll distance, not time.
+        easings.extend(
+            (match.start(), None) for match in GSAP_EASE_RE.finditer(code) if match.group(1).lower() not in GSAP_TOKEN_EASES
+        )
         if not re.search(r"\bscrub\s*:", code):
-            if any(float(value) not in GSAP_TOKEN_DURATIONS for value in GSAP_DURATION_RE.findall(code)):
-                duration_violation = True
+            durations.extend(
+                (match.start(), None)
+                for match in GSAP_DURATION_RE.finditer(code)
+                if float(match.group(1)) not in GSAP_TOKEN_DURATIONS
+            )
+    return durations, easings
+
+
+MOTION_DURATION_MESSAGE = (
+    "Keep motion on the BC duration tokens: 150-250ms for UI (duration-150, duration-250, or 0.15/0.25 in GSAP), "
+    "400ms for drawers and dialogs, 600ms only for once-only reveals, and the shimmer token for 1800ms thinking states."
+)
+MOTION_EASING_MESSAGE = (
+    "Use a BC easing token (var(--bc-ease), ease-[var(--bc-ease)], or \"expo.out\"/\"power2.inOut\" in GSAP); "
+    "avoid browser-default keywords and cubic-bezier curves that overshoot or bounce."
+)
+
+
+def _utility_motion_violations(content, source_file):
+    """Duration and easing findings for CSS, Tailwind, and GSAP motion."""
+    durations, easings = _motion_hits(content)
     violations = []
-    if duration_violation:
-        violations.append((
-            "motion-duration-budget",
-            "Use the BC duration tokens: duration-150 or duration-250 for UI (0.15 or 0.25 in GSAP), 400ms for drawers and dialogs, 600ms only for once-only reveals.",
-            source_file,
-        ))
-    if easing_violation:
-        violations.append((
-            "motion-easing-token",
-            "Replace ease-in, ease-out, ease-linear, and off-token GSAP eases with the BC curve: ease-[var(--bc-ease)] in Tailwind, \"expo.out\" or \"power2.inOut\" in GSAP.",
-            source_file,
-        ))
+    if durations:
+        violations.append(("motion-duration-budget", MOTION_DURATION_MESSAGE, source_file))
+    if easings:
+        violations.append(("motion-easing-token", MOTION_EASING_MESSAGE, source_file))
     return violations
 
 
@@ -795,65 +888,116 @@ def _ignored_rules(content):
     return {rule.strip().lower() for match in IGNORE_COMMENT_RE.finditer(content) for rule in match.group(1).split(",")}
 
 
+# Rules found by one pattern each; every match is a finding on its own line.
+PATTERN_CHECKS = [
+    (
+        "monotonous-card-kit",
+        re.compile(r"rounded-xl\s+p-6", re.IGNORECASE),
+        "Avoid the repeated rounded-xl p-6 card template.",
+    ),
+    (
+        "template-arrow-cta",
+        re.compile(r"(?:button|cta|class(?:name)?\s*=)[^\n]{0,160}→", re.IGNORECASE),
+        "Use an active-voice CTA without a decorative arrow suffix.",
+    ),
+    (
+        "middle-dot-metadata",
+        re.compile(r"\s·\s"),
+        "Avoid middle-dot metadata strings; use a label, line break, or meaningful punctuation.",
+    ),
+    (
+        "template-arrow-glyph",
+        re.compile(
+            r"<(?:a|button)\b[^>]*>[\s\S]{0,320}?[↗↘→←↑↓][\s\S]{0,120}?</(?:a|button)>",
+            re.IGNORECASE,
+        ),
+        "Remove decorative arrow glyphs from links and buttons; make the action label carry the meaning.",
+    ),
+    (
+        "unicode-icon-glyph",
+        re.compile(
+            r"<[^>]*\baria-hidden\s*=\s*['\"]true['\"][^>]*>\s*[⌖↗↘→←↑↓★☆✦✧]\s*</[^>]+>",
+            re.IGNORECASE,
+        ),
+        "Use a purposeful 1.5px monoline SVG icon instead of a Unicode glyph.",
+    ),
+    (
+        "decorative-index-marker",
+        re.compile(r"(?:>\s*[A-C]\s*<|\b0[1-9]\s+—\s+[A-Za-z])"),
+        "Do not use decorative A/B/C or 01—03 markers unless they encode a real ordered sequence.",
+    ),
+    (
+        "focus-ring-width",
+        re.compile(
+            r":focus-visible[^{}]*\{[^{}]*\boutline\s*:\s*(?!2px\b)\d+px",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        "Use a visible 2px focus ring for keyboard users.",
+    ),
+    (
+        "sticky-z-index-token",
+        re.compile(
+            r"(?:position\s*:\s*sticky[^{}]*\bz-index\s*:\s*(?!30\b)\d+|"
+            r"\bz-index\s*:\s*(?!30\b)\d+[^{}]*position\s*:\s*sticky)",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        "Use the semantic sticky-nav z-index token (30), not an arbitrary layer number.",
+    ),
+]
+
+GLYPH_IN_MATCH_RE = re.compile("[⌖↗↘→←↑↓★☆✦✧]")
+
+
+def _pattern_hits(pattern, content):
+    """Offsets of each match, pointing at the glyph when the match spans a whole link or button."""
+    hits = []
+    for match in pattern.finditer(content):
+        glyph = GLYPH_IN_MATCH_RE.search(match.group(0))
+        hits.append((match.start() + (glyph.start() if glyph else 0), None))
+    return hits
+
+
+def _line_locators():
+    """Rules whose findings can be pinned to each offending line, mapped to their hit finders."""
+    code = strip_code_comments
+    patterns = {
+        rule_id: (lambda content, source_file, context, pattern=pattern: _pattern_hits(pattern, content))
+        for rule_id, pattern, _ in PATTERN_CHECKS
+    }
+    return {
+        **patterns,
+        "motion-duration-budget": lambda content, source_file, context: _motion_hits(content)[0],
+        "motion-easing-token": lambda content, source_file, context: _motion_hits(content)[1],
+        "pure-black-overlay": lambda content, source_file, context: _pure_black_hits(code(content)),
+        "tracked-uppercase-label": lambda content, source_file, context: _tracked_uppercase_hits(code(content)),
+        "button-focus-ring-missing": lambda content, source_file, context: _button_focus_hits(code(content), source_file, context),
+        "unicode-glyph-copy": lambda content, source_file, context: _copy_hits(content, source_file, UNICODE_GLYPH_RE),
+        "em-dash-copy": lambda content, source_file, context: _copy_hits(content, source_file, EM_DASH_COPY_RE),
+        "buzzword-copy": lambda content, source_file, context: _copy_hits(content, source_file, BUZZWORD_RE),
+        "unverified-claim": lambda content, source_file, context: _copy_hits(content, source_file, UNVERIFIED_CLAIM_RE),
+    }
+
+
+def violation_locations(rule_id, content, source_file, context=None):
+    """[(line, message or None)] for every line that breaks ``rule_id``, or None when the rule is file-level.
+
+    A message is returned only when it differs by line: the glyph rule names the glyphs on that line.
+    """
+    locator = _line_locators().get(rule_id)
+    if locator is None:
+        return None
+    by_line = {}
+    for offset, detail in locator(content, source_file, context):
+        by_line.setdefault(content.count("\n", 0, offset) + 1, []).append(detail)
+    if rule_id == "unicode-glyph-copy":
+        return [(line, _glyph_message(glyphs)) for line, glyphs in sorted(by_line.items())]
+    return [(line, None) for line in sorted(by_line)]
+
+
 def find_audit_violations(content, source_file, context=None):
     """Return explainable BC Design quality findings for one source file."""
     violations = []
-    checks = [
-        (
-            "monotonous-card-kit",
-            re.compile(r"rounded-xl\s+p-6", re.IGNORECASE),
-            "Avoid the repeated rounded-xl p-6 card template.",
-        ),
-        (
-            "template-arrow-cta",
-            re.compile(r"(?:button|cta|class(?:name)?\s*=)[^\n]{0,160}→", re.IGNORECASE),
-            "Use an active-voice CTA without a decorative arrow suffix.",
-        ),
-        (
-            "middle-dot-metadata",
-            re.compile(r"\s·\s"),
-            "Avoid middle-dot metadata strings; use a label, line break, or meaningful punctuation.",
-        ),
-        (
-            "template-arrow-glyph",
-            re.compile(
-                r"<(?:a|button)\b[^>]*>[\s\S]{0,320}?[↗↘→←↑↓][\s\S]{0,120}?</(?:a|button)>",
-                re.IGNORECASE,
-            ),
-            "Remove decorative arrow glyphs from links and buttons; make the action label carry the meaning.",
-        ),
-        (
-            "unicode-icon-glyph",
-            re.compile(
-                r"<[^>]*\baria-hidden\s*=\s*['\"]true['\"][^>]*>\s*[⌖↗↘→←↑↓★☆✦✧]\s*</[^>]+>",
-                re.IGNORECASE,
-            ),
-            "Use a purposeful 1.5px monoline SVG icon instead of a Unicode glyph.",
-        ),
-        (
-            "decorative-index-marker",
-            re.compile(r"(?:>\s*[A-C]\s*<|\b0[1-9]\s+—\s+[A-Za-z])"),
-            "Do not use decorative A/B/C or 01—03 markers unless they encode a real ordered sequence.",
-        ),
-        (
-            "focus-ring-width",
-            re.compile(
-                r":focus-visible[^{}]*\{[^{}]*\boutline\s*:\s*(?!2px\b)\d+px",
-                re.IGNORECASE | re.DOTALL,
-            ),
-            "Use a visible 2px focus ring for keyboard users.",
-        ),
-        (
-            "sticky-z-index-token",
-            re.compile(
-                r"(?:position\s*:\s*sticky[^{}]*\bz-index\s*:\s*(?!30\b)\d+|"
-                r"\bz-index\s*:\s*(?!30\b)\d+[^{}]*position\s*:\s*sticky)",
-                re.IGNORECASE | re.DOTALL,
-            ),
-            "Use the semantic sticky-nav z-index token (30), not an arbitrary layer number.",
-        ),
-    ]
-    for rule_id, pattern, message in checks:
+    for rule_id, pattern, message in PATTERN_CHECKS:
         if pattern.search(content):
             violations.append((rule_id, message, source_file))
 
@@ -1130,7 +1274,6 @@ def main():
         if not violations:
             print(f"AUDIT PASS: {args.design_audit}")
             return 0
-        print(f"AUDIT FAIL: {len(violations)} violation(s) in {args.design_audit}")
         try:
             from audit import build_audit_findings
             findings = build_audit_findings(args.design_audit)
@@ -1139,6 +1282,7 @@ def main():
                 {"rule_id": rule_id, "message": message, "path": str(source_file), "line": 1, "evidence": ""}
                 for rule_id, message, source_file in violations
             ]
+        print(f"AUDIT FAIL: {len(findings)} finding(s) in {args.design_audit}")
         for finding in findings:
             evidence = f" Evidence: {finding['evidence']}" if finding.get("evidence") else ""
             message = finding["message"].rstrip(".")

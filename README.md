@@ -211,6 +211,8 @@ See [project-memory.md](./.agents/skills/bc-design/references/project-memory.md)
 
 Every contract, review, and handoff covers eighteen dimensions: twelve for the interface (color, typography, layout and grid, spacing, visual hierarchy, imagery and icons, shape and effects, UI components, interaction and states, motion, responsiveness, accessibility) and six for the experience (user research, information architecture, user flow, wireframe and prototype, UX writing, usability testing). [design-dimensions.md](./.agents/skills/bc-design/references/design-dimensions.md) sets the house standard for each, names how it is verified, and provides the scorecard. `--audit --json` groups findings under `summary.by_dimension`.
 
+The audit reports one finding per offending line, so a file with three off-token durations lists all three with their line numbers. Rules that judge a whole file, such as a missing reduced-motion branch, report once. Each rule reports at most 20 lines per file; the last of those ends with `(+N more in this file)`.
+
 ## Motion orchestration with GSAP
 
 BC Design orchestrates multi-element and scroll-driven motion with [GSAP](https://gsap.com) timelines on the house motion tokens (`expo.out` equals the `--bc-ease` curve). Every choreography runs inside `gsap.matchMedia()` with a reduced-motion branch, animates transforms and opacity only, and cleans up through `gsap.context()` or `useGSAP()`.
