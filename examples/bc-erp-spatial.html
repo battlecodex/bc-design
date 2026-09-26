@@ -83,8 +83,7 @@
       font-family: var(--bc-font-mono);
       font-size: 13px;
       font-weight: 500;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-text);
     }
     .theme-toggle-btn {
@@ -92,8 +91,7 @@
       border-radius: 100px;
       font-family: var(--bc-font-mono);
       font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-text);
       background: var(--bc-surface);
       border: 1px solid var(--bc-border);
@@ -123,8 +121,7 @@
       gap: 8px;
       font-family: var(--bc-font-mono);
       font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-accent);
       margin-bottom: 20px;
     }
@@ -155,8 +152,7 @@
       border-radius: 100px;
       font-size: 12.5px;
       font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: #ffffff !important;
       background: var(--bc-accent-strong);
       border: 1px solid var(--bc-accent-deep);
@@ -216,6 +212,12 @@
     }
     @media (max-width: 600px) {
       .division-cards-grid { grid-template-columns: 1fr; }
+    }
+    /* Visible keyboard focus for every control */
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--bc-accent-strong, #B35637);
+      outline-offset: 2px;
     }
   </style>
 </head>

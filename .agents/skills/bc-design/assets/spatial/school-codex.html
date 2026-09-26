@@ -223,8 +223,7 @@
     .crest-text b {
       font-size: 13.5px;
       font-weight: 500;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-text);
     }
 
@@ -244,8 +243,7 @@
     .nav-nav-links a {
       font-size: 12.5px;
       font-weight: 400;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-text-dim);
       text-decoration: none;
       transition: color 200ms var(--bc-ease);
@@ -270,8 +268,7 @@
       border-radius: 100px;
       font-family: var(--bc-font-mono);
       font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-text);
       background: var(--bc-surface);
       border: 1px solid var(--bc-border);
@@ -292,8 +289,7 @@
       border-radius: 100px;
       font-size: 12px;
       font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: #ffffff !important;
       background: var(--bc-accent-strong);
       border: 1px solid var(--bc-accent-deep);
@@ -333,8 +329,7 @@
       font-family: var(--bc-font-mono);
       font-size: 11px;
       font-weight: 500;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-accent);
       margin-bottom: 24px;
     }
@@ -390,8 +385,7 @@
       border-radius: 100px;
       font-size: 12px;
       font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-text);
       background: var(--bc-surface);
       border: 1px solid var(--bc-border);
@@ -449,8 +443,7 @@
     .academic-chip b {
       font-size: 12px;
       font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-text);
     }
 
@@ -479,8 +472,7 @@
     .section-tag {
       font-family: var(--bc-font-mono);
       font-size: 11px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-text-muted);
       flex: 0 0 auto;
     }
@@ -528,8 +520,7 @@
       align-items: center;
       font-family: var(--bc-font-mono);
       font-size: 10.5px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-text-muted);
       margin-bottom: 20px;
     }
@@ -561,8 +552,7 @@
       border-top: 1px solid var(--bc-border-subtle);
       font-family: var(--bc-font-mono);
       font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-text-muted);
       display: flex;
       justify-content: space-between;
@@ -630,8 +620,7 @@
     .faculty-dept {
       font-family: var(--bc-font-mono);
       font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-accent);
     }
 
@@ -701,8 +690,7 @@
     .footer-links-col h4 {
       font-family: var(--bc-font-mono);
       font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-text);
       margin-bottom: 16px;
     }
@@ -733,9 +721,8 @@
       border-top: 1px solid var(--bc-border-subtle);
       font-family: var(--bc-font-mono);
       font-size: 11px;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.01em;
       color: var(--bc-text-muted);
-      text-transform: uppercase;
     }
 
     /* ═════════════════════════════════════════════════════════════════
@@ -809,7 +796,6 @@
       <div class="nav-actions-cluster">
         <!-- Live Light / Dark Mode Toggle Button -->
         <button class="theme-toggle-btn" id="btn-theme-switcher" aria-label="Toggle Light and Dark Mode">
-          <span id="theme-icon">☼</span>
           <span id="theme-label">Light Codex</span>
         </button>
 
@@ -1110,7 +1096,6 @@
       const canvas = document.getElementById("school-canvas");
       const htmlEl = document.documentElement;
       const themeBtn = document.getElementById("btn-theme-switcher");
-      const themeIcon = document.getElementById("theme-icon");
       const themeLabel = document.getElementById("theme-label");
 
       let currentTheme = htmlEl.getAttribute("data-theme") || "dark";
@@ -1421,7 +1406,6 @@
         htmlEl.setAttribute("data-theme", theme);
 
         if (theme === "light") {
-          themeIcon.textContent = "☾";
           themeLabel.textContent = "Midnight Codex";
 
           // Light mode shader / material adaptations
@@ -1439,7 +1423,6 @@
           particleMat.blending = THREE.NormalBlending;
           particleMat.opacity = 0.55;
         } else {
-          themeIcon.textContent = "☼";
           themeLabel.textContent = "Light Codex";
 
           // Dark mode shader / material adaptations

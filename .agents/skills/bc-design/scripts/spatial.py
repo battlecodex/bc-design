@@ -590,7 +590,7 @@ export const RibbonField: React.FC<RibbonFieldProps> = ({{
       display: flex; flex-direction: column; justify-content: space-between; padding: 32px;
     }}
     .hud-header {{ display: flex; justify-content: space-between; align-items: center; }}
-    .hud-brand {{ font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bc-text); }}
+    .hud-brand {{ font-size: 13px; font-weight: 500; letter-spacing: 0.01em; color: var(--bc-text); }}
     .hud-telemetry {{ font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.14em; color: {pal['text_muted']}; }}
     .hud-center {{ max-width: 540px; pointer-events: auto; }}
     .hud-title {{ font-family: "Newsreader", serif; font-size: clamp(32px, 4.5vw, 64px); font-weight: 400; line-height: 1.1; margin-bottom: 16px; }}
@@ -599,7 +599,7 @@ export const RibbonField: React.FC<RibbonFieldProps> = ({{
     .hud-cta {{
       display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; border-radius: 100px;
       background: var(--bc-accent-strong); color: #ffffff !important; font-size: 12px; font-weight: 500;
-      letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;
+      letter-spacing: 0.01em; text-decoration: none;
       box-shadow: 0 4px 20px rgba(217, 119, 87, 0.35); transition: transform 200ms var(--bc-ease);
     }}
     .hud-cta:hover {{ transform: translateY(-2px); }}
@@ -880,7 +880,7 @@ export const PredictiveArc: React.FC<PredictiveArcProps> = ({{
       display: flex; flex-direction: column; justify-content: space-between; padding: 32px;
     }}
     .hud-header {{ display: flex; justify-content: space-between; align-items: center; }}
-    .hud-brand {{ font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bc-text); }}
+    .hud-brand {{ font-size: 13px; font-weight: 500; letter-spacing: 0.01em; color: var(--bc-text); }}
     .hud-telemetry {{ font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.14em; color: {pal['text_muted']}; }}
     .hud-center {{ max-width: 540px; pointer-events: auto; }}
     .hud-title {{ font-family: "Newsreader", serif; font-size: clamp(32px, 4.5vw, 64px); font-weight: 400; line-height: 1.1; margin-bottom: 16px; }}
@@ -889,7 +889,7 @@ export const PredictiveArc: React.FC<PredictiveArcProps> = ({{
     .hud-cta {{
       display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; border-radius: 100px;
       background: var(--bc-accent-strong); color: #ffffff !important; font-size: 12px; font-weight: 500;
-      letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;
+      letter-spacing: 0.01em; text-decoration: none;
       box-shadow: 0 4px 20px rgba(217, 119, 87, 0.35); transition: transform 200ms var(--bc-ease);
     }}
     .hud-cta:hover {{ transform: translateY(-2px); }}
@@ -1072,8 +1072,7 @@ def generate_erp_spatial(palette_key="terracotta", theme="dark", format_type="ht
       font-family: var(--bc-font-mono);
       font-size: 13px;
       font-weight: 500;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-text);
     }}
     .theme-toggle-btn {{
@@ -1081,8 +1080,7 @@ def generate_erp_spatial(palette_key="terracotta", theme="dark", format_type="ht
       border-radius: 100px;
       font-family: var(--bc-font-mono);
       font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-text);
       background: var(--bc-surface);
       border: 1px solid var(--bc-border);
@@ -1112,8 +1110,7 @@ def generate_erp_spatial(palette_key="terracotta", theme="dark", format_type="ht
       gap: 8px;
       font-family: var(--bc-font-mono);
       font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--bc-accent);
       margin-bottom: 20px;
     }}
@@ -1144,8 +1141,7 @@ def generate_erp_spatial(palette_key="terracotta", theme="dark", format_type="ht
       border-radius: 100px;
       font-size: 12.5px;
       font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: #ffffff !important;
       background: var(--bc-accent-strong);
       border: 1px solid var(--bc-accent-deep);

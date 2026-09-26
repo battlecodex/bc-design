@@ -13,9 +13,19 @@ It needs Playwright (``pip install playwright`` then
 ``python -m playwright install chromium``). Everything else is standard
 library, so the rest of BC Design keeps working without it.
 
+Signed-in pages render with the session a real user has, instead of a
+temporary preview page:
+
+- ``--storage-state state.json`` loads a Playwright storage state (cookies and
+  local storage), for example one saved with ``playwright codegen --save-storage``;
+- ``--cookie name=value`` sets a cookie for the target's origin (repeatable);
+- ``--mock-api "**/api/tasks*=tasks.json"`` answers matching requests with a
+  JSON file, so pages that need a backend render with fixed data (repeatable).
+
 Usage:
     python render_check.py path/to/page.html
     python render_check.py https://localhost:3000 --out render-check --json
+    python render_check.py http://localhost:3000/dashboard --storage-state auth.json --mock-api "**/api/me=me.json"
 """
 
 from __future__ import annotations
@@ -23,7 +33,9 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import re
 import sys
+from urllib.parse import urlparse
 
 DEFAULT_VIEWPORTS = "375x812,768x1024,1440x900"
 SETTLE_MS = 1600
@@ -78,6 +90,62 @@ def target_url(target):
     return path.as_uri()
 
 
+def parse_cookies(values, url):
+    """Turn repeated name=value options into Playwright cookies for the target's origin."""
+    if not values:
+        return []
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"}:
+        raise ValueError("--cookie needs an http(s) URL target; use --storage-state for other setups")
+    cookies = []
+    for value in values:
+        name, separator, content = value.partition("=")
+        if not separator or not name.strip():
+            raise ValueError(f"Cookie must look like name=value, got '{value}'")
+        cookies.append({"name": name.strip(), "value": content, "url": f"{parsed.scheme}://{parsed.netloc}"})
+    return cookies
+
+
+def parse_mocks(values, base=Path(".")):
+    """Turn repeated 'pattern=file.json' options into (glob pattern, JSON body) pairs."""
+    mocks = []
+    for value in values or []:
+        pattern, separator, file_name = value.rpartition("=")
+        if not separator or not pattern.strip() or not file_name.strip():
+            raise ValueError(f"Mock must look like '**/api/path*=file.json', got '{value}'")
+        path = (Path(base) / file_name.strip()).expanduser()
+        if not path.is_file():
+            raise FileNotFoundError(str(path))
+        body = path.read_text(encoding="utf-8")
+        try:
+            json.loads(body)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Mock file is not valid JSON: {path} ({exc})") from exc
+        mocks.append((pattern.strip(), body))
+    return mocks
+
+
+def check_storage_state(value):
+    if value is None:
+        return None
+    path = Path(value).expanduser()
+    if not path.is_file():
+        raise FileNotFoundError(str(path))
+    try:
+        json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Storage state is not valid JSON: {path} ({exc})") from exc
+    return str(path)
+
+
+def redirected_to_sign_in(requested, final):
+    """True when a page the user asked for ended on a sign-in page instead."""
+    words = r"(?:login|log-in|signin|sign-in|sign_in|auth)"
+    return bool(re.search(words, urlparse(final).path, re.IGNORECASE)) and not re.search(
+        words, urlparse(requested).path, re.IGNORECASE
+    )
+
+
 def plan_runs(viewports):
     """Every viewport renders normally; the extremes also render with reduced motion."""
     runs = [(width, height, "no-preference") for width, height in viewports]
@@ -123,7 +191,7 @@ def dedupe(findings):
     return list(merged.values())
 
 
-def run_checks(url, viewports, out_dir):
+def run_checks(url, viewports, out_dir, storage_state=None, cookies=(), mocks=()):
     from playwright.sync_api import sync_playwright
 
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -134,7 +202,16 @@ def run_checks(url, viewports, out_dir):
         try:
             for run in plan_runs(viewports):
                 width, height, motion = run
-                context = browser.new_context(viewport={"width": width, "height": height}, reduced_motion=motion)
+                context = browser.new_context(
+                    viewport={"width": width, "height": height}, reduced_motion=motion, storage_state=storage_state
+                )
+                if cookies:
+                    context.add_cookies(list(cookies))
+                for pattern, body in mocks:
+                    context.route(
+                        pattern,
+                        lambda route, request=None, body=body: route.fulfill(status=200, content_type="application/json", body=body),
+                    )
                 page = context.new_page()
                 console_errors, page_errors, failed_requests = [], [], []
                 page.on("console", lambda msg, sink=console_errors: sink.append(msg.text) if msg.type == "error" else None)
@@ -159,6 +236,13 @@ def run_checks(url, viewports, out_dir):
                 screenshots.append(str(path))
                 probe = page.evaluate(PAGE_PROBE)
                 findings.extend(findings_for(run, probe, console_errors, page_errors, failed_requests))
+                if redirected_to_sign_in(url, page.url):
+                    findings.append({
+                        "rule_id": "render-signed-out",
+                        "severity": "error",
+                        "view": f"{width}px",
+                        "message": f"The page redirected to {page.url}; pass --storage-state or --cookie with a signed-in session.",
+                    })
                 context.close()
         finally:
             browser.close()
@@ -174,11 +258,20 @@ def main(argv=None):
     parser.add_argument("--out", default="render-check", help="Directory for screenshots (default: render-check)")
     parser.add_argument("--viewports", default=DEFAULT_VIEWPORTS, help=f"Comma-separated WIDTHxHEIGHT list (default: {DEFAULT_VIEWPORTS})")
     parser.add_argument("--json", action="store_true", help="Print a JSON report")
+    parser.add_argument("--storage-state", help="Playwright storage state JSON with a signed-in session")
+    parser.add_argument("--cookie", action="append", default=[], metavar="NAME=VALUE", help="Cookie for the target's origin (repeatable)")
+    parser.add_argument(
+        "--mock-api", action="append", default=[], metavar="PATTERN=FILE",
+        help="Answer requests matching a glob such as '**/api/tasks*' with a JSON file (repeatable)",
+    )
     args = parser.parse_args(argv)
 
     try:
         viewports = parse_viewports(args.viewports)
         url = target_url(args.target)
+        storage_state = check_storage_state(args.storage_state)
+        cookies = parse_cookies(args.cookie, url)
+        mocks = parse_mocks(args.mock_api)
     except (ValueError, FileNotFoundError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 2
@@ -194,7 +287,7 @@ def main(argv=None):
         )
         return 2
 
-    screenshots, findings = run_checks(url, viewports, Path(args.out))
+    screenshots, findings = run_checks(url, viewports, Path(args.out), storage_state, cookies, mocks)
     status = "fail" if any(f["severity"] == "error" for f in findings) else "pass"
     if args.json:
         print(json.dumps({"status": status, "target": url, "screenshots": screenshots, "findings": findings}, indent=2))

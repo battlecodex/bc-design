@@ -66,7 +66,7 @@ def project_context(root):
             shadcn_files.add(path.stem)
         else:
             own_files.append(path.relative_to(root).as_posix())
-    other_libraries = [item for item in findings["components"] if not item.startswith("shadcn/ui")]
+    other_libraries = [item for item in findings["components"] if not item.startswith(("shadcn/ui", "Project components"))]
     return {"shadcn": shadcn, "shadcn_files": shadcn_files, "own_files": own_files, "libraries": other_libraries}
 
 

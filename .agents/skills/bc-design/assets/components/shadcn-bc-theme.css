@@ -26,7 +26,8 @@
   --popover: #FFFFFF;
   --popover-foreground: #141413;
 
-  /* Ink carries primary actions; the accent marks focus and selection. */
+  /* Ink carries primary actions; the accent marks focus and selection.
+     With a brand color, set --primary to its strong variant (project.py accent HEX). */
   --primary: #141413;
   --primary-foreground: #FAF9F5;
   --secondary: #F0EEE6;
