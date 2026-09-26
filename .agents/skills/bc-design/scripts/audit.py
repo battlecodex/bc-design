@@ -6,6 +6,7 @@ legacy tuples into stable machine-readable findings for integrations and CI.
 
 from __future__ import annotations
 
+import functools
 import importlib.util
 import re
 from pathlib import Path
@@ -203,6 +204,11 @@ EVIDENCE_MARKERS = {
 }
 
 
+# At most this many findings per rule and file; the last one notes how many more there are.
+MAX_FINDINGS_PER_RULE_AND_FILE = 20
+
+
+@functools.lru_cache(maxsize=1)
 def _legacy():
     path = Path(__file__).with_name("bc_design.py")
     spec = importlib.util.spec_from_file_location("bc_design_audit_compat", path)
@@ -248,32 +254,45 @@ def _line_for_rule(content, rule_id, message):
 
 
 def build_audit_findings(target):
-    """Return stable finding dictionaries with evidence and remediation guidance."""
+    """Return stable finding dictionaries with evidence and remediation guidance.
+
+    A rule that can be located line by line reports one finding per offending line (deduplicated
+    on rule, file, and line, and capped per rule and file); a file-level rule reports once.
+    """
     target_path = Path(target)
+    legacy = _legacy()
     findings = []
+    seen = set()
     for rule_id, message, source in audit_target(target_path):
         source_path = Path(source)
         try:
             content = source_path.read_text(encoding="utf-8", errors="ignore")
         except OSError:
             content = ""
-        line = _line_for_rule(content, rule_id, message)
+        locations = legacy.violation_locations(rule_id, content, source_path) or [(_line_for_rule(content, rule_id, message), None)]
+        locations = [(line, line_message) for line, line_message in locations if (rule_id, str(source_path), line) not in seen]
+        extra = max(0, len(locations) - MAX_FINDINGS_PER_RULE_AND_FILE)
+        locations = locations[:MAX_FINDINGS_PER_RULE_AND_FILE]
         lines = content.splitlines()
-        evidence = lines[line - 1].strip() if lines and line <= len(lines) else ""
-        findings.append(
-            {
-                "rule_id": rule_id,
-                "severity": SEVERITY.get(rule_id, "warning"),
-                "category": CATEGORY.get(rule_id, "identity"),
-                "dimension": DIMENSION.get(rule_id, "Visual hierarchy"),
-                "path": str(source_path),
-                "line": line,
-                "evidence": evidence,
-                "message": message,
-                "recommendation": RECOMMENDATIONS.get(rule_id, message),
-                "confidence": "high",
-            }
-        )
+        for index, (line, line_message) in enumerate(locations):
+            seen.add((rule_id, str(source_path), line))
+            text = line_message or message
+            if extra and index == len(locations) - 1:
+                text = f"{text.rstrip('.')}. (+{extra} more in this file)"
+            findings.append(
+                {
+                    "rule_id": rule_id,
+                    "severity": SEVERITY.get(rule_id, "warning"),
+                    "category": CATEGORY.get(rule_id, "identity"),
+                    "dimension": DIMENSION.get(rule_id, "Visual hierarchy"),
+                    "path": str(source_path),
+                    "line": line,
+                    "evidence": lines[line - 1].strip() if lines and line <= len(lines) else "",
+                    "message": text,
+                    "recommendation": RECOMMENDATIONS.get(rule_id, text),
+                    "confidence": "high",
+                }
+            )
     return findings
 
 
